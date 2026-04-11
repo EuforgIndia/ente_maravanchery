@@ -106,6 +106,12 @@
     .divider{height:1px;background:var(--border);margin:2px 14px 10px}
     .sdot{width:7px;height:7px;border-radius:50%;display:inline-block;background:var(--green);box-shadow:0 0 6px var(--green)}
     .sdot.off{background:var(--muted);box-shadow:none}
+    /* Extra field tags */
+    .xtags{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+    .xtag{display:inline-flex;align-items:center;gap:3px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:3px 9px;font-size:11px;color:#b0bec5;white-space:nowrap}
+    /* Dynamic extra fields in admin */
+    #extra-fields .fg{margin-bottom:13px}
+    #extra-fields{transition:all .2s}
 
     /* TOAST */
     .toast{position:fixed;bottom:calc(var(--nh) + 14px);left:50%;transform:translateX(-50%);padding:9px 20px;border-radius:20px;font-size:13px;font-weight:700;z-index:999;white-space:nowrap;pointer-events:none;animation:tin .3s ease}
@@ -218,6 +224,59 @@ const CATS = [
   {id:'authority',   icon:'🏛️', name:'അധികൃതർ',       col:'#60A5FA'},
   {id:'other',       icon:'🛠️', name:'മറ്റുള്ളവ',     col:'#94A3B8'},
 ];
+
+// Category-specific extra fields
+const CAT_EXTRA = {
+  store: [
+    { id:'shopType', label:'കടയുടെ തരം', type:'select',
+      options:['പലചരക്ക് (Grocery)','ഹാർഡ്‌വെയർ (Hardware)','ഫാൻസി (Fancy)','മെഡിക്കൽ (Medical)',
+               'ബേക്കറി (Bakery)','ഹോട്ടൽ / ഭക്ഷണം','ടെക്സ്റ്റൈൽ (Textiles)','ഇലക്ട്രോണിക്സ്','മറ്റുള്ളവ'] },
+    { id:'offers', label:'ഓഫറുകൾ / ഡിസ്കൗണ്ട്', type:'text', placeholder:'ഉദാ: 10% ഓഫ് on weekends' },
+  ],
+  driver: [
+    { id:'vehicleType', label:'വാഹനത്തിന്റെ തരം', type:'select',
+      options:['കാർ (Car)','ഓട്ടോ റിക്ഷ (Auto)','ജീപ്പ് (Jeep)','ലോറി (Lorry)','മിനി ലോറി','ടെമ്പോ','ബൈക്ക് (Bike)','ബസ് (Bus)'] },
+    { id:'vehicleNo', label:'വാഹന നമ്പർ', type:'text', placeholder:'ഉദാ: KL 11 AB 1234' },
+    { id:'availability', label:'ലഭ്യത', type:'text', placeholder:'ഉദാ: 24/7, രാവിലെ 6AM – 10PM' },
+  ],
+  electrician: [
+    { id:'speciality', label:'സ്പെഷ്യാലിറ്റി', type:'select',
+      options:['Domestic Wiring','Industrial','Solar Installation','AC / Appliance Repair','Panel / Switchboard','General'] },
+    { id:'experience', label:'പരിചയം (വർഷം)', type:'text', placeholder:'ഉദാ: 8 വർഷം' },
+  ],
+  plumber: [
+    { id:'speciality', label:'സ്പെഷ്യാലിറ്റി', type:'select',
+      options:['Pipe Fitting','Drainage','Water Tank','Bore Well','Bathroom Fitting','General'] },
+    { id:'experience', label:'പരിചയം (വർഷം)', type:'text', placeholder:'ഉദാ: 5 വർഷം' },
+  ],
+  coconut: [
+    { id:'ratePerTree', label:'ഒരു മരത്തിന് നിരക്ക്', type:'text', placeholder:'ഉദാ: ₹30 per tree' },
+    { id:'coverageArea', label:'സേവന പ്രദേശം', type:'text', placeholder:'ഉദാ: 5km radius' },
+  ],
+  carpenter: [
+    { id:'speciality', label:'സ്പെഷ്യാലിറ്റി', type:'select',
+      options:['Furniture Making','Door / Window','Roofing','Modular Kitchen','Repair Work','General'] },
+    { id:'experience', label:'പരിചയം (വർഷം)', type:'text', placeholder:'ഉദാ: 12 വർഷം' },
+  ],
+  mason: [
+    { id:'speciality', label:'സ്പെഷ്യാലിറ്റി', type:'select',
+      options:['House Construction','Plastering','Tiling','Waterproofing','Compound Wall','General'] },
+    { id:'experience', label:'പരിചയം (വർഷം)', type:'text', placeholder:'ഉദാ: 15 വർഷം' },
+  ],
+  painter: [
+    { id:'speciality', label:'സ്പെഷ്യാലിറ്റി', type:'select',
+      options:['Interior','Exterior','Texture / Design','Waterproofing Paint','General'] },
+    { id:'experience', label:'പരിചയം (വർഷം)', type:'text', placeholder:'ഉദാ: 7 വർഷം' },
+  ],
+  authority: [
+    { id:'designation', label:'പദവി (Designation)', type:'text', placeholder:'ഉദാ: Ward Member, Police Officer' },
+    { id:'officeName',  label:'ഓഫീസ് / സ്ഥാപനം', type:'text', placeholder:'ഉദാ: Panchayath Office' },
+  ],
+  other: [
+    { id:'serviceType', label:'സേവനത്തിന്റെ തരം', type:'text', placeholder:'ഉദാ: AC Repair, Pest Control' },
+    { id:'experience',  label:'പരിചയം (വർഷം)', type:'text', placeholder:'ഉദാ: 4 വർഷം' },
+  ],
+};
 
 const BUS = {
   kurippuram:{name:'കുറിപ്പുറം',col:'#F5A623',
@@ -360,6 +419,19 @@ function mkCard(e, rank=0){
   const c=CATS.find(x=>x.id===e.cat);
   const a=avgR(e), cnt=(e.ratings||[]).length;
   const stars=[1,2,3,4,5].map(s=>`<span class="star" onclick="rateEntry('${e.id}',${s})">${s<=Math.round(a)?'⭐':'☆'}</span>`).join('');
+
+  // build extra-field tags
+  const extras = CAT_EXTRA[e.cat]||[];
+  const tags = extras
+    .filter(f => e[f.id])
+    .map(f => {
+      const icons = {shopType:'🏷️',offers:'🎁',vehicleType:'🚘',vehicleNo:'🔢',
+                     availability:'🕐',speciality:'🔩',experience:'📅',
+                     ratePerTree:'💰',coverageArea:'📍',designation:'🏅',
+                     officeName:'🏢',serviceType:'🛠️'};
+      return `<span class="xtag">${icons[f.id]||'•'} ${e[f.id]}</span>`;
+    }).join('');
+
   return `<div class="card" style="border-left-color:${c?.col||'#666'}">
     <div class="cr">
       <div class="cb">
@@ -368,6 +440,7 @@ function mkCard(e, rank=0){
           ${rank?`<span class="rbadge">#${rank} ⭐</span>`:''}
         </div>
         <div class="cm">${[e.area,e.desc].filter(Boolean).join(' · ')}</div>
+        ${tags ? `<div class="xtags">${tags}</div>` : ''}
         ${e.timing?`<div class="tr">🕐 ${e.timing}</div>`:''}
         <div class="sr"><div>${stars}</div><span class="rl">${a>0?a.toFixed(1)+' ('+cnt+' പേർ)':'റേറ്റ് ചെയ്യുക'}</span></div>
       </div>
@@ -471,6 +544,7 @@ function renderPanel(){
       <div class="fg"><label class="fl">വിവരണം</label><input type="text" class="fi" id="fd" placeholder="ഉദാ: 10 വർഷം പരിചയം"></div>
       <div class="fg"><label class="fl">സമയം <span style="font-size:10px;color:var(--muted)">(കടകൾക്ക്)</span></label>
         <input type="text" class="fi" id="ft2" placeholder="ഉദാ: 8AM – 9PM"></div>
+      <div id="extra-fields"></div>
       <button class="bprim" id="sbtn">+ ചേർക്കുക</button>
       <div style="height:16px"></div>
     </div>
@@ -481,7 +555,34 @@ function renderPanel(){
   document.getElementById('sbtn').onclick    = saveEntry;
   document.getElementById('logoutbtn').onclick = doLogout;
   document.getElementById('cancelbtn').onclick = cancelEdit;
+  document.getElementById('fc').onchange = () => renderExtraFields();
+  renderExtraFields();
   renderAList();
+}
+
+function renderExtraFields(data={}){
+  const cat = document.getElementById('fc')?.value;
+  const fields = CAT_EXTRA[cat]||[];
+  const el = document.getElementById('extra-fields');
+  if(!el) return;
+  if(!fields.length){ el.innerHTML=''; return; }
+  el.innerHTML = `
+    <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:12px 12px 2px;margin-bottom:13px">
+      <div style="font-size:10px;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;font-weight:700">
+        ✦ അധിക വിവരങ്ങൾ
+      </div>
+      ${fields.map(f=>`
+        <div class="fg">
+          <label class="fl">${f.label}</label>
+          ${f.type==='select'
+            ? `<select class="fsl" id="ex-${f.id}">
+                <option value="">— തിരഞ്ഞെടുക്കുക —</option>
+                ${f.options.map(o=>`<option value="${o}" ${data[f.id]===o?'selected':''}>${o}</option>`).join('')}
+               </select>`
+            : `<input type="text" class="fi" id="ex-${f.id}" placeholder="${f.placeholder||''}" value="${data[f.id]||''}">`
+          }
+        </div>`).join('')}
+    </div>`;
 }
 
 function renderAList(){
@@ -522,14 +623,22 @@ async function saveEntry(){
   const desc=document.getElementById('fd').value.trim();
   const timing=document.getElementById('ft2').value.trim();
   if(!name||!phone){toast('⚠️ പേരും ഫോണും നൽകണം','err');return;}
+
+  // collect extra fields
+  const extraData = {};
+  (CAT_EXTRA[cat]||[]).forEach(f=>{
+    const el=document.getElementById('ex-'+f.id);
+    if(el && el.value.trim()) extraData[f.id]=el.value.trim();
+  });
+
   const btn=document.getElementById('sbtn');
   btn.disabled=true; btn.innerHTML='<span class="spin"></span>';
   try{
     if(editId){
-      await updateDoc(doc(db,'entries',editId),{name,phone,cat,area,desc,timing});
+      await updateDoc(doc(db,'entries',editId),{name,phone,cat,area,desc,timing,...extraData});
       toast('✅ അപ്ഡേറ്റ് ചെയ്തു','ok'); cancelEdit();
     } else {
-      await addDoc(collection(db,'entries'),{name,phone,cat,area,desc,timing,ratings:[],createdAt:serverTimestamp()});
+      await addDoc(collection(db,'entries'),{name,phone,cat,area,desc,timing,...extraData,ratings:[],createdAt:serverTimestamp()});
       toast('✅ Firebase-ൽ ചേർത്തു','ok'); clearForm();
     }
   }catch(e){ toast('❌ '+e.message,'err'); }
@@ -546,6 +655,8 @@ function editEntry(id){
   document.getElementById('fa').value=e.area||'';
   document.getElementById('fd').value=e.desc||'';
   document.getElementById('ft2').value=e.timing||'';
+  // render extra fields with existing data pre-filled
+  renderExtraFields(e);
   document.getElementById('ebanner').style.display='flex';
   document.getElementById('sbtn').textContent='✅ അപ്ഡേറ്റ് ചെയ്യുക';
   window.scrollTo({top:0,behavior:'smooth'});
@@ -560,6 +671,9 @@ function cancelEdit(){
 
 function clearForm(){
   ['fn','fp','fa','fd','ft2'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  // reset extra fields to default category
+  document.getElementById('fc').value='store';
+  renderExtraFields();
 }
 
 async function delEntry(id){
