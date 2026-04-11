@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>എന്റെ മറവഞ്ചേരി</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
   <style>
     :root{
       --bg:#07111A;--bg2:#0D1E2C;--bg3:#122436;
@@ -28,15 +27,13 @@
 
     /* HEADER */
     .ph{padding:48px 20px 16px;background:linear-gradient(180deg,var(--bg2),transparent);position:sticky;top:0;z-index:10;backdrop-filter:blur(10px)}
-    .pt{font-size:24px;font-weight:900}
-    .ps{font-size:12px;color:var(--muted);margin-top:2px}
+    .pt{font-size:24px;font-weight:900}.ps{font-size:12px;color:var(--muted);margin-top:2px}
 
     /* SEARCH */
     .sw{position:relative;padding:0 16px 14px}
     .si{position:absolute;left:28px;top:50%;transform:translateY(-58%);font-size:15px;pointer-events:none;color:var(--muted)}
     .sb{width:100%;padding:11px 14px 11px 42px;background:var(--bg3);border:1px solid var(--border);border-radius:12px;color:var(--text);font-family:inherit;font-size:14px;outline:none;transition:border-color .2s}
-    .sb:focus{border-color:var(--gold)}
-    .sb::placeholder{color:var(--muted)}
+    .sb:focus{border-color:var(--gold)}.sb::placeholder{color:var(--muted)}
 
     /* CAT GRID */
     .cg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 16px 4px}
@@ -106,14 +103,14 @@
     .empty{text-align:center;padding:40px 20px;color:var(--muted)}
     .rbadge{display:inline-flex;align-items:center;gap:3px;background:rgba(245,166,35,.13);border:1px solid rgba(245,166,35,.3);color:var(--gold);border-radius:8px;padding:2px 7px;font-size:11px;font-weight:700}
     .clk{font-size:13px;font-family:monospace;color:var(--muted);letter-spacing:1px}
-    .div{height:1px;background:var(--border);margin:2px 14px 10px}
+    .divider{height:1px;background:var(--border);margin:2px 14px 10px}
+    .sdot{width:7px;height:7px;border-radius:50%;display:inline-block;background:var(--green);box-shadow:0 0 6px var(--green)}
+    .sdot.off{background:var(--muted);box-shadow:none}
 
     /* TOAST */
     .toast{position:fixed;bottom:calc(var(--nh) + 14px);left:50%;transform:translateX(-50%);padding:9px 20px;border-radius:20px;font-size:13px;font-weight:700;z-index:999;white-space:nowrap;pointer-events:none;animation:tin .3s ease}
     .toast.ok{background:#2ECC71;color:#000}.toast.err{background:#E74C3C;color:#fff}
     @keyframes tin{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
-
-    /* SPINNER */
     .spin{display:inline-block;width:18px;height:18px;border:2px solid rgba(0,0,0,.2);border-top-color:#000;border-radius:50%;animation:sp .6s linear infinite;vertical-align:middle}
     @keyframes sp{to{transform:rotate(360deg)}}
   </style>
@@ -130,6 +127,9 @@
       </div>
       <div style="text-align:right">
         <div id="clk-home" class="clk"></div>
+        <div style="margin-top:4px;font-size:10px;color:var(--muted);display:flex;align-items:center;gap:4px;justify-content:flex-end">
+          <span class="sdot off" id="sdot"></span><span id="stxt">കണക്ട്…</span>
+        </div>
       </div>
     </div>
     <div class="srow" id="stats">
@@ -140,7 +140,7 @@
   </div>
   <div class="sw" style="padding:14px 16px">
     <span class="si">🔍</span>
-    <input class="sb" type="search" placeholder="പേര്, ഫോൺ, പ്രദേശം…" id="homeSearch" oninput="if(window.gSearch)window.gSearch(this.value)">
+    <input class="sb" type="search" placeholder="പേര്, ഫോൺ, പ്രദേശം…" id="gsearch">
   </div>
   <div id="gres" style="display:none"></div>
   <div id="hbody">
@@ -155,7 +155,7 @@
 <div class="screen" id="s-dir">
   <div class="ph"><div class="pt">ഡയറക്ടറി</div><div class="ps">സേവനദാതാക്കൾ & കടകൾ</div></div>
   <div class="tabs" id="dtabs"></div>
-  <div class="sw"><span class="si">🔍</span><input class="sb" type="search" placeholder="തിരയുക…" id="dq" oninput="if(window.filterDir)window.filterDir(this.value)"></div>
+  <div class="sw"><span class="si">🔍</span><input class="sb" type="search" placeholder="തിരയുക…" id="dq"></div>
   <div id="dlist"></div>
 </div>
 
@@ -174,31 +174,49 @@
 <div class="screen" id="s-admin"><div id="aroot"></div></div>
 
 <!-- NAV -->
-<nav class="bnav">
-  <button class="nb on" onclick="if(window.nav)nav('home')"  id="n-home">  <span class="ni">🏠</span><span>ഹോം</span></button>
-  <button class="nb"    onclick="if(window.nav)nav('dir')"   id="n-dir">   <span class="ni">📋</span><span>ഡയറക്ടറി</span></button>
-  <button class="nb"    onclick="if(window.nav)nav('bus')"   id="n-bus">   <span class="ni">🚌</span><span>ബസ്</span></button>
-  <button class="nb"    onclick="if(window.nav)nav('admin')" id="n-admin"> <span class="ni">⚙️</span><span>അഡ്മിൻ</span></button>
+<nav class="bnav" id="bnav" style="pointer-events:none;opacity:0.5">
+  <button class="nb on" id="n-home"  onclick="nav('home')"> <span class="ni">🏠</span><span>ഹോം</span></button>
+  <button class="nb"    id="n-dir"   onclick="nav('dir')">  <span class="ni">📋</span><span>ഡയറക്ടറി</span></button>
+  <button class="nb"    id="n-bus"   onclick="nav('bus')">  <span class="ni">🚌</span><span>ബസ്</span></button>
+  <button class="nb"    id="n-admin" onclick="nav('admin')"><span class="ni">⚙️</span><span>അഡ്മിൻ</span></button>
 </nav>
 
-<script>
-// Global variables
-let entries = [], adminIn = false, busR = 'kurippuram', dirTab = 'store', dirQ = '', editId = null;
-let db = null, FS = null;
+<!-- ✅ SINGLE MODULE SCRIPT — Firebase + App logic together, no race condition -->
+<script type="module">
+import { initializeApp }    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, updateDoc,
+         deleteDoc, doc, onSnapshot,
+         query, orderBy, serverTimestamp }
+                            from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+// ── Firebase init ──
+const app = initializeApp({
+  apiKey:            "AIzaSyDd7k11dyoaRBEq6jnDGUbWw3KlrTXNwhY",
+  authDomain:        "ente-maravanchery.firebaseapp.com",
+  projectId:         "ente-maravanchery",
+  storageBucket:     "ente-maravanchery.firebasestorage.app",
+  messagingSenderId: "859930472254",
+  appId:             "1:859930472254:web:023d69985dd64f7fb2466f",
+  measurementId:     "G-CYH8DH2JY4"
+});
+const db = getFirestore(app);
+
+// ════════════════════════════
+//  CONSTANTS
+// ════════════════════════════
 const PASS = 'Maravanchery@123';
 
 const CATS = [
-  {id:'store',       icon:'🏪',name:'കടകൾ',           col:'#F59E0B'},
-  {id:'electrician', icon:'⚡',name:'ഇലക്ട്രീഷ്യൻ',  col:'#FBBF24'},
-  {id:'plumber',     icon:'🔧',name:'പ്ലംബർ',         col:'#38BDF8'},
-  {id:'coconut',     icon:'🥥',name:'തേങ്ങ പറിക്കൽ', col:'#84CC16'},
-  {id:'carpenter',   icon:'🔨',name:'ആശാരി',          col:'#C084FC'},
-  {id:'mason',       icon:'🧱',name:'മേസൻ',           col:'#FB923C'},
-  {id:'painter',     icon:'🎨',name:'പെയിന്റർ',      col:'#F472B6'},
-  {id:'driver',      icon:'🚗',name:'ഡ്രൈവർ / ഓട്ടോ',col:'#34D399'},
-  {id:'authority',   icon:'🏛️',name:'അധികൃതർ',       col:'#60A5FA'},
-  {id:'other',       icon:'🛠️',name:'മറ്റുള്ളവ',     col:'#94A3B8'},
+  {id:'store',       icon:'🏪', name:'കടകൾ',           col:'#F59E0B'},
+  {id:'electrician', icon:'⚡', name:'ഇലക്ട്രീഷ്യൻ',  col:'#FBBF24'},
+  {id:'plumber',     icon:'🔧', name:'പ്ലംബർ',         col:'#38BDF8'},
+  {id:'coconut',     icon:'🥥', name:'തേങ്ങ പറിക്കൽ', col:'#84CC16'},
+  {id:'carpenter',   icon:'🔨', name:'ആശാരി',          col:'#C084FC'},
+  {id:'mason',       icon:'🧱', name:'മേസൻ',           col:'#FB923C'},
+  {id:'painter',     icon:'🎨', name:'പെയിന്റർ',      col:'#F472B6'},
+  {id:'driver',      icon:'🚗', name:'ഡ്രൈവർ / ഓട്ടോ',col:'#34D399'},
+  {id:'authority',   icon:'🏛️', name:'അധികൃതർ',       col:'#60A5FA'},
+  {id:'other',       icon:'🛠️', name:'മറ്റുള്ളവ',     col:'#94A3B8'},
 ];
 
 const BUS = {
@@ -214,28 +232,134 @@ const BUS = {
     t:['7:35','8:00','10:05','12:55','15:35','18:18']}
 };
 
-// Helper functions
-function toast(msg, type='ok'){
-  const el=document.createElement('div');
-  el.className=`toast ${type}`;el.textContent=msg;
-  document.body.appendChild(el);
-  setTimeout(()=>el.remove(),2500);
+// ════════════════════════════
+//  STATE
+// ════════════════════════════
+let entries=[], adminIn=false, busR='kurippuram', dirTab='store', dirQ='', editId=null;
+
+// ════════════════════════════
+//  FIRESTORE LIVE LISTENER
+// ════════════════════════════
+const q = query(collection(db,'entries'), orderBy('createdAt','asc'));
+onSnapshot(q, snap => {
+  entries = snap.docs.map(d => ({id:d.id, ...d.data()}));
+  syncDot(true);
+  const cur = document.querySelector('.screen.active')?.id?.replace('s-','');
+  if(cur==='home')  renderHome();
+  if(cur==='dir')  {renderDirTabs(); filterDir(dirQ);}
+  if(cur==='admin' && adminIn) renderAList();
+}, (err) => {
+  syncDot(false);
+  console.error('Firestore error:', err.message);
+  toast('❌ Firebase കണക്ട് ആകുന്നില്ല. Firestore Rules പരിശോധിക്കുക.', 'err');
+});
+
+function syncDot(ok){
+  const d=document.getElementById('sdot'), t=document.getElementById('stxt');
+  if(!d) return;
+  d.classList.toggle('off',!ok);
+  t.textContent = ok ? 'ലൈവ്' : 'ഓഫ്‌ലൈൻ';
 }
 
-function avg(e){const r=e.ratings;return r?.length?r.reduce((a,b)=>a+b,0)/r.length:0;}
-
-function pt(t){const[h,m]=t.split(':').map(Number);return h*60+m;}
-function ft(t){const[h,m]=t.split(':').map(Number);return{t:`${h%12||12}:${String(m).padStart(2,'0')}`,p:h<12?'AM':'PM'};}
-
+// ════════════════════════════
+//  CLOCK
+// ════════════════════════════
 function tickClocks(){
   const t=new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
   ['clk-home','clk-bus'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=t;});
 }
+tickClocks();
+setInterval(tickClocks,1000);
+setInterval(()=>{if(document.getElementById('s-bus').classList.contains('active'))renderBus();},30000);
 
-function card(e,rank=0){
+// ════════════════════════════
+//  NAV — exposed to global so HTML onclick works
+// ════════════════════════════
+window.nav = function(s){
+  document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(x=>x.classList.remove('on'));
+  document.getElementById('s-'+s).classList.add('active');
+  document.getElementById('n-'+s).classList.add('on');
+  ({home:renderHome, dir:renderDir, bus:renderBus, admin:renderAdmin})[s]();
+};
+
+// ════════════════════════════
+//  HOME
+// ════════════════════════════
+function renderHome(){
+  const tot=entries.reduce((s,e)=>s+(e.ratings?.length||0),0);
+  document.getElementById('stats').innerHTML=
+    `<div class="sbox"><div class="sv">${entries.length}</div><div class="sl">ആകെ ലിസ്റ്റിംഗ്</div></div>
+     <div class="sbox"><div class="sv">${[...new Set(entries.map(e=>e.cat))].length||0}</div><div class="sl">വിഭാഗം</div></div>
+     <div class="sbox"><div class="sv">${tot}</div><div class="sl">റേറ്റിംഗ്</div></div>`;
+
+  document.getElementById('catgrid').innerHTML=CATS.map(c=>{
+    const n=entries.filter(e=>e.cat===c.id).length;
+    return `<div class="cc" onclick="goCat('${c.id}')" style="${n?'border-color:'+c.col+'28':''}">
+      <div style="font-size:26px;margin-bottom:5px">${c.icon}</div>
+      <div style="font-size:11px;font-weight:700;line-height:1.3;color:${n?'#dde':'#566477'}">${c.name}</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:3px">${n} എൻട്രി</div></div>`;
+  }).join('');
+
+  const top=entries.map(e=>({...e,av:avgR(e)})).filter(e=>e.av>0).sort((a,b)=>b.av-a.av).slice(0,5);
+  document.getElementById('toprated').innerHTML=top.length
+    ? top.map((e,i)=>mkCard(e,i+1)).join('')
+    : `<div class="empty"><div style="font-size:32px">⭐</div><div style="font-size:13px;margin-top:6px">ഇതുവരെ റേറ്റിംഗ് ഇല്ല</div><div style="font-size:11px;margin-top:4px">ഡയറക്ടറിയിൽ ആർക്കെങ്കിലും ആദ്യം റേറ്റ് ചെയ്യൂ</div></div>`;
+
+}
+
+window.goCat = function(id){dirTab=id; nav('dir');};
+
+// wire global search once
+document.getElementById('gsearch').oninput = e => gSearch(e.target.value);
+
+function gSearch(q){
+  const r=document.getElementById('gres'), b=document.getElementById('hbody');
+  if(!q.trim()){r.style.display='none';b.style.display='block';return;}
+  r.style.display='block'; b.style.display='none';
+  const f=entries.filter(e=>e.name?.includes(q)||e.phone?.includes(q)||(e.area||'').includes(q)||(e.desc||'').includes(q));
+  r.innerHTML=`<div class="stitle">${f.length} ഫലം — "${q}"</div>`
+    +(f.length?f.map(e=>mkCard(e)).join('')
+    :`<div class="empty"><div style="font-size:32px">🔍</div><div style="font-size:13px;margin-top:6px">ഒന്നും കണ്ടെത്തിയില്ല</div></div>`);
+}
+
+// ════════════════════════════
+//  DIRECTORY
+// ════════════════════════════
+function renderDir(){renderDirTabs(); filterDir(dirQ);}
+
+function renderDirTabs(){
+  document.getElementById('dtabs').innerHTML=CATS.map(c=>{
+    const n=entries.filter(e=>e.cat===c.id).length;
+    return `<button class="tbn${c.id===dirTab?' on':''}" onclick="setTab('${c.id}')">${c.icon} ${c.name} (${n})</button>`;
+  }).join('');
+}
+
+window.setTab = function(id){dirTab=id; dirQ=''; document.getElementById('dq').value=''; renderDir();};
+
+// wire directory search once
+document.getElementById('dq').oninput = e => filterDir(e.target.value);
+
+function filterDir(q){
+  dirQ=q;
+  const list=entries.filter(e=>e.cat===dirTab&&(!q.trim()||e.name?.includes(q)||e.phone?.includes(q)||(e.area||'').includes(q)));
+  const c=CATS.find(x=>x.id===dirTab);
+  document.getElementById('dlist').innerHTML=list.length
+    ? list.map(e=>mkCard(e)).join('')
+    : `<div class="empty"><div style="font-size:32px">${c?.icon||'📋'}</div>
+       <div style="font-size:13px;margin-top:6px">${c?.name} ഒന്നും ഇല്ല</div>
+       <div style="font-size:11px;margin-top:4px">അഡ്മിൻ ആദ്യം ഇവിടെ ചേർക്കട്ടെ</div></div>`;
+}
+
+// ════════════════════════════
+//  CARD + RATING
+// ════════════════════════════
+function avgR(e){const r=e.ratings; return r?.length ? r.reduce((a,b)=>a+b,0)/r.length : 0;}
+
+function mkCard(e, rank=0){
   const c=CATS.find(x=>x.id===e.cat);
-  const a=avg(e),cnt=(e.ratings||[]).length;
-  const stars=[1,2,3,4,5].map(s=>`<span class="star" onclick="if(window.rate)rate('${e.id}',${s})">${s<=Math.round(a)?'⭐':'☆'}</span>`).join('');
+  const a=avgR(e), cnt=(e.ratings||[]).length;
+  const stars=[1,2,3,4,5].map(s=>`<span class="star" onclick="rateEntry('${e.id}',${s})">${s<=Math.round(a)?'⭐':'☆'}</span>`).join('');
   return `<div class="card" style="border-left-color:${c?.col||'#666'}">
     <div class="cr">
       <div class="cb">
@@ -252,92 +376,31 @@ function card(e,rank=0){
   </div>`;
 }
 
-// Firebase functions
-async function startListener(){
-  if(!db || !FS) return;
-  const {onSnapshot,query,orderBy,collection} = FS;
-  const q = query(collection(db,'entries'), orderBy('createdAt','asc'));
-  onSnapshot(q, snap=>{
-    entries = snap.docs.map(d=>({id:d.id,...d.data()}));
-    const cur = document.querySelector('.screen.active')?.id?.replace('s-','');
-    if(cur==='home') renderHome();
-    if(cur==='dir'){renderDirTabs();filterDir(dirQ);}
-    if(cur==='admin'&&adminIn) renderAList();
-  }, (err)=>{
-    console.error('Snapshot error:', err);
-    toast('Data connection error', 'err');
-  });
-}
-
-// Render functions
-function renderHome(){
-  const tot = entries.reduce((s,e)=>s+(e.ratings?.length||0),0);
-  document.getElementById('stats').innerHTML=
-    `<div class="sbox"><div class="sv">${entries.length}</div><div class="sl">ആകെ ലിസ്റ്റിംഗ്</div></div>
-     <div class="sbox"><div class="sv">${[...new Set(entries.map(e=>e.cat))].length||0}</div><div class="sl">വിഭാഗം</div></div>
-     <div class="sbox"><div class="sv">${tot}</div><div class="sl">റേറ്റിംഗ്</div></div>`;
-
-  document.getElementById('catgrid').innerHTML = CATS.map(c=>{
-    const n=entries.filter(e=>e.cat===c.id).length;
-    return `<div class="cc" onclick="if(window.goCat)goCat('${c.id}')" style="${n?'border-color:'+c.col+'28':''}">
-      <div style="font-size:26px;margin-bottom:5px">${c.icon}</div>
-      <div style="font-size:11px;font-weight:700;line-height:1.3;color:${n?'#dde':'#566477'}">${c.name}</div>
-      <div style="font-size:10px;color:var(--muted);margin-top:3px">${n} എൻട്രി</div></div>`;
-  }).join('');
-
-  const top = entries.map(e=>({...e,avg:avg(e)})).filter(e=>e.avg>0).sort((a,b)=>b.avg-a.avg).slice(0,5);
-  document.getElementById('toprated').innerHTML = top.length
-    ? top.map((e,i)=>card(e,i+1)).join('')
-    : `<div class="empty"><div style="font-size:32px">⭐</div><div style="font-size:13px;margin-top:6px">ഇതുവരെ റേറ്റിംഗ് ഇല്ല</div><div style="font-size:11px;margin-top:4px">ഡയറക്ടറിയിൽ ആർക്കെങ്കിലും ആദ്യം റേറ്റ് ചെയ്യൂ</div></div>`;
-}
-
-function goCat(id){dirTab=id;nav('dir');}
-
-function gSearch(q){
-  const r=document.getElementById('gres'),b=document.getElementById('hbody');
-  if(!q.trim()){r.style.display='none';b.style.display='block';return;}
-  r.style.display='block';b.style.display='none';
-  const f=entries.filter(e=>e.name?.includes(q)||e.phone?.includes(q)||(e.area||'').includes(q)||(e.desc||'').includes(q));
-  r.innerHTML=`<div class="stitle">${f.length} ഫലം — "${q}"</div>`+(f.length?f.map(e=>card(e)).join(''):`<div class="empty"><div style="font-size:32px">🔍</div><div style="font-size:13px;margin-top:6px">ഒന്നും കണ്ടെത്തിയില്ല</div></div>`);
-}
-
-function renderDir(){renderDirTabs();filterDir(dirQ);}
-
-function renderDirTabs(){
-  document.getElementById('dtabs').innerHTML=CATS.map(c=>{
-    const n=entries.filter(e=>e.cat===c.id).length;
-    return `<button class="tbn${c.id===dirTab?' on':''}" onclick="if(window.setTab)setTab('${c.id}')">${c.icon} ${c.name} (${n})</button>`;
-  }).join('');
-}
-
-function setTab(id){dirTab=id;dirQ='';const dq=document.getElementById('dq');if(dq)dq.value='';renderDir();}
-
-function filterDir(q){
-  dirQ=q;
-  const list=entries.filter(e=>e.cat===dirTab&&(!q.trim()||e.name?.includes(q)||e.phone?.includes(q)||(e.area||'').includes(q)));
-  const c=CATS.find(x=>x.id===dirTab);
-  document.getElementById('dlist').innerHTML=list.length?list.map(e=>card(e)).join('')
-    :`<div class="empty"><div style="font-size:32px">${c?.icon||'📋'}</div><div style="font-size:13px;margin-top:6px">${c?.name} ഒന്നും ഇല്ല</div><div style="font-size:11px;margin-top:4px">അഡ്മിൻ ആദ്യം ഇവിടെ ചേർക്കട്ടെ</div></div>`;
-}
-
-async function rate(id,stars){
-  if(!db || !FS){toast('Please wait, loading...','err');return;}
-  const e=entries.find(x=>x.id===id);if(!e)return;
+window.rateEntry = async function(id, stars){
+  const e=entries.find(x=>x.id===id); if(!e) return;
   const updated=[...(e.ratings||[]),stars];
   try{
-    await FS.updateDoc(FS.doc(db,'entries',id),{ratings:updated});
+    await updateDoc(doc(db,'entries',id),{ratings:updated});
     toast('⭐ റേറ്റിംഗ് ചേർത്തു!','ok');
-  }catch{toast('❌ റേറ്റ് ചെയ്യാൻ കഴിഞ്ഞില്ല','err');}
-}
+  }catch{ toast('❌ റേറ്റ് ചെയ്യാൻ കഴിഞ്ഞില്ല','err'); }
+};
+
+// ════════════════════════════
+//  BUS
+// ════════════════════════════
+function pt(t){const[h,m]=t.split(':').map(Number);return h*60+m;}
+function ft(t){const[h,m]=t.split(':').map(Number);return{t:`${h%12||12}:${String(m).padStart(2,'0')}`,p:h<12?'AM':'PM'};}
+
+window.setBus = function(k){busR=k; renderBus();};
 
 function renderBus(){
   const cur=new Date().getHours()*60+new Date().getMinutes();
   document.getElementById('brtabs').innerHTML=Object.entries(BUS).map(([k,v])=>
-    `<button class="btab${k===busR?' active':''}" onclick="if(window.setBus)setBus('${k}')"
+    `<button class="btab${k===busR?' on':''}" onclick="setBus('${k}')"
       style="${k===busR?'color:'+v.col+';border-color:'+v.col+'50;background:'+v.col+'12':''}">
       ${v.name}</button>`
   ).join('');
-  const r=BUS[busR],ni=r.t.findIndex(t=>pt(t)>cur),nb=ni!==-1?r.t[ni]:null,nm=nb?pt(nb)-cur:null;
+  const r=BUS[busR], ni=r.t.findIndex(t=>pt(t)>cur), nb=ni!==-1?r.t[ni]:null, nm=nb?pt(nb)-cur:null;
   if(nb){
     const{t,p}=ft(nb);
     document.getElementById('nba').innerHTML=`<div class="nbanner" style="border-color:${r.col}30">
@@ -353,26 +416,18 @@ function renderBus(){
     document.getElementById('nba').innerHTML=`<div style="margin:0 14px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:14px;text-align:center;color:var(--muted);font-size:13px">🌙 ഇന്ന് ഇനി ബസ് ഇല്ല</div>`;
   }
   document.getElementById('tgrid').innerHTML=r.t.map(t=>{
-    const past=pt(t)<cur,isN=t===nb;const{t:tv,p}=ft(t);
+    const past=pt(t)<cur, isN=t===nb; const{t:tv,p}=ft(t);
     return `<div class="tc${past?' past':''}${isN?' next':''}">
       ${isN?`<div class="ndot" style="background:${r.col};box-shadow:0 0 6px ${r.col}"></div>`:''}
-      <div class="tv" style="${isN?'color:'+r.col:''}">${tv}</div><div class="tap">${p}</div></div>`;
+      <div class="tv" style="${isN?'color:'+r.col:''}">${tv}</div>
+      <div class="tap">${p}</div></div>`;
   }).join('');
 }
-function setBus(k){busR=k;renderBus();}
 
-function nav(s){
-  document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
-  document.querySelectorAll('.nb').forEach(x=>x.classList.remove('on'));
-  document.getElementById('s-'+s).classList.add('active');
-  document.getElementById('n-'+s).classList.add('on');
-  if(s==='home') renderHome();
-  if(s==='dir') renderDir();
-  if(s==='bus') renderBus();
-  if(s==='admin') renderAdmin();
-}
-
-function renderAdmin(){adminIn?renderPanel():renderLock();}
+// ════════════════════════════
+//  ADMIN
+// ════════════════════════════
+function renderAdmin(){adminIn ? renderPanel() : renderLock();}
 
 function renderLock(){
   document.getElementById('aroot').innerHTML=`
@@ -382,16 +437,17 @@ function renderLock(){
       <div style="font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.6">ഈ വിഭാഗം കൈകാര്യം ചെയ്യാൻ<br>പാസ്‌വേഡ് നൽകുക</div>
       <div style="width:100%;max-width:300px">
         <input type="password" class="fi" id="pinp" placeholder="••••••••••"
-          style="text-align:center;letter-spacing:4px;margin-bottom:10px"
-          onkeydown="if(event.key==='Enter')doLogin()">
-        <button class="bprim" onclick="doLogin()">ലോഗിൻ ചെയ്യുക</button>
+          style="text-align:center;letter-spacing:4px;margin-bottom:10px">
+        <button class="bprim" id="lbtn">ലോഗിൻ ചെയ്യുക</button>
         <div style="color:var(--red);font-size:12px;text-align:center;margin-top:8px;min-height:18px" id="perr"></div>
       </div>
     </div>`;
+  document.getElementById('lbtn').onclick = doLogin;
+  document.getElementById('pinp').onkeydown = e => { if(e.key==='Enter') doLogin(); };
 }
 
 function doLogin(){
-  if(document.getElementById('pinp').value===PASS){adminIn=true;renderPanel();}
+  if(document.getElementById('pinp').value===PASS){ adminIn=true; renderPanel(); }
   else document.getElementById('perr').textContent='❌ തെറ്റായ പാസ്‌വേഡ്';
 }
 
@@ -399,12 +455,12 @@ function renderPanel(){
   document.getElementById('aroot').innerHTML=`
     <div class="ph" style="display:flex;justify-content:space-between;align-items:center">
       <div><div class="pt">അഡ്മിൻ</div><div class="ps">ലിസ്റ്റിംഗ് ചേർക്കുക / തിരുത്തുക</div></div>
-      <button onclick="doLogout()" style="background:rgba(231,76,60,.12);border:1px solid rgba(231,76,60,.3);color:#E74C3C;padding:6px 12px;border-radius:8px;font-family:inherit;font-size:12px;cursor:pointer">ലോഗൗട്ട്</button>
+      <button id="logoutbtn" style="background:rgba(231,76,60,.12);border:1px solid rgba(231,76,60,.3);color:#E74C3C;padding:6px 12px;border-radius:8px;font-family:inherit;font-size:12px;cursor:pointer">ലോഗൗട്ട്</button>
     </div>
     <div class="fwrap">
       <div id="ebanner" class="ebanner" style="display:none">
         ✏️ <span>എഡിറ്റ് മോഡ്</span>
-        <button onclick="cancelEdit()" style="background:none;border:none;color:var(--red);font-family:inherit;font-size:12px;cursor:pointer">❌ റദ്ദാക്കുക</button>
+        <button id="cancelbtn" style="background:none;border:none;color:var(--red);font-family:inherit;font-size:12px;cursor:pointer">❌ റദ്ദാക്കുക</button>
       </div>
       <div class="fg"><label class="fl">പേര് *</label><input type="text" class="fi" id="fn" placeholder="ഉദാ: രാജൻ ഇലക്ട്രിക്കൽ"></div>
       <div class="fg"><label class="fl">ഫോൺ നമ്പർ *</label><input type="tel" class="fi" id="fp" placeholder="ഉദാ: 9400000000"></div>
@@ -413,20 +469,29 @@ function renderPanel(){
       </div>
       <div class="fg"><label class="fl">പ്രദേശം</label><input type="text" class="fi" id="fa" placeholder="ഉദാ: മറവഞ്ചേരി"></div>
       <div class="fg"><label class="fl">വിവരണം</label><input type="text" class="fi" id="fd" placeholder="ഉദാ: 10 വർഷം പരിചയം"></div>
-      <div class="fg"><label class="fl">സമയം <span style="font-size:10px;color:var(--muted)">(കടകൾക്ക്)</span></label><input type="text" class="fi" id="ft2" placeholder="ഉദാ: 8AM – 9PM"></div>
-      <button class="bprim" onclick="saveEntry()" id="sbtn">+ ചേർക്കുക</button>
+      <div class="fg"><label class="fl">സമയം <span style="font-size:10px;color:var(--muted)">(കടകൾക്ക്)</span></label>
+        <input type="text" class="fi" id="ft2" placeholder="ഉദാ: 8AM – 9PM"></div>
+      <button class="bprim" id="sbtn">+ ചേർക്കുക</button>
       <div style="height:16px"></div>
     </div>
-    <div class="div"></div>
+    <div class="divider"></div>
     <div class="stitle" id="altitle">ചേർത്ത ലിസ്റ്റിംഗ് (${entries.length})</div>
     <div id="alist"></div>`;
+
+  document.getElementById('sbtn').onclick    = saveEntry;
+  document.getElementById('logoutbtn').onclick = doLogout;
+  document.getElementById('cancelbtn').onclick = cancelEdit;
   renderAList();
 }
 
 function renderAList(){
-  const el=document.getElementById('alist'),tl=document.getElementById('altitle');
-  if(!el)return;if(tl)tl.textContent=`ചേർത്ത ലിസ്റ്റിംഗ് (${entries.length})`;
-  if(!entries.length){el.innerHTML='<div class="empty"><div style="font-size:32px">📋</div><div style="font-size:13px;margin-top:6px">ഒന്നും ചേർത്തിട്ടില്ല</div></div>';return;}
+  const el=document.getElementById('alist'), tl=document.getElementById('altitle');
+  if(!el) return;
+  if(tl) tl.textContent=`ചേർത്ത ലിസ്റ്റിംഗ് (${entries.length})`;
+  if(!entries.length){
+    el.innerHTML='<div class="empty"><div style="font-size:32px">📋</div><div style="font-size:13px;margin-top:6px">ഒന്നും ചേർത്തിട്ടില്ല</div></div>';
+    return;
+  }
   el.innerHTML=entries.map(e=>{
     const c=CATS.find(x=>x.id===e.cat);
     return `<div class="card" style="border-left-color:${c?.col||'#666'}">
@@ -437,16 +502,19 @@ function renderAList(){
           ${e.area?`<div style="font-size:11px;color:#556;margin-top:2px">${e.area}</div>`:''}
         </div>
         <div style="display:flex;flex-direction:column;gap:6px">
-          <button class="bsm bedit" onclick="editEntry('${e.id}')">✏️ തിരുത്ത്</button>
-          <button class="bsm bdel"  onclick="delEntry('${e.id}')">🗑️ ഡിലീറ്റ്</button>
+          <button class="bsm bedit" data-id="${e.id}">✏️ തിരുത്ത്</button>
+          <button class="bsm bdel"  data-id="${e.id}">🗑️ ഡിലീറ്റ്</button>
         </div>
       </div>
     </div>`;
   }).join('');
+
+  // wire edit/delete via event delegation
+  el.querySelectorAll('.bedit').forEach(btn => btn.onclick = () => editEntry(btn.dataset.id));
+  el.querySelectorAll('.bdel').forEach(btn  => btn.onclick = () => delEntry(btn.dataset.id));
 }
 
 async function saveEntry(){
-  if(!db || !FS){toast('Please wait, loading...','err');return;}
   const name=document.getElementById('fn').value.trim();
   const phone=document.getElementById('fp').value.trim();
   const cat=document.getElementById('fc').value;
@@ -455,23 +523,22 @@ async function saveEntry(){
   const timing=document.getElementById('ft2').value.trim();
   if(!name||!phone){toast('⚠️ പേരും ഫോണും നൽകണം','err');return;}
   const btn=document.getElementById('sbtn');
-  btn.disabled=true;btn.innerHTML='<span class="spin"></span>';
+  btn.disabled=true; btn.innerHTML='<span class="spin"></span>';
   try{
     if(editId){
-      await FS.updateDoc(FS.doc(db,'entries',editId),{name,phone,cat,area,desc,timing});
-      toast('✅ അപ്ഡേറ്റ് ചെയ്തു','ok');cancelEdit();
+      await updateDoc(doc(db,'entries',editId),{name,phone,cat,area,desc,timing});
+      toast('✅ അപ്ഡേറ്റ് ചെയ്തു','ok'); cancelEdit();
     } else {
-      await FS.addDoc(FS.collection(db,'entries'),
-        {name,phone,cat,area,desc,timing,ratings:[],createdAt:FS.serverTimestamp()});
-      toast('✅ ചേർത്തു','ok');clearForm();
+      await addDoc(collection(db,'entries'),{name,phone,cat,area,desc,timing,ratings:[],createdAt:serverTimestamp()});
+      toast('✅ Firebase-ൽ ചേർത്തു','ok'); clearForm();
     }
-  }catch(e){toast('❌ '+e.message,'err');}
+  }catch(e){ toast('❌ '+e.message,'err'); }
   btn.disabled=false;
   btn.textContent=editId?'✅ അപ്ഡേറ്റ് ചെയ്യുക':'+ ചേർക്കുക';
 }
 
 function editEntry(id){
-  const e=entries.find(x=>x.id===id);if(!e)return;
+  const e=entries.find(x=>x.id===id); if(!e) return;
   editId=id;
   document.getElementById('fn').value=e.name||'';
   document.getElementById('fp').value=e.phone||'';
@@ -496,57 +563,37 @@ function clearForm(){
 }
 
 async function delEntry(id){
-  if(!confirm('ഈ ലിസ്റ്റിംഗ് ഡിലീറ്റ് ചെയ്യണോ?'))return;
+  if(!confirm('ഈ ലിസ്റ്റിംഗ് ഡിലീറ്റ് ചെയ്യണോ?')) return;
   try{
-    await FS.deleteDoc(FS.doc(db,'entries',id));
+    await deleteDoc(doc(db,'entries',id));
     toast('🗑️ ഡിലീറ്റ് ചെയ്തു','ok');
-  }catch{toast('❌ ഡിലീറ്റ് ചെയ്യാൻ കഴിഞ്ഞില്ല','err');}
+  }catch{ toast('❌ ഡിലീറ്റ് ചെയ്യാൻ കഴിഞ്ഞില്ല','err'); }
 }
 
-function doLogout(){adminIn=false;renderLock();}
+function doLogout(){adminIn=false; renderLock();}
 
-// Initialize Firebase and expose functions
-async function initFirebase() {
-  try {
-    const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js");
-    const { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, serverTimestamp } = 
-      await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
-
-    const cfg = {
-      apiKey: "AIzaSyDd7k11dyoaRBEq6jnDGUbWw3KlrTXNwhY",
-      authDomain: "ente-maravanchery.firebaseapp.com",
-      projectId: "ente-maravanchery",
-      storageBucket: "ente-maravanchery.firebasestorage.app",
-      messagingSenderId: "859930472254",
-      appId: "1:859930472254:web:023d69985dd64f7fb2466f",
-      measurementId: "G-CYH8DH2JY4"
-    };
-    
-    const app = initializeApp(cfg);
-    db = getFirestore(app);
-    FS = { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, serverTimestamp };
-    
-    // Expose necessary functions to window
-    window.nav = nav;
-    window.gSearch = gSearch;
-    window.filterDir = filterDir;
-    window.setTab = setTab;
-    window.goCat = goCat;
-    window.rate = rate;
-    window.setBus = setBus;
-    
-    startListener();
-    tickClocks();
-    setInterval(tickClocks,1000);
-    setInterval(()=>{if(document.getElementById('s-bus').classList.contains('active'))renderBus();},30000);
-  } catch (error) {
-    console.error('Firebase initialization error:', error);
-    toast('Connection failed. Please refresh.', 'err');
-  }
+// ════════════════════════════
+//  TOAST
+// ════════════════════════════
+function toast(msg,type='ok'){
+  const el=document.createElement('div');
+  el.className=`toast ${type}`; el.textContent=msg;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),2500);
 }
 
-// Start the app
-initFirebase();
+// ════════════════════════════
+//  BOOT
+// ════════════════════════════
+// Enable nav now that module is loaded
+document.getElementById('bnav').style.pointerEvents='auto';
+document.getElementById('bnav').style.opacity='1';
+// Show loading skeletons until Firebase first responds
+document.getElementById('stats').innerHTML=
+  `<div class="sbox"><div class="sv">…</div><div class="sl">ആകെ ലിസ്റ്റിംഗ്</div></div>
+   <div class="sbox"><div class="sv">…</div><div class="sl">വിഭാഗം</div></div>
+   <div class="sbox"><div class="sv">…</div><div class="sl">റേറ്റിംഗ്</div></div>`;
+renderBus();
 </script>
 </body>
 </html>
