@@ -106,6 +106,28 @@
     .divider{height:1px;background:var(--border);margin:2px 14px 10px}
     .sdot{width:7px;height:7px;border-radius:50%;display:inline-block;background:var(--green);box-shadow:0 0 6px var(--green)}
     .sdot.off{background:var(--muted);box-shadow:none}
+    /* Extra field tags */
+    .xtags{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+    .xtag{display:inline-flex;align-items:center;gap:3px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:3px 9px;font-size:11px;color:#b0bec5;white-space:nowrap}
+    /* Dynamic extra fields in admin */
+    #extra-fields .fg{margin-bottom:13px}
+    #extra-fields{transition:all .2s}
+    /* WhatsApp feedback modal */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:flex;align-items:flex-end;justify-content:center;animation:fadeIn .2s ease}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    .modal-box{background:#0D1E2C;border:1px solid rgba(255,255,255,.1);border-radius:20px 20px 0 0;padding:24px 20px 36px;width:100%;max-width:430px;animation:slideUp .25s ease}
+    @keyframes slideUp{from{transform:translateY(60px);opacity:0}to{transform:translateY(0);opacity:1}}
+    .modal-title{font-size:16px;font-weight:800;margin-bottom:4px}
+    .modal-sub{font-size:12px;color:var(--muted);margin-bottom:16px}
+    .modal-stars{display:flex;gap:10px;font-size:30px;margin-bottom:16px;justify-content:center}
+    .modal-star{cursor:pointer;transition:transform .1s;opacity:.35}
+    .modal-star.on{opacity:1}
+    .modal-star:active{transform:scale(1.3)}
+    .modal-ta{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:12px;color:var(--text);font-family:inherit;font-size:14px;padding:11px 12px;outline:none;resize:none;height:90px;margin-bottom:14px}
+    .modal-ta:focus{border-color:#25D366}
+    .wa-btn{width:100%;padding:13px;background:#25D366;color:#fff;border:none;border-radius:12px;font-family:inherit;font-size:15px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+    .wa-btn:active{opacity:.85}
+    .modal-cancel{width:100%;padding:10px;background:none;border:none;color:var(--muted);font-family:inherit;font-size:13px;cursor:pointer;margin-top:6px}
 
     /* TOAST */
     .toast{position:fixed;bottom:calc(var(--nh) + 14px);left:50%;transform:translateX(-50%);padding:9px 20px;border-radius:20px;font-size:13px;font-weight:700;z-index:999;white-space:nowrap;pointer-events:none;animation:tin .3s ease}
@@ -219,6 +241,59 @@ const CATS = [
   {id:'other',       icon:'🛠️', name:'മറ്റുള്ളവ',     col:'#94A3B8'},
 ];
 
+// Category-specific extra fields
+const CAT_EXTRA = {
+  store: [
+    { id:'shopType', label:'കടയുടെ തരം', type:'select',
+      options:['പലചരക്ക് (Grocery)','ഹാർഡ്‌വെയർ (Hardware)','ഫാൻസി (Fancy)','മെഡിക്കൽ (Medical)',
+               'ബേക്കറി (Bakery)','ഹോട്ടൽ / ഭക്ഷണം','ടെക്സ്റ്റൈൽ (Textiles)','ഇലക്ട്രോണിക്സ്','മറ്റുള്ളവ'] },
+    { id:'offers', label:'ഓഫറുകൾ / ഡിസ്കൗണ്ട്', type:'text', placeholder:'ഉദാ: 10% ഓഫ് on weekends' },
+  ],
+  driver: [
+    { id:'vehicleType', label:'വാഹനത്തിന്റെ തരം', type:'select',
+      options:['കാർ (Car)','ഓട്ടോ റിക്ഷ (Auto)','ജീപ്പ് (Jeep)','ലോറി (Lorry)','മിനി ലോറി','ടെമ്പോ','ബൈക്ക് (Bike)','ബസ് (Bus)'] },
+    { id:'vehicleNo', label:'വാഹന നമ്പർ', type:'text', placeholder:'ഉദാ: KL 11 AB 1234' },
+    { id:'availability', label:'ലഭ്യത', type:'text', placeholder:'ഉദാ: 24/7, രാവിലെ 6AM – 10PM' },
+  ],
+  electrician: [
+    { id:'speciality', label:'സ്പെഷ്യാലിറ്റി', type:'select',
+      options:['Domestic Wiring','Industrial','Solar Installation','AC / Appliance Repair','Panel / Switchboard','General'] },
+    { id:'experience', label:'പരിചയം (വർഷം)', type:'text', placeholder:'ഉദാ: 8 വർഷം' },
+  ],
+  plumber: [
+    { id:'speciality', label:'സ്പെഷ്യാലിറ്റി', type:'select',
+      options:['Pipe Fitting','Drainage','Water Tank','Bore Well','Bathroom Fitting','General'] },
+    { id:'experience', label:'പരിചയം (വർഷം)', type:'text', placeholder:'ഉദാ: 5 വർഷം' },
+  ],
+  coconut: [
+    { id:'ratePerTree', label:'ഒരു മരത്തിന് നിരക്ക്', type:'text', placeholder:'ഉദാ: ₹30 per tree' },
+    { id:'coverageArea', label:'സേവന പ്രദേശം', type:'text', placeholder:'ഉദാ: 5km radius' },
+  ],
+  carpenter: [
+    { id:'speciality', label:'സ്പെഷ്യാലിറ്റി', type:'select',
+      options:['Furniture Making','Door / Window','Roofing','Modular Kitchen','Repair Work','General'] },
+    { id:'experience', label:'പരിചയം (വർഷം)', type:'text', placeholder:'ഉദാ: 12 വർഷം' },
+  ],
+  mason: [
+    { id:'speciality', label:'സ്പെഷ്യാലിറ്റി', type:'select',
+      options:['House Construction','Plastering','Tiling','Waterproofing','Compound Wall','General'] },
+    { id:'experience', label:'പരിചയം (വർഷം)', type:'text', placeholder:'ഉദാ: 15 വർഷം' },
+  ],
+  painter: [
+    { id:'speciality', label:'സ്പെഷ്യാലിറ്റി', type:'select',
+      options:['Interior','Exterior','Texture / Design','Waterproofing Paint','General'] },
+    { id:'experience', label:'പരിചയം (വർഷം)', type:'text', placeholder:'ഉദാ: 7 വർഷം' },
+  ],
+  authority: [
+    { id:'designation', label:'പദവി (Designation)', type:'text', placeholder:'ഉദാ: Ward Member, Police Officer' },
+    { id:'officeName',  label:'ഓഫീസ് / സ്ഥാപനം', type:'text', placeholder:'ഉദാ: Panchayath Office' },
+  ],
+  other: [
+    { id:'serviceType', label:'സേവനത്തിന്റെ തരം', type:'text', placeholder:'ഉദാ: AC Repair, Pest Control' },
+    { id:'experience',  label:'പരിചയം (വർഷം)', type:'text', placeholder:'ഉദാ: 4 വർഷം' },
+  ],
+};
+
 const BUS = {
   kurippuram:{name:'കുറിപ്പുറം',col:'#F5A623',
     t:['6:45','7:00','7:15','8:05','8:35','9:15','9:20','9:35','10:10','10:30',
@@ -275,13 +350,32 @@ setInterval(()=>{if(document.getElementById('s-bus').classList.contains('active'
 // ════════════════════════════
 //  NAV — exposed to global so HTML onclick works
 // ════════════════════════════
-window.nav = function(s){
+window.nav = function(s, pushState=true){
   document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
   document.querySelectorAll('.nb').forEach(x=>x.classList.remove('on'));
   document.getElementById('s-'+s).classList.add('active');
   document.getElementById('n-'+s).classList.add('on');
   ({home:renderHome, dir:renderDir, bus:renderBus, admin:renderAdmin})[s]();
+  // push a history entry so Android back button fires popstate
+  if(pushState){
+    history.pushState({page:s}, '', '#'+s);
+  }
 };
+
+// Android / browser back button handler
+window.addEventListener('popstate', (e) => {
+  const page = e.state?.page;
+  if(!page || page === 'home'){
+    // already at home — navigate to home without pushing state
+    nav('home', false);
+    // push a fresh home state so next back = exit
+    history.pushState({page:'home'}, '', '#home');
+  } else {
+    // on any inner page — go back to home
+    nav('home', false);
+    history.pushState({page:'home'}, '', '#home');
+  }
+});
 
 // ════════════════════════════
 //  HOME
@@ -360,6 +454,19 @@ function mkCard(e, rank=0){
   const c=CATS.find(x=>x.id===e.cat);
   const a=avgR(e), cnt=(e.ratings||[]).length;
   const stars=[1,2,3,4,5].map(s=>`<span class="star" onclick="rateEntry('${e.id}',${s})">${s<=Math.round(a)?'⭐':'☆'}</span>`).join('');
+
+  // build extra-field tags
+  const extras = CAT_EXTRA[e.cat]||[];
+  const tags = extras
+    .filter(f => e[f.id])
+    .map(f => {
+      const icons = {shopType:'🏷️',offers:'🎁',vehicleType:'🚘',vehicleNo:'🔢',
+                     availability:'🕐',speciality:'🔩',experience:'📅',
+                     ratePerTree:'💰',coverageArea:'📍',designation:'🏅',
+                     officeName:'🏢',serviceType:'🛠️'};
+      return `<span class="xtag">${icons[f.id]||'•'} ${e[f.id]}</span>`;
+    }).join('');
+
   return `<div class="card" style="border-left-color:${c?.col||'#666'}">
     <div class="cr">
       <div class="cb">
@@ -368,8 +475,13 @@ function mkCard(e, rank=0){
           ${rank?`<span class="rbadge">#${rank} ⭐</span>`:''}
         </div>
         <div class="cm">${[e.area,e.desc].filter(Boolean).join(' · ')}</div>
+        ${tags ? `<div class="xtags">${tags}</div>` : ''}
         ${e.timing?`<div class="tr">🕐 ${e.timing}</div>`:''}
         <div class="sr"><div>${stars}</div><span class="rl">${a>0?a.toFixed(1)+' ('+cnt+' പേർ)':'റേറ്റ് ചെയ്യുക'}</span></div>
+        <button onclick="openFeedback('${e.id}')" style="margin-top:10px;width:100%;padding:8px;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.3);border-radius:10px;color:#25D366;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.999 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2.007 22l4.946-1.41A9.935 9.935 0 0012 22c5.523 0 10-4.477 10-10S17.522 2 12 2z"/></svg>
+          WhatsApp-ൽ ഫീഡ്‌ബാക്ക് അയക്കുക
+        </button>
       </div>
       <a class="cbtn" href="tel:${e.phone}">📞<br>വിളിക്കുക</a>
     </div>
@@ -383,6 +495,87 @@ window.rateEntry = async function(id, stars){
     await updateDoc(doc(db,'entries',id),{ratings:updated});
     toast('⭐ റേറ്റിംഗ് ചേർത്തു!','ok');
   }catch{ toast('❌ റേറ്റ് ചെയ്യാൻ കഴിഞ്ഞില്ല','err'); }
+};
+
+// ════════════════════════════
+//  WHATSAPP FEEDBACK
+// ════════════════════════════
+const WA_NUMBER = '917594993481'; // +91 prefix for India
+
+window.openFeedback = function(id){
+  const e = entries.find(x=>x.id===id); if(!e) return;
+  const cat = CATS.find(c=>c.id===e.cat);
+  let selectedStars = 0;
+
+  // remove existing modal if any
+  document.getElementById('fb-modal')?.remove();
+
+  const modal = document.createElement('div');
+  modal.id = 'fb-modal';
+  modal.className = 'modal-overlay';
+  modal.innerHTML = `
+    <div class="modal-box">
+      <div class="modal-title">${cat?.icon||''} ${e.name}</div>
+      <div class="modal-sub">നിങ്ങളുടെ അനുഭവം WhatsApp-ൽ ഞങ്ങളുമായി പങ്കിടൂ</div>
+      <div class="modal-stars" id="fb-stars">
+        ${[1,2,3,4,5].map(s=>`<span class="modal-star" data-s="${s}" onclick="pickStar(${s})">⭐</span>`).join('')}
+      </div>
+      <textarea class="modal-ta" id="fb-txt" placeholder="നിങ്ങളുടെ അഭിപ്രായം ഇവിടെ എഴുതൂ… (ഐച്ഛികം)"></textarea>
+      <button class="wa-btn" onclick="sendFeedback('${id}')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.999 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2.007 22l4.946-1.41A9.935 9.935 0 0012 22c5.523 0 10-4.477 10-10S17.522 2 12 2z"/></svg>
+        WhatsApp-ൽ അയക്കുക
+      </button>
+      <button class="modal-cancel" onclick="closeFeedback()">റദ്ദാക്കുക</button>
+    </div>`;
+
+  // close on overlay tap
+  modal.addEventListener('click', ev => { if(ev.target===modal) closeFeedback(); });
+  document.body.appendChild(modal);
+
+  // expose star picker
+  window._fbStars = 0;
+};
+
+window.pickStar = function(s){
+  window._fbStars = s;
+  document.querySelectorAll('.modal-star').forEach(el => {
+    el.classList.toggle('on', Number(el.dataset.s) <= s);
+  });
+};
+
+window.closeFeedback = function(){
+  document.getElementById('fb-modal')?.remove();
+};
+
+window.sendFeedback = async function(id){
+  const e = entries.find(x=>x.id===id); if(!e) return;
+  const cat = CATS.find(c=>c.id===e.cat);
+  const stars = window._fbStars || 0;
+  const comment = document.getElementById('fb-txt')?.value.trim() || '';
+
+  const starLine  = stars > 0 ? '⭐'.repeat(stars) + ` (${stars}/5)` : 'റേറ്റ് ചെയ്തിട്ടില്ല';
+  const msg = [
+    `📋 *എന്റെ മറവഞ്ചേരി — ഫീഡ്‌ബാക്ക്*`,
+    ``,
+    `🏷️ *${e.name}*`,
+    `📁 ${cat?.name||''}${e.area ? ' · '+e.area : ''}`,
+    ``,
+    `⭐ *റേറ്റിംഗ്:* ${starLine}`,
+    comment ? `💬 *അഭിപ്രായം:* ${comment}` : '',
+    ``,
+    `🔗 ente-maravanchery.euforg.com`,
+  ].filter(l => l !== undefined && !(l==='' && !comment)).join('\n');
+
+  // also save rating to Firebase if stars given
+  if(stars > 0){
+    const updated = [...(e.ratings||[]), stars];
+    try{ await updateDoc(doc(db,'entries',id),{ratings:updated}); }catch{}
+  }
+
+  const url = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
+  window.open(url, '_blank');
+  closeFeedback();
+  toast('✅ WhatsApp തുറക്കുന്നു…','ok');
 };
 
 // ════════════════════════════
@@ -471,6 +664,7 @@ function renderPanel(){
       <div class="fg"><label class="fl">വിവരണം</label><input type="text" class="fi" id="fd" placeholder="ഉദാ: 10 വർഷം പരിചയം"></div>
       <div class="fg"><label class="fl">സമയം <span style="font-size:10px;color:var(--muted)">(കടകൾക്ക്)</span></label>
         <input type="text" class="fi" id="ft2" placeholder="ഉദാ: 8AM – 9PM"></div>
+      <div id="extra-fields"></div>
       <button class="bprim" id="sbtn">+ ചേർക്കുക</button>
       <div style="height:16px"></div>
     </div>
@@ -481,7 +675,34 @@ function renderPanel(){
   document.getElementById('sbtn').onclick    = saveEntry;
   document.getElementById('logoutbtn').onclick = doLogout;
   document.getElementById('cancelbtn').onclick = cancelEdit;
+  document.getElementById('fc').onchange = () => renderExtraFields();
+  renderExtraFields();
   renderAList();
+}
+
+function renderExtraFields(data={}){
+  const cat = document.getElementById('fc')?.value;
+  const fields = CAT_EXTRA[cat]||[];
+  const el = document.getElementById('extra-fields');
+  if(!el) return;
+  if(!fields.length){ el.innerHTML=''; return; }
+  el.innerHTML = `
+    <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:12px 12px 2px;margin-bottom:13px">
+      <div style="font-size:10px;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;font-weight:700">
+        ✦ അധിക വിവരങ്ങൾ
+      </div>
+      ${fields.map(f=>`
+        <div class="fg">
+          <label class="fl">${f.label}</label>
+          ${f.type==='select'
+            ? `<select class="fsl" id="ex-${f.id}">
+                <option value="">— തിരഞ്ഞെടുക്കുക —</option>
+                ${f.options.map(o=>`<option value="${o}" ${data[f.id]===o?'selected':''}>${o}</option>`).join('')}
+               </select>`
+            : `<input type="text" class="fi" id="ex-${f.id}" placeholder="${f.placeholder||''}" value="${data[f.id]||''}">`
+          }
+        </div>`).join('')}
+    </div>`;
 }
 
 function renderAList(){
@@ -522,14 +743,22 @@ async function saveEntry(){
   const desc=document.getElementById('fd').value.trim();
   const timing=document.getElementById('ft2').value.trim();
   if(!name||!phone){toast('⚠️ പേരും ഫോണും നൽകണം','err');return;}
+
+  // collect extra fields
+  const extraData = {};
+  (CAT_EXTRA[cat]||[]).forEach(f=>{
+    const el=document.getElementById('ex-'+f.id);
+    if(el && el.value.trim()) extraData[f.id]=el.value.trim();
+  });
+
   const btn=document.getElementById('sbtn');
   btn.disabled=true; btn.innerHTML='<span class="spin"></span>';
   try{
     if(editId){
-      await updateDoc(doc(db,'entries',editId),{name,phone,cat,area,desc,timing});
+      await updateDoc(doc(db,'entries',editId),{name,phone,cat,area,desc,timing,...extraData});
       toast('✅ അപ്ഡേറ്റ് ചെയ്തു','ok'); cancelEdit();
     } else {
-      await addDoc(collection(db,'entries'),{name,phone,cat,area,desc,timing,ratings:[],createdAt:serverTimestamp()});
+      await addDoc(collection(db,'entries'),{name,phone,cat,area,desc,timing,...extraData,ratings:[],createdAt:serverTimestamp()});
       toast('✅ Firebase-ൽ ചേർത്തു','ok'); clearForm();
     }
   }catch(e){ toast('❌ '+e.message,'err'); }
@@ -546,6 +775,8 @@ function editEntry(id){
   document.getElementById('fa').value=e.area||'';
   document.getElementById('fd').value=e.desc||'';
   document.getElementById('ft2').value=e.timing||'';
+  // render extra fields with existing data pre-filled
+  renderExtraFields(e);
   document.getElementById('ebanner').style.display='flex';
   document.getElementById('sbtn').textContent='✅ അപ്ഡേറ്റ് ചെയ്യുക';
   window.scrollTo({top:0,behavior:'smooth'});
@@ -560,6 +791,9 @@ function cancelEdit(){
 
 function clearForm(){
   ['fn','fp','fa','fd','ft2'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  // reset extra fields to default category
+  document.getElementById('fc').value='store';
+  renderExtraFields();
 }
 
 async function delEntry(id){
@@ -594,6 +828,8 @@ document.getElementById('stats').innerHTML=
    <div class="sbox"><div class="sv">…</div><div class="sl">വിഭാഗം</div></div>
    <div class="sbox"><div class="sv">…</div><div class="sl">റേറ്റിംഗ്</div></div>`;
 renderBus();
+// Seed history so back button has a base state to pop to (exits app on home)
+history.replaceState({page:'home'}, '', '#home');
 </script>
 </body>
 </html>
