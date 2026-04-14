@@ -6,41 +6,26 @@
   <title>എന്റെ മറവഞ്ചേരി</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    :root{
-      --bg:#07111A;--bg2:#0D1E2C;--bg3:#122436;
-      --gold:#F5A623;--green:#2ECC71;--blue:#3498DB;--red:#E74C3C;
-      --text:#ECF0F1;--muted:#7F8C8D;--border:rgba(255,255,255,.07);
-      --r:16px;--nh:68px;
-    }
+    :root{--bg:#07111A;--bg2:#0D1E2C;--bg3:#122436;--gold:#F5A623;--green:#2ECC71;--blue:#3498DB;--red:#E74C3C;--text:#ECF0F1;--muted:#7F8C8D;--border:rgba(255,255,255,.07);--r:16px;--nh:68px;}
     *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
     html,body{height:100%}
     body{font-family:'Noto Sans Malayalam','Segoe UI',sans-serif;background:var(--bg);color:var(--text);max-width:430px;margin:0 auto;overflow-x:hidden;min-height:100vh}
     .screen{display:none;padding-bottom:calc(var(--nh) + 10px);min-height:100vh}
     .screen.active{display:block}
-
-    /* NAV */
     .bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:var(--bg2);border-top:1px solid var(--border);display:flex;height:var(--nh);z-index:100}
     .nb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:none;color:var(--muted);font-family:inherit;cursor:pointer;font-size:10px;padding:6px 0;transition:color .2s;position:relative}
     .nb.on{color:var(--gold)}
     .nb.on::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:36px;height:3px;background:var(--gold);border-radius:0 0 4px 4px}
     .ni{font-size:22px;line-height:1}
-
-    /* HEADER */
     .ph{padding:48px 20px 16px;background:linear-gradient(180deg,var(--bg2),transparent);position:sticky;top:0;z-index:10;backdrop-filter:blur(10px)}
     .pt{font-size:24px;font-weight:900}.ps{font-size:12px;color:var(--muted);margin-top:2px}
-
-    /* SEARCH */
     .sw{position:relative;padding:0 16px 14px}
     .si{position:absolute;left:28px;top:50%;transform:translateY(-58%);font-size:15px;pointer-events:none;color:var(--muted)}
     .sb{width:100%;padding:11px 14px 11px 42px;background:var(--bg3);border:1px solid var(--border);border-radius:12px;color:var(--text);font-family:inherit;font-size:14px;outline:none;transition:border-color .2s}
     .sb:focus{border-color:var(--gold)}.sb::placeholder{color:var(--muted)}
-
-    /* CAT GRID */
     .cg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 16px 4px}
     .cc{background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:14px 6px 12px;text-align:center;cursor:pointer;transition:transform .15s}
     .cc:active{transform:scale(.94)}
-
-    /* CARD */
     .card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin:0 14px 10px;border-left-width:3px}
     .cr{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
     .cb{flex:1;min-width:0}
@@ -52,14 +37,10 @@
     .star{font-size:16px;cursor:pointer;transition:transform .1s;display:inline-block}
     .star:active{transform:scale(1.4)}
     .rl{font-size:11px;color:var(--muted)}
-
-    /* TABS */
     .tabs{display:flex;gap:8px;padding:0 16px 14px;overflow-x:auto;scrollbar-width:none}
     .tabs::-webkit-scrollbar{display:none}
     .tbn{padding:7px 14px;border-radius:20px;border:1px solid var(--border);background:var(--bg3);color:var(--muted);font-family:inherit;font-size:12px;cursor:pointer;white-space:nowrap;transition:all .2s;flex-shrink:0}
     .tbn.on{background:var(--gold);color:#000;border-color:var(--gold);font-weight:800}
-
-    /* BUS */
     .btabs{display:flex;gap:8px;padding:0 16px 14px}
     .btab{flex:1;padding:10px 4px;border-radius:12px;border:1px solid var(--border);background:var(--bg3);color:var(--muted);font-family:inherit;font-size:11px;font-weight:700;cursor:pointer;text-align:center;transition:all .2s;line-height:1.5}
     .tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 14px 20px}
@@ -74,8 +55,6 @@
     .mbox{border-radius:10px;padding:8px 14px;text-align:center}
     .mv{font-size:24px;font-weight:900;font-family:monospace}
     .ml{font-size:9px;color:var(--muted);letter-spacing:1px;margin-top:1px}
-
-    /* FORMS */
     .lkwrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;padding:24px;text-align:center}
     .fwrap{padding:0 16px}
     .fg{margin-bottom:13px}
@@ -89,8 +68,6 @@
     .bedit{background:rgba(52,152,219,.13);border-color:rgba(52,152,219,.3);color:var(--blue)}
     .bdel{background:rgba(231,76,60,.13);border-color:rgba(231,76,60,.3);color:var(--red)}
     .ebanner{background:rgba(52,152,219,.1);border:1px solid rgba(52,152,219,.3);border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:13px;color:var(--blue);display:flex;justify-content:space-between;align-items:center}
-
-    /* HERO */
     .hero{padding:52px 20px 18px;background:linear-gradient(160deg,#0D2035,#07111A);position:relative;overflow:hidden}
     .hero::before{content:'🌴';position:absolute;right:-10px;bottom:-10px;font-size:100px;opacity:.06;transform:rotate(-10deg);pointer-events:none}
     .htitle{font-size:27px;font-weight:900;color:var(--gold);line-height:1.2}
@@ -106,14 +83,10 @@
     .divider{height:1px;background:var(--border);margin:2px 14px 10px}
     .sdot{width:7px;height:7px;border-radius:50%;display:inline-block;background:var(--green);box-shadow:0 0 6px var(--green)}
     .sdot.off{background:var(--muted);box-shadow:none}
-    /* Extra field tags */
     .xtags{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
     .xtag{display:inline-flex;align-items:center;gap:3px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:3px 9px;font-size:11px;color:#b0bec5;white-space:nowrap}
-    /* Dynamic extra fields in admin */
     #extra-fields .fg{margin-bottom:13px}
     #extra-fields{transition:all .2s}
-
-    /* TOAST */
     .toast{position:fixed;bottom:calc(var(--nh) + 14px);left:50%;transform:translateX(-50%);padding:9px 20px;border-radius:20px;font-size:13px;font-weight:700;z-index:999;white-space:nowrap;pointer-events:none;animation:tin .3s ease}
     .toast.ok{background:#2ECC71;color:#000}.toast.err{background:#E74C3C;color:#fff}
     @keyframes tin{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
@@ -123,7 +96,6 @@
 </head>
 <body>
 
-<!-- HOME -->
 <div class="screen active" id="s-home">
   <div class="hero">
     <div style="display:flex;justify-content:space-between;align-items:flex-start">
@@ -157,15 +129,13 @@
   </div>
 </div>
 
-<!-- DIRECTORY -->
 <div class="screen" id="s-dir">
-  <div class="ph"><div class="pt">ഡയറക്ടറി</div><div class="ps">സേവനദാതാക്കൾ & കടകൾ</div></div>
+  <div class="ph"><div class="pt">ഡയറക്ടറി</div><div class="ps">സേവനദാതാക്കൾ &amp; കടകൾ</div></div>
   <div class="tabs" id="dtabs"></div>
   <div class="sw"><span class="si">🔍</span><input class="sb" type="search" placeholder="തിരയുക…" id="dq"></div>
   <div id="dlist"></div>
 </div>
 
-<!-- BUS -->
 <div class="screen" id="s-bus">
   <div class="ph" style="display:flex;justify-content:space-between;align-items:center">
     <div><div class="pt">ബസ് സമയം</div><div class="ps">മറവഞ്ചേരി ടൈംടേബിൾ</div></div>
@@ -176,10 +146,8 @@
   <div class="tgrid" id="tgrid"></div>
 </div>
 
-<!-- ADMIN -->
 <div class="screen" id="s-admin"><div id="aroot"></div></div>
 
-<!-- NAV -->
 <nav class="bnav" id="bnav" style="pointer-events:none;opacity:0.5">
   <button class="nb on" id="n-home"  onclick="nav('home')"> <span class="ni">🏠</span><span>ഹോം</span></button>
   <button class="nb"    id="n-dir"   onclick="nav('dir')">  <span class="ni">📋</span><span>ഡയറക്ടറി</span></button>
@@ -187,29 +155,23 @@
   <button class="nb"    id="n-admin" onclick="nav('admin')"><span class="ni">⚙️</span><span>അഡ്മിൻ</span></button>
 </nav>
 
-<!-- ✅ SINGLE MODULE SCRIPT — Firebase + App logic together, no race condition -->
 <script type="module">
-import { initializeApp }    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, addDoc, updateDoc,
-         deleteDoc, doc, onSnapshot,
-         query, orderBy, serverTimestamp }
-                            from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc,
+         onSnapshot, query, orderBy, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// ── Firebase init ──
 const app = initializeApp({
-  apiKey:            "AIzaSyDd7k11dyoaRBEq6jnDGUbWw3KlrTXNwhY",
-  authDomain:        "ente-maravanchery.firebaseapp.com",
-  projectId:         "ente-maravanchery",
-  storageBucket:     "ente-maravanchery.firebasestorage.app",
-  messagingSenderId: "859930472254",
-  appId:             "1:859930472254:web:023d69985dd64f7fb2466f",
-  measurementId:     "G-CYH8DH2JY4"
+  apiKey:"AIzaSyDd7k11dyoaRBEq6jnDGUbWw3KlrTXNwhY",
+  authDomain:"ente-maravanchery.firebaseapp.com",
+  projectId:"ente-maravanchery",
+  storageBucket:"ente-maravanchery.firebasestorage.app",
+  messagingSenderId:"859930472254",
+  appId:"1:859930472254:web:023d69985dd64f7fb2466f",
+  measurementId:"G-CYH8DH2JY4"
 });
 const db = getFirestore(app);
 
-// ════════════════════════════
-//  CONSTANTS
-// ════════════════════════════
 const PASS = 'Maravanchery@123';
 
 const CATS = [
@@ -225,59 +187,52 @@ const CATS = [
   {id:'other',       icon:'🛠️', name:'മറ്റുള്ളവ',     col:'#94A3B8'},
 ];
 
-// Category-specific extra fields
 const CAT_EXTRA = {
-  store: [
-    { id:'shopType', label:'കടയുടെ തരം', type:'select',
-      options:['പലചരക്ക് (Grocery)','ഹാർഡ്‌വെയർ (Hardware)','ഫാൻസി (Fancy)','മെഡിക്കൽ (Medical)',
-               'ബേക്കറി (Bakery)','ഹോട്ടൽ / ഭക്ഷണം','ടെക്സ്റ്റൈൽ (Textiles)','ഇലക്ട്രോണിക്സ്','മറ്റുള്ളവ'] },
-    { id:'offers', label:'ഓഫറുകൾ / ഡിസ്കൗണ്ട്', type:'text', placeholder:'ഉദാ: 10% ഓഫ് on weekends' },
+  store:[
+    {id:'shopType',label:'കടയുടെ തരം',type:'select',options:['പലചരക്ക് (Grocery)','ഹാർഡ്‌വെയർ (Hardware)','ഫാൻസി (Fancy)','മെഡിക്കൽ (Medical)','ബേക്കറി (Bakery)','ഹോട്ടൽ / ഭക്ഷണം','ടെക്സ്റ്റൈൽ (Textiles)','ഇലക്ട്രോണിക്സ്','മറ്റുള്ളവ']},
+    {id:'offers',label:'ഓഫറുകൾ / ഡിസ്കൗണ്ട്',type:'text',placeholder:'ഉദാ: 10% ഓഫ് on weekends'},
   ],
-  driver: [
-    { id:'vehicleType', label:'വാഹനത്തിന്റെ തരം', type:'select',
-      options:['കാർ (Car)','ഓട്ടോ റിക്ഷ (Auto)','ജീപ്പ് (Jeep)','ലോറി (Lorry)','മിനി ലോറി','ടെമ്പോ','ബൈക്ക് (Bike)','ബസ് (Bus)'] },
-    { id:'vehicleNo', label:'വാഹന നമ്പർ', type:'text', placeholder:'ഉദാ: KL 11 AB 1234' },
-    { id:'availability', label:'ലഭ്യത', type:'text', placeholder:'ഉദാ: 24/7, രാവിലെ 6AM – 10PM' },
+  driver:[
+    {id:'vehicleType',label:'വാഹനത്തിന്റെ തരം',type:'select',options:['കാർ (Car)','ഓട്ടോ റിക്ഷ (Auto)','ജീപ്പ് (Jeep)','ലോറി (Lorry)','മിനി ലോറി','ടെമ്പോ','ബൈക്ക് (Bike)','ബസ് (Bus)']},
+    {id:'vehicleNo',label:'വാഹന നമ്പർ',type:'text',placeholder:'ഉദാ: KL 11 AB 1234'},
+    {id:'availability',label:'ലഭ്യത',type:'text',placeholder:'ഉദാ: 24/7, രാവിലെ 6AM – 10PM'},
   ],
-  electrician: [
-    { id:'speciality', label:'സ്പെഷ്യാലിറ്റി', type:'select',
-      options:['Domestic Wiring','Industrial','Solar Installation','AC / Appliance Repair','Panel / Switchboard','General'] },
-    { id:'experience', label:'പരിചയം (വർഷം)', type:'text', placeholder:'ഉദാ: 8 വർഷം' },
+  electrician:[
+    {id:'speciality',label:'സ്പെഷ്യാലിറ്റി',type:'select',options:['Domestic Wiring','Industrial','Solar Installation','AC / Appliance Repair','Panel / Switchboard','General']},
+    {id:'experience',label:'പരിചയം (വർഷം)',type:'text',placeholder:'ഉദാ: 8 വർഷം'},
   ],
-  plumber: [
-    { id:'speciality', label:'സ്പെഷ്യാലിറ്റി', type:'select',
-      options:['Pipe Fitting','Drainage','Water Tank','Bore Well','Bathroom Fitting','General'] },
-    { id:'experience', label:'പരിചയം (വർഷം)', type:'text', placeholder:'ഉദാ: 5 വർഷം' },
+  plumber:[
+    {id:'speciality',label:'സ്പെഷ്യാലിറ്റി',type:'select',options:['Pipe Fitting','Drainage','Water Tank','Bore Well','Bathroom Fitting','General']},
+    {id:'experience',label:'പരിചയം (വർഷം)',type:'text',placeholder:'ഉദാ: 5 വർഷം'},
   ],
-  coconut: [
-    { id:'ratePerTree', label:'ഒരു മരത്തിന് നിരക്ക്', type:'text', placeholder:'ഉദാ: ₹30 per tree' },
-    { id:'coverageArea', label:'സേവന പ്രദേശം', type:'text', placeholder:'ഉദാ: 5km radius' },
+  coconut:[
+    {id:'ratePerTree',label:'ഒരു മരത്തിന് നിരക്ക്',type:'text',placeholder:'ഉദാ: ₹30 per tree'},
+    {id:'coverageArea',label:'സേവന പ്രദേശം',type:'text',placeholder:'ഉദാ: 5km radius'},
   ],
-  carpenter: [
-    { id:'speciality', label:'സ്പെഷ്യാലിറ്റി', type:'select',
-      options:['Furniture Making','Door / Window','Roofing','Modular Kitchen','Repair Work','General'] },
-    { id:'experience', label:'പരിചയം (വർഷം)', type:'text', placeholder:'ഉദാ: 12 വർഷം' },
+  carpenter:[
+    {id:'speciality',label:'സ്പെഷ്യാലിറ്റി',type:'select',options:['Furniture Making','Door / Window','Roofing','Modular Kitchen','Repair Work','General']},
+    {id:'experience',label:'പരിചയം (വർഷം)',type:'text',placeholder:'ഉദാ: 12 വർഷം'},
   ],
-  mason: [
-    { id:'speciality', label:'സ്പെഷ്യാലിറ്റി', type:'select',
-      options:['House Construction','Plastering','Tiling','Waterproofing','Compound Wall','General'] },
-    { id:'experience', label:'പരിചയം (വർഷം)', type:'text', placeholder:'ഉദാ: 15 വർഷം' },
+  mason:[
+    {id:'speciality',label:'സ്പെഷ്യാലിറ്റി',type:'select',options:['House Construction','Plastering','Tiling','Waterproofing','Compound Wall','General']},
+    {id:'experience',label:'പരിചയം (വർഷം)',type:'text',placeholder:'ഉദാ: 15 വർഷം'},
   ],
-  painter: [
-    { id:'speciality', label:'സ്പെഷ്യാലിറ്റി', type:'select',
-      options:['Interior','Exterior','Texture / Design','Waterproofing Paint','General'] },
-    { id:'experience', label:'പരിചയം (വർഷം)', type:'text', placeholder:'ഉദാ: 7 വർഷം' },
+  painter:[
+    {id:'speciality',label:'സ്പെഷ്യാലിറ്റി',type:'select',options:['Interior','Exterior','Texture / Design','Waterproofing Paint','General']},
+    {id:'experience',label:'പരിചയം (വർഷം)',type:'text',placeholder:'ഉദാ: 7 വർഷം'},
   ],
-  authority: [
-    { id:'designation', label:'പദവി (Designation)', type:'text', placeholder:'ഉദാ: Ward Member, Police Officer' },
-    { id:'officeName',  label:'ഓഫീസ് / സ്ഥാപനം', type:'text', placeholder:'ഉദാ: Panchayath Office' },
+  authority:[
+    {id:'designation',label:'പദവി (Designation)',type:'text',placeholder:'ഉദാ: Ward Member, Police Officer'},
+    {id:'officeName',label:'ഓഫീസ് / സ്ഥാപനം',type:'text',placeholder:'ഉദാ: Panchayath Office'},
   ],
-  other: [
-    { id:'serviceType', label:'സേവനത്തിന്റെ തരം', type:'text', placeholder:'ഉദാ: AC Repair, Pest Control' },
-    { id:'experience',  label:'പരിചയം (വർഷം)', type:'text', placeholder:'ഉദാ: 4 വർഷം' },
+  other:[
+    {id:'serviceType',label:'സേവനത്തിന്റെ തരം',type:'text',placeholder:'ഉദാ: AC Repair, Pest Control'},
+    {id:'experience',label:'പരിചയം (വർഷം)',type:'text',placeholder:'ഉദാ: 4 വർഷം'},
   ],
 };
 
+// ── BUS TIMINGS ──
+// എടപ്പാൾ: 3 new times added — 12:25, 13:00, 13:55 (total 23 services)
 const BUS = {
   kurippuram:{name:'കുറിപ്പുറം',col:'#F5A623',
     t:['6:45','7:00','7:15','8:05','8:35','9:15','9:20','9:35','10:10','10:30',
@@ -285,21 +240,15 @@ const BUS = {
        '14:12','14:25','14:40','14:55','15:20','15:40','16:20','16:40','16:50',
        '17:30','17:35','17:50','18:10','18:20','18:55']},
   edappal:{name:'എടപ്പാൾ',col:'#10B981',
-    t:['6:55','7:45','8:30','8:55','9:10','10:15','10:25','10:45','11:19','11:45','12:25',
-       '13:00','13:55','14:25','14:55','15:20','16:05','16:35','17:25','17:35','18:15',
-       '18:31','19:00']},
+    t:['6:55','7:45','8:30','8:55','9:10','10:15','10:25','10:45','11:19','11:45',
+       '12:25','13:00','13:55','14:25','14:55','15:20','16:05','16:35','17:25',
+       '17:35','18:15','18:31','19:00']},
   ponnani:{name:'പൊന്നാനി',col:'#8B5CF6',
     t:['7:35','8:00','10:05','12:55','15:35','18:18']}
 };
 
-// ════════════════════════════
-//  STATE
-// ════════════════════════════
 let entries=[], adminIn=false, busR='kurippuram', dirTab='store', dirQ='', editId=null;
 
-// ════════════════════════════
-//  FIRESTORE LIVE LISTENER
-// ════════════════════════════
 const q = query(collection(db,'entries'), orderBy('createdAt','asc'));
 onSnapshot(q, snap => {
   entries = snap.docs.map(d => ({id:d.id, ...d.data()}));
@@ -308,22 +257,15 @@ onSnapshot(q, snap => {
   if(cur==='home')  renderHome();
   if(cur==='dir')  {renderDirTabs(); filterDir(dirQ);}
   if(cur==='admin' && adminIn) renderAList();
-}, (err) => {
-  syncDot(false);
-  console.error('Firestore error:', err.message);
-  toast('❌ Firebase കണക്ട് ആകുന്നില്ല. Firestore Rules പരിശോധിക്കുക.', 'err');
-});
+}, err => { syncDot(false); console.error(err.message); toast('❌ Firebase കണക്ട് ആകുന്നില്ല.','err'); });
 
 function syncDot(ok){
-  const d=document.getElementById('sdot'), t=document.getElementById('stxt');
-  if(!d) return;
+  const d=document.getElementById('sdot'),t=document.getElementById('stxt');
+  if(!d)return;
   d.classList.toggle('off',!ok);
-  t.textContent = ok ? 'ലൈവ്' : 'ഓഫ്‌ലൈൻ';
+  t.textContent=ok?'ലൈവ്':'ഓഫ്‌ലൈൻ';
 }
 
-// ════════════════════════════
-//  CLOCK
-// ════════════════════════════
 function tickClocks(){
   const t=new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
   ['clk-home','clk-bus'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=t;});
@@ -332,46 +274,32 @@ tickClocks();
 setInterval(tickClocks,1000);
 setInterval(()=>{if(document.getElementById('s-bus').classList.contains('active'))renderBus();},30000);
 
-// ════════════════════════════
-//  NAV — exposed to global so HTML onclick works
-// ════════════════════════════
 window.nav = function(s, pushState=true){
   document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
   document.querySelectorAll('.nb').forEach(x=>x.classList.remove('on'));
   document.getElementById('s-'+s).classList.add('active');
   document.getElementById('n-'+s).classList.add('on');
-  ({home:renderHome, dir:renderDir, bus:renderBus, admin:renderAdmin})[s]();
-  // push a history entry so Android back button fires popstate
-  if(pushState){
-    history.pushState({page:s}, '', '#'+s);
-  }
+  ({home:renderHome,dir:renderDir,bus:renderBus,admin:renderAdmin})[s]();
+  if(pushState) history.pushState({page:s},'','#'+s);
 };
 
-// Android / browser back button handler
-window.addEventListener('popstate', (e) => {
+window.addEventListener('popstate', e => {
   const page = e.state?.page;
-  if(!page || page === 'home'){
-    // already at home — navigate to home without pushing state
-    nav('home', false);
-    // push a fresh home state so next back = exit
-    history.pushState({page:'home'}, '', '#home');
+  if(!page || page==='home'){
+    nav('home',false);
+    history.pushState({page:'home'},'','#home');
   } else {
-    // on any inner page — go back to home
-    nav('home', false);
-    history.pushState({page:'home'}, '', '#home');
+    nav('home',false);
+    history.pushState({page:'home'},'','#home');
   }
 });
 
-// ════════════════════════════
-//  HOME
-// ════════════════════════════
 function renderHome(){
   const tot=entries.reduce((s,e)=>s+(e.ratings?.length||0),0);
   document.getElementById('stats').innerHTML=
     `<div class="sbox"><div class="sv">${entries.length}</div><div class="sl">ആകെ ലിസ്റ്റിംഗ്</div></div>
      <div class="sbox"><div class="sv">${[...new Set(entries.map(e=>e.cat))].length||0}</div><div class="sl">വിഭാഗം</div></div>
      <div class="sbox"><div class="sv">${tot}</div><div class="sl">റേറ്റിംഗ്</div></div>`;
-
   document.getElementById('catgrid').innerHTML=CATS.map(c=>{
     const n=entries.filter(e=>e.cat===c.id).length;
     return `<div class="cc" onclick="goCat('${c.id}')" style="${n?'border-color:'+c.col+'28':''}">
@@ -379,44 +307,32 @@ function renderHome(){
       <div style="font-size:11px;font-weight:700;line-height:1.3;color:${n?'#dde':'#566477'}">${c.name}</div>
       <div style="font-size:10px;color:var(--muted);margin-top:3px">${n} എൻട്രി</div></div>`;
   }).join('');
-
   const top=entries.map(e=>({...e,av:avgR(e)})).filter(e=>e.av>0).sort((a,b)=>b.av-a.av).slice(0,5);
   document.getElementById('toprated').innerHTML=top.length
-    ? top.map((e,i)=>mkCard(e,i+1)).join('')
-    : `<div class="empty"><div style="font-size:32px">⭐</div><div style="font-size:13px;margin-top:6px">ഇതുവരെ റേറ്റിംഗ് ഇല്ല</div><div style="font-size:11px;margin-top:4px">ഡയറക്ടറിയിൽ ആർക്കെങ്കിലും ആദ്യം റേറ്റ് ചെയ്യൂ</div></div>`;
-
+    ?top.map((e,i)=>mkCard(e,i+1)).join('')
+    :`<div class="empty"><div style="font-size:32px">⭐</div><div style="font-size:13px;margin-top:6px">ഇതുവരെ റേറ്റിംഗ് ഇല്ല</div><div style="font-size:11px;margin-top:4px">ഡയറക്ടറിയിൽ ആർക്കെങ്കിലും ആദ്യം റേറ്റ് ചെയ്യൂ</div></div>`;
 }
 
-window.goCat = function(id){dirTab=id; nav('dir');};
-
-// wire global search once
+window.goCat = function(id){dirTab=id;nav('dir');};
 document.getElementById('gsearch').oninput = e => gSearch(e.target.value);
 
 function gSearch(q){
-  const r=document.getElementById('gres'), b=document.getElementById('hbody');
+  const r=document.getElementById('gres'),b=document.getElementById('hbody');
   if(!q.trim()){r.style.display='none';b.style.display='block';return;}
-  r.style.display='block'; b.style.display='none';
+  r.style.display='block';b.style.display='none';
   const f=entries.filter(e=>e.name?.includes(q)||e.phone?.includes(q)||(e.area||'').includes(q)||(e.desc||'').includes(q));
   r.innerHTML=`<div class="stitle">${f.length} ഫലം — "${q}"</div>`
-    +(f.length?f.map(e=>mkCard(e)).join('')
-    :`<div class="empty"><div style="font-size:32px">🔍</div><div style="font-size:13px;margin-top:6px">ഒന്നും കണ്ടെത്തിയില്ല</div></div>`);
+    +(f.length?f.map(e=>mkCard(e)).join(''):`<div class="empty"><div style="font-size:32px">🔍</div><div style="font-size:13px;margin-top:6px">ഒന്നും കണ്ടെത്തിയില്ല</div></div>`);
 }
 
-// ════════════════════════════
-//  DIRECTORY
-// ════════════════════════════
-function renderDir(){renderDirTabs(); filterDir(dirQ);}
-
+function renderDir(){renderDirTabs();filterDir(dirQ);}
 function renderDirTabs(){
   document.getElementById('dtabs').innerHTML=CATS.map(c=>{
     const n=entries.filter(e=>e.cat===c.id).length;
     return `<button class="tbn${c.id===dirTab?' on':''}" onclick="setTab('${c.id}')">${c.icon} ${c.name} (${n})</button>`;
   }).join('');
 }
-
-window.setTab = function(id){dirTab=id; dirQ=''; document.getElementById('dq').value=''; renderDir();};
-
-// wire directory search once
+window.setTab = function(id){dirTab=id;dirQ='';document.getElementById('dq').value='';renderDir();};
 document.getElementById('dq').oninput = e => filterDir(e.target.value);
 
 function filterDir(q){
@@ -424,34 +340,21 @@ function filterDir(q){
   const list=entries.filter(e=>e.cat===dirTab&&(!q.trim()||e.name?.includes(q)||e.phone?.includes(q)||(e.area||'').includes(q)));
   const c=CATS.find(x=>x.id===dirTab);
   document.getElementById('dlist').innerHTML=list.length
-    ? list.map(e=>mkCard(e)).join('')
-    : `<div class="empty"><div style="font-size:32px">${c?.icon||'📋'}</div>
+    ?list.map(e=>mkCard(e)).join('')
+    :`<div class="empty"><div style="font-size:32px">${c?.icon||'📋'}</div>
        <div style="font-size:13px;margin-top:6px">${c?.name} ഒന്നും ഇല്ല</div>
        <div style="font-size:11px;margin-top:4px">അഡ്മിൻ ആദ്യം ഇവിടെ ചേർക്കട്ടെ</div></div>`;
 }
 
-// ════════════════════════════
-//  CARD + RATING
-// ════════════════════════════
-function avgR(e){const r=e.ratings; return r?.length ? r.reduce((a,b)=>a+b,0)/r.length : 0;}
+function avgR(e){const r=e.ratings;return r?.length?r.reduce((a,b)=>a+b,0)/r.length:0;}
 
-function mkCard(e, rank=0){
+function mkCard(e,rank=0){
   const c=CATS.find(x=>x.id===e.cat);
-  const a=avgR(e), cnt=(e.ratings||[]).length;
+  const a=avgR(e),cnt=(e.ratings||[]).length;
   const stars=[1,2,3,4,5].map(s=>`<span class="star" onclick="rateEntry('${e.id}',${s})">${s<=Math.round(a)?'⭐':'☆'}</span>`).join('');
-
-  // build extra-field tags
-  const extras = CAT_EXTRA[e.cat]||[];
-  const tags = extras
-    .filter(f => e[f.id])
-    .map(f => {
-      const icons = {shopType:'🏷️',offers:'🎁',vehicleType:'🚘',vehicleNo:'🔢',
-                     availability:'🕐',speciality:'🔩',experience:'📅',
-                     ratePerTree:'💰',coverageArea:'📍',designation:'🏅',
-                     officeName:'🏢',serviceType:'🛠️'};
-      return `<span class="xtag">${icons[f.id]||'•'} ${e[f.id]}</span>`;
-    }).join('');
-
+  const extras=CAT_EXTRA[e.cat]||[];
+  const icons={shopType:'🏷️',offers:'🎁',vehicleType:'🚘',vehicleNo:'🔢',availability:'🕐',speciality:'🔩',experience:'📅',ratePerTree:'💰',coverageArea:'📍',designation:'🏅',officeName:'🏢',serviceType:'🛠️'};
+  const tags=extras.filter(f=>e[f.id]).map(f=>`<span class="xtag">${icons[f.id]||'•'} ${e[f.id]}</span>`).join('');
   return `<div class="card" style="border-left-color:${c?.col||'#666'}">
     <div class="cr">
       <div class="cb">
@@ -460,7 +363,7 @@ function mkCard(e, rank=0){
           ${rank?`<span class="rbadge">#${rank} ⭐</span>`:''}
         </div>
         <div class="cm">${[e.area,e.desc].filter(Boolean).join(' · ')}</div>
-        ${tags ? `<div class="xtags">${tags}</div>` : ''}
+        ${tags?`<div class="xtags">${tags}</div>`:''}
         ${e.timing?`<div class="tr">🕐 ${e.timing}</div>`:''}
         <div class="sr"><div>${stars}</div><span class="rl">${a>0?a.toFixed(1)+' ('+cnt+' പേർ)':'റേറ്റ് ചെയ്യുക'}</span></div>
       </div>
@@ -469,31 +372,24 @@ function mkCard(e, rank=0){
   </div>`;
 }
 
-window.rateEntry = async function(id, stars){
-  const e=entries.find(x=>x.id===id); if(!e) return;
+window.rateEntry = async function(id,stars){
+  const e=entries.find(x=>x.id===id);if(!e)return;
   const updated=[...(e.ratings||[]),stars];
-  try{
-    await updateDoc(doc(db,'entries',id),{ratings:updated});
-    toast('⭐ റേറ്റിംഗ് ചേർത്തു!','ok');
-  }catch{ toast('❌ റേറ്റ് ചെയ്യാൻ കഴിഞ്ഞില്ല','err'); }
+  try{await updateDoc(doc(db,'entries',id),{ratings:updated});toast('⭐ റേറ്റിംഗ് ചേർത്തു!','ok');}
+  catch{toast('❌ റേറ്റ് ചെയ്യാൻ കഴിഞ്ഞില്ല','err');}
 };
 
-// ════════════════════════════
-//  BUS
-// ════════════════════════════
 function pt(t){const[h,m]=t.split(':').map(Number);return h*60+m;}
 function ft(t){const[h,m]=t.split(':').map(Number);return{t:`${h%12||12}:${String(m).padStart(2,'0')}`,p:h<12?'AM':'PM'};}
-
-window.setBus = function(k){busR=k; renderBus();};
+window.setBus = function(k){busR=k;renderBus();};
 
 function renderBus(){
   const cur=new Date().getHours()*60+new Date().getMinutes();
   document.getElementById('brtabs').innerHTML=Object.entries(BUS).map(([k,v])=>
     `<button class="btab${k===busR?' on':''}" onclick="setBus('${k}')"
       style="${k===busR?'color:'+v.col+';border-color:'+v.col+'50;background:'+v.col+'12':''}">
-      ${v.name}</button>`
-  ).join('');
-  const r=BUS[busR], ni=r.t.findIndex(t=>pt(t)>cur), nb=ni!==-1?r.t[ni]:null, nm=nb?pt(nb)-cur:null;
+      ${v.name}</button>`).join('');
+  const r=BUS[busR],ni=r.t.findIndex(t=>pt(t)>cur),nb=ni!==-1?r.t[ni]:null,nm=nb?pt(nb)-cur:null;
   if(nb){
     const{t,p}=ft(nb);
     document.getElementById('nba').innerHTML=`<div class="nbanner" style="border-color:${r.col}30">
@@ -503,13 +399,14 @@ function renderBus(){
         <div style="font-size:11px;color:#556;margin-top:2px">${r.name} ഭാഗം</div>
       </div>
       <div class="mbox" style="background:${r.col}18;border:1px solid ${r.col}40">
-        <div class="mv" style="color:${r.col}">${nm}</div><div class="ml">മിനിറ്റ്</div>
+        <div class="mv" style="color:${r.col};font-size:${nm>=60?'18px':'24px'}">${nm>=60?Math.floor(nm/60)+'hr '+(nm%60)+'min':nm+'min'}</div>
+        <div class="ml">ബാക്കി</div>
       </div></div>`;
   } else {
     document.getElementById('nba').innerHTML=`<div style="margin:0 14px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:14px;text-align:center;color:var(--muted);font-size:13px">🌙 ഇന്ന് ഇനി ബസ് ഇല്ല</div>`;
   }
   document.getElementById('tgrid').innerHTML=r.t.map(t=>{
-    const past=pt(t)<cur, isN=t===nb; const{t:tv,p}=ft(t);
+    const past=pt(t)<cur,isN=t===nb;const{t:tv,p}=ft(t);
     return `<div class="tc${past?' past':''}${isN?' next':''}">
       ${isN?`<div class="ndot" style="background:${r.col};box-shadow:0 0 6px ${r.col}"></div>`:''}
       <div class="tv" style="${isN?'color:'+r.col:''}">${tv}</div>
@@ -517,10 +414,7 @@ function renderBus(){
   }).join('');
 }
 
-// ════════════════════════════
-//  ADMIN
-// ════════════════════════════
-function renderAdmin(){adminIn ? renderPanel() : renderLock();}
+function renderAdmin(){adminIn?renderPanel():renderLock();}
 
 function renderLock(){
   document.getElementById('aroot').innerHTML=`
@@ -529,18 +423,17 @@ function renderLock(){
       <div style="font-size:20px;font-weight:800;margin-bottom:6px">അഡ്മിൻ ലോഗിൻ</div>
       <div style="font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.6">ഈ വിഭാഗം കൈകാര്യം ചെയ്യാൻ<br>പാസ്‌വേഡ് നൽകുക</div>
       <div style="width:100%;max-width:300px">
-        <input type="password" class="fi" id="pinp" placeholder="••••••••••"
-          style="text-align:center;letter-spacing:4px;margin-bottom:10px">
+        <input type="password" class="fi" id="pinp" placeholder="••••••••••" style="text-align:center;letter-spacing:4px;margin-bottom:10px">
         <button class="bprim" id="lbtn">ലോഗിൻ ചെയ്യുക</button>
         <div style="color:var(--red);font-size:12px;text-align:center;margin-top:8px;min-height:18px" id="perr"></div>
       </div>
     </div>`;
   document.getElementById('lbtn').onclick = doLogin;
-  document.getElementById('pinp').onkeydown = e => { if(e.key==='Enter') doLogin(); };
+  document.getElementById('pinp').onkeydown = e => {if(e.key==='Enter')doLogin();};
 }
 
 function doLogin(){
-  if(document.getElementById('pinp').value===PASS){ adminIn=true; renderPanel(); }
+  if(document.getElementById('pinp').value===PASS){adminIn=true;renderPanel();}
   else document.getElementById('perr').textContent='❌ തെറ്റായ പാസ്‌വേഡ്';
 }
 
@@ -571,8 +464,7 @@ function renderPanel(){
     <div class="divider"></div>
     <div class="stitle" id="altitle">ചേർത്ത ലിസ്റ്റിംഗ് (${entries.length})</div>
     <div id="alist"></div>`;
-
-  document.getElementById('sbtn').onclick    = saveEntry;
+  document.getElementById('sbtn').onclick     = saveEntry;
   document.getElementById('logoutbtn').onclick = doLogout;
   document.getElementById('cancelbtn').onclick = cancelEdit;
   document.getElementById('fc').onchange = () => renderExtraFields();
@@ -581,38 +473,33 @@ function renderPanel(){
 }
 
 function renderExtraFields(data={}){
-  const cat = document.getElementById('fc')?.value;
-  const fields = CAT_EXTRA[cat]||[];
-  const el = document.getElementById('extra-fields');
-  if(!el) return;
-  if(!fields.length){ el.innerHTML=''; return; }
-  el.innerHTML = `
+  const cat=document.getElementById('fc')?.value;
+  const fields=CAT_EXTRA[cat]||[];
+  const el=document.getElementById('extra-fields');
+  if(!el)return;
+  if(!fields.length){el.innerHTML='';return;}
+  el.innerHTML=`
     <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:12px 12px 2px;margin-bottom:13px">
-      <div style="font-size:10px;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;font-weight:700">
-        ✦ അധിക വിവരങ്ങൾ
-      </div>
+      <div style="font-size:10px;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;font-weight:700">✦ അധിക വിവരങ്ങൾ</div>
       ${fields.map(f=>`
         <div class="fg">
           <label class="fl">${f.label}</label>
           ${f.type==='select'
-            ? `<select class="fsl" id="ex-${f.id}">
+            ?`<select class="fsl" id="ex-${f.id}">
                 <option value="">— തിരഞ്ഞെടുക്കുക —</option>
                 ${f.options.map(o=>`<option value="${o}" ${data[f.id]===o?'selected':''}>${o}</option>`).join('')}
                </select>`
-            : `<input type="text" class="fi" id="ex-${f.id}" placeholder="${f.placeholder||''}" value="${data[f.id]||''}">`
+            :`<input type="text" class="fi" id="ex-${f.id}" placeholder="${f.placeholder||''}" value="${data[f.id]||''}">`
           }
         </div>`).join('')}
     </div>`;
 }
 
 function renderAList(){
-  const el=document.getElementById('alist'), tl=document.getElementById('altitle');
-  if(!el) return;
-  if(tl) tl.textContent=`ചേർത്ത ലിസ്റ്റിംഗ് (${entries.length})`;
-  if(!entries.length){
-    el.innerHTML='<div class="empty"><div style="font-size:32px">📋</div><div style="font-size:13px;margin-top:6px">ഒന്നും ചേർത്തിട്ടില്ല</div></div>';
-    return;
-  }
+  const el=document.getElementById('alist'),tl=document.getElementById('altitle');
+  if(!el)return;
+  if(tl)tl.textContent=`ചേർത്ത ലിസ്റ്റിംഗ് (${entries.length})`;
+  if(!entries.length){el.innerHTML='<div class="empty"><div style="font-size:32px">📋</div><div style="font-size:13px;margin-top:6px">ഒന്നും ചേർത്തിട്ടില്ല</div></div>';return;}
   el.innerHTML=entries.map(e=>{
     const c=CATS.find(x=>x.id===e.cat);
     return `<div class="card" style="border-left-color:${c?.col||'#666'}">
@@ -629,10 +516,8 @@ function renderAList(){
       </div>
     </div>`;
   }).join('');
-
-  // wire edit/delete via event delegation
-  el.querySelectorAll('.bedit').forEach(btn => btn.onclick = () => editEntry(btn.dataset.id));
-  el.querySelectorAll('.bdel').forEach(btn  => btn.onclick = () => delEntry(btn.dataset.id));
+  el.querySelectorAll('.bedit').forEach(btn=>btn.onclick=()=>editEntry(btn.dataset.id));
+  el.querySelectorAll('.bdel').forEach(btn=>btn.onclick=()=>delEntry(btn.dataset.id));
 }
 
 async function saveEntry(){
@@ -643,31 +528,25 @@ async function saveEntry(){
   const desc=document.getElementById('fd').value.trim();
   const timing=document.getElementById('ft2').value.trim();
   if(!name||!phone){toast('⚠️ പേരും ഫോണും നൽകണം','err');return;}
-
-  // collect extra fields
-  const extraData = {};
-  (CAT_EXTRA[cat]||[]).forEach(f=>{
-    const el=document.getElementById('ex-'+f.id);
-    if(el && el.value.trim()) extraData[f.id]=el.value.trim();
-  });
-
+  const extraData={};
+  (CAT_EXTRA[cat]||[]).forEach(f=>{const el=document.getElementById('ex-'+f.id);if(el&&el.value.trim())extraData[f.id]=el.value.trim();});
   const btn=document.getElementById('sbtn');
-  btn.disabled=true; btn.innerHTML='<span class="spin"></span>';
+  btn.disabled=true;btn.innerHTML='<span class="spin"></span>';
   try{
     if(editId){
       await updateDoc(doc(db,'entries',editId),{name,phone,cat,area,desc,timing,...extraData});
-      toast('✅ അപ്ഡേറ്റ് ചെയ്തു','ok'); cancelEdit();
+      toast('✅ അപ്ഡേറ്റ് ചെയ്തു','ok');cancelEdit();
     } else {
       await addDoc(collection(db,'entries'),{name,phone,cat,area,desc,timing,...extraData,ratings:[],createdAt:serverTimestamp()});
-      toast('✅ Firebase-ൽ ചേർത്തു','ok'); clearForm();
+      toast('✅ Firebase-ൽ ചേർത്തു','ok');clearForm();
     }
-  }catch(e){ toast('❌ '+e.message,'err'); }
+  }catch(e){toast('❌ '+e.message,'err');}
   btn.disabled=false;
   btn.textContent=editId?'✅ അപ്ഡേറ്റ് ചെയ്യുക':'+ ചേർക്കുക';
 }
 
 function editEntry(id){
-  const e=entries.find(x=>x.id===id); if(!e) return;
+  const e=entries.find(x=>x.id===id);if(!e)return;
   editId=id;
   document.getElementById('fn').value=e.name||'';
   document.getElementById('fp').value=e.phone||'';
@@ -675,7 +554,6 @@ function editEntry(id){
   document.getElementById('fa').value=e.area||'';
   document.getElementById('fd').value=e.desc||'';
   document.getElementById('ft2').value=e.timing||'';
-  // render extra fields with existing data pre-filled
   renderExtraFields(e);
   document.getElementById('ebanner').style.display='flex';
   document.getElementById('sbtn').textContent='✅ അപ്ഡേറ്റ് ചെയ്യുക';
@@ -691,45 +569,34 @@ function cancelEdit(){
 
 function clearForm(){
   ['fn','fp','fa','fd','ft2'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
-  // reset extra fields to default category
   document.getElementById('fc').value='store';
   renderExtraFields();
 }
 
 async function delEntry(id){
-  if(!confirm('ഈ ലിസ്റ്റിംഗ് ഡിലീറ്റ് ചെയ്യണോ?')) return;
-  try{
-    await deleteDoc(doc(db,'entries',id));
-    toast('🗑️ ഡിലീറ്റ് ചെയ്തു','ok');
-  }catch{ toast('❌ ഡിലീറ്റ് ചെയ്യാൻ കഴിഞ്ഞില്ല','err'); }
+  if(!confirm('ഈ ലിസ്റ്റിംഗ് ഡിലീറ്റ് ചെയ്യണോ?'))return;
+  try{await deleteDoc(doc(db,'entries',id));toast('🗑️ ഡിലീറ്റ് ചെയ്തു','ok');}
+  catch{toast('❌ ഡിലീറ്റ് ചെയ്യാൻ കഴിഞ്ഞില്ല','err');}
 }
 
-function doLogout(){adminIn=false; renderLock();}
+function doLogout(){adminIn=false;renderLock();}
 
-// ════════════════════════════
-//  TOAST
-// ════════════════════════════
 function toast(msg,type='ok'){
   const el=document.createElement('div');
-  el.className=`toast ${type}`; el.textContent=msg;
+  el.className=`toast ${type}`;el.textContent=msg;
   document.body.appendChild(el);
   setTimeout(()=>el.remove(),2500);
 }
 
-// ════════════════════════════
-//  BOOT
-// ════════════════════════════
-// Enable nav now that module is loaded
+// BOOT
 document.getElementById('bnav').style.pointerEvents='auto';
 document.getElementById('bnav').style.opacity='1';
-// Show loading skeletons until Firebase first responds
 document.getElementById('stats').innerHTML=
   `<div class="sbox"><div class="sv">…</div><div class="sl">ആകെ ലിസ്റ്റിംഗ്</div></div>
    <div class="sbox"><div class="sv">…</div><div class="sl">വിഭാഗം</div></div>
    <div class="sbox"><div class="sv">…</div><div class="sl">റേറ്റിംഗ്</div></div>`;
 renderBus();
-// Seed history so back button has a base state to pop to (exits app on home)
-history.replaceState({page:'home'}, '', '#home');
+history.replaceState({page:'home'},'','#home');
 </script>
 </body>
 </html>
