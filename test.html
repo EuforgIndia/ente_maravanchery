@@ -13,10 +13,10 @@
     .screen{display:none;padding-bottom:calc(var(--nh) + 10px);min-height:100vh}
     .screen.active{display:block}
     .bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:var(--bg2);border-top:1px solid var(--border);display:flex;height:var(--nh);z-index:100}
-    .nb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:none;color:var(--muted);font-family:inherit;cursor:pointer;font-size:10px;padding:6px 0;transition:color .2s;position:relative}
+    .nb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:none;color:var(--muted);font-family:inherit;cursor:pointer;font-size:9px;padding:6px 0;transition:color .2s;position:relative}
     .nb.on{color:var(--gold)}
     .nb.on::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:36px;height:3px;background:var(--gold);border-radius:0 0 4px 4px}
-    .ni{font-size:22px;line-height:1}
+    .ni{font-size:20px;line-height:1}
     .ph{padding:48px 20px 16px;background:linear-gradient(180deg,var(--bg2),transparent);position:sticky;top:0;z-index:10;backdrop-filter:blur(10px)}
     .pt{font-size:24px;font-weight:900}.ps{font-size:12px;color:var(--muted);margin-top:2px}
     .sw{position:relative;padding:0 16px 14px}
@@ -33,7 +33,6 @@
     .cm{font-size:12px;color:var(--muted);margin-top:3px}
     .cbtn{background:rgba(46,204,113,.13);border:1px solid rgba(46,204,113,.3);color:var(--green);border-radius:10px;padding:8px 12px;font-size:12px;font-family:inherit;cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-flex;flex-direction:column;align-items:center;gap:2px;flex-shrink:0}
     .tr{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);margin-top:5px}
-    .rl{font-size:11px;color:var(--muted)}
     .tabs{display:flex;gap:8px;padding:0 16px 14px;overflow-x:auto;scrollbar-width:none}
     .tabs::-webkit-scrollbar{display:none}
     .tbn{padding:7px 14px;border-radius:20px;border:1px solid var(--border);background:var(--bg3);color:var(--muted);font-family:inherit;font-size:12px;cursor:pointer;white-space:nowrap;transition:all .2s;flex-shrink:0}
@@ -83,7 +82,6 @@
     .xtag{display:inline-flex;align-items:center;gap:3px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:3px 9px;font-size:11px;color:#b0bec5;white-space:nowrap}
     #extra-fields .fg{margin-bottom:13px}
     #extra-fields{transition:all .2s}
-    /* Detail panel */
     .detail-panel{display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
     .detail-panel.open{display:block}
     .detail-row{display:flex;align-items:flex-start;gap:8px;margin-bottom:7px;font-size:12px}
@@ -92,6 +90,18 @@
     .toggle-btn{width:100%;margin-top:8px;padding:6px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:inherit;font-size:11px;cursor:pointer;text-align:center;transition:all .2s}
     .toggle-btn:active{background:rgba(255,255,255,.08)}
     .phone-row{display:flex;align-items:center;gap:6px;margin-top:4px;font-size:13px;font-weight:700;color:var(--green);font-family:monospace;letter-spacing:.5px}
+    /* Blood donor styles */
+    .bg-filter{display:flex;gap:6px;padding:0 16px 14px;flex-wrap:wrap}
+    .bgtag{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--bg3);color:var(--muted);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s}
+    .bgtag.on{color:#fff;border-color:var(--red);background:var(--red)}
+    .donor-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin:0 14px 10px;border-left:3px solid var(--red)}
+    .blood-badge{display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:50%;background:rgba(231,76,60,.15);border:2px solid rgba(231,76,60,.4);font-size:15px;font-weight:900;color:var(--red);flex-shrink:0;font-family:monospace}
+    .donor-name{font-size:15px;font-weight:700}
+    .donor-meta{font-size:11px;color:var(--muted);margin-top:2px}
+    .donor-phone{font-size:13px;font-weight:700;color:var(--green);font-family:monospace;margin-top:5px}
+    .blood-hero{margin:0 14px 14px;background:linear-gradient(135deg,rgba(231,76,60,.15),rgba(231,76,60,.05));border:1px solid rgba(231,76,60,.25);border-radius:16px;padding:16px}
+    .bg-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:12px}
+    .bg-stat{background:rgba(0,0,0,.2);border:1px solid rgba(231,76,60,.2);border-radius:10px;padding:6px 4px;text-align:center}
     .toast{position:fixed;bottom:calc(var(--nh) + 14px);left:50%;transform:translateX(-50%);padding:9px 20px;border-radius:20px;font-size:13px;font-weight:700;z-index:999;white-space:nowrap;pointer-events:none;animation:tin .3s ease}
     .toast.ok{background:#2ECC71;color:#000}.toast.err{background:#E74C3C;color:#fff}
     @keyframes tin{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
@@ -117,7 +127,7 @@
     </div>
     <div class="srow" id="stats">
       <div class="sbox"><div class="sv">…</div><div class="sl">ആകെ ലിസ്റ്റിംഗ്</div></div>
-      <div class="sbox"><div class="sv">…</div><div class="sl">റേറ്റിംഗ്</div></div>
+      <div class="sbox"><div class="sv">…</div><div class="sl">കാറ്റഗറി</div></div>
     </div>
   </div>
   <div class="sw" style="padding:14px 16px">
@@ -148,12 +158,25 @@
   <div class="tgrid" id="tgrid"></div>
 </div>
 
+<!-- Blood Donor Screen -->
+<div class="screen" id="s-blood">
+  <div class="ph">
+    <div class="pt">🩸 രക്തദാനം</div>
+    <div class="ps">മറവഞ്ചേരി ഡോണർ ഡയറക്ടറി</div>
+  </div>
+  <div id="blood-hero-wrap"></div>
+  <div class="sw"><span class="si">🔍</span><input class="sb" type="search" placeholder="പേര്, പ്രദേശം, ഗ്രൂപ്പ്…" id="bq"></div>
+  <div class="bg-filter" id="bg-filter"></div>
+  <div id="blist"></div>
+</div>
+
 <div class="screen" id="s-admin"><div id="aroot"></div></div>
 
 <nav class="bnav" id="bnav" style="pointer-events:none;opacity:0.5">
   <button class="nb on" id="n-home"  onclick="nav('home')"> <span class="ni">🏠</span><span>ഹോം</span></button>
   <button class="nb"    id="n-dir"   onclick="nav('dir')">  <span class="ni">📋</span><span>ഡയറക്ടറി</span></button>
   <button class="nb"    id="n-bus"   onclick="nav('bus')">  <span class="ni">🚌</span><span>ബസ്</span></button>
+  <button class="nb"    id="n-blood" onclick="nav('blood')"><span class="ni">🩸</span><span>രക്തദാനം</span></button>
   <button class="nb"    id="n-admin" onclick="nav('admin')"><span class="ni">⚙️</span><span>അഡ്മിൻ</span></button>
 </nav>
 
@@ -175,6 +198,7 @@ const app = initializeApp({
 const db = getFirestore(app);
 
 const PASS = 'Maravanchery@123';
+const BLOOD_GROUPS = ['A+','A-','B+','B-','AB+','AB-','O+','O-'];
 
 const CATS = [
   {id:'store',       icon:'🏪', name:'കടകൾ',           col:'#F59E0B'},
@@ -243,8 +267,6 @@ const CAT_EXTRA = {
   ],
 };
 
-// ── BUS TIMINGS ──
-// എടപ്പാൾ: 3 new times added — 12:25, 13:00, 13:55 (total 23 services)
 const BUS = {
   kurippuram:{name:'കുറിപ്പുറം',col:'#F5A623',
     t:['6:45','7:00','7:15','8:05','8:35','9:15','9:20','9:35','10:10','10:30',
@@ -259,17 +281,27 @@ const BUS = {
     t:['7:35','8:00','10:05','12:55','15:35','18:18']}
 };
 
-let entries=[], adminIn=false, busR='kurippuram', dirTab='store', dirQ='', editId=null;
+let entries=[], donors=[], adminIn=false, busR='kurippuram', dirTab='store', dirQ='', editId=null;
+let bloodFilter='ALL', bloodQ='', donorEditId=null;
 
-const q = query(collection(db,'entries'), orderBy('createdAt','asc'));
-onSnapshot(q, snap => {
+// Firestore listeners
+const eq = query(collection(db,'entries'), orderBy('createdAt','asc'));
+onSnapshot(eq, snap => {
   entries = snap.docs.map(d => ({id:d.id, ...d.data()}));
   syncDot(true);
   const cur = document.querySelector('.screen.active')?.id?.replace('s-','');
   if(cur==='home')  renderHome();
   if(cur==='dir')  {renderDirTabs(); filterDir(dirQ);}
   if(cur==='admin' && adminIn) renderAList();
-}, err => { syncDot(false); console.error(err.message); toast('❌ Firebase കണക്ട് ആകുന്നില്ല.','err'); });
+}, err => { syncDot(false); toast('❌ Firebase കണക്ട് ആകുന്നില്ല.','err'); });
+
+const dqr = query(collection(db,'donors'), orderBy('createdAt','asc'));
+onSnapshot(dqr, snap => {
+  donors = snap.docs.map(d => ({id:d.id, ...d.data()}));
+  const cur = document.querySelector('.screen.active')?.id?.replace('s-','');
+  if(cur==='blood') renderBlood();
+  if(cur==='admin' && adminIn) renderDAList();
+});
 
 function syncDot(ok){
   const d=document.getElementById('sdot'),t=document.getElementById('stxt');
@@ -291,21 +323,16 @@ window.nav = function(s, pushState=true){
   document.querySelectorAll('.nb').forEach(x=>x.classList.remove('on'));
   document.getElementById('s-'+s).classList.add('active');
   document.getElementById('n-'+s).classList.add('on');
-  ({home:renderHome,dir:renderDir,bus:renderBus,admin:renderAdmin})[s]();
+  ({home:renderHome,dir:renderDir,bus:renderBus,blood:renderBlood,admin:renderAdmin})[s]();
   if(pushState) history.pushState({page:s},'','#'+s);
 };
 
-window.addEventListener('popstate', e => {
-  const page = e.state?.page;
-  if(!page || page==='home'){
-    nav('home',false);
-    history.pushState({page:'home'},'','#home');
-  } else {
-    nav('home',false);
-    history.pushState({page:'home'},'','#home');
-  }
+window.addEventListener('popstate', () => {
+  nav('home',false);
+  history.pushState({page:'home'},'','#home');
 });
 
+// ── HOME ──
 function renderHome(){
   document.getElementById('stats').innerHTML=
     `<div class="sbox"><div class="sv">${entries.length}</div><div class="sl">ആകെ ലിസ്റ്റിംഗ്</div></div>
@@ -331,6 +358,7 @@ function gSearch(q){
     +(f.length?f.map(e=>mkCard(e)).join(''):`<div class="empty"><div style="font-size:32px">🔍</div><div style="font-size:13px;margin-top:6px">ഒന്നും കണ്ടെത്തിയില്ല</div></div>`);
 }
 
+// ── DIRECTORY ──
 function renderDir(){renderDirTabs();filterDir(dirQ);}
 function renderDirTabs(){
   document.getElementById('dtabs').innerHTML=CATS.map(c=>{
@@ -352,50 +380,31 @@ function filterDir(q){
        <div style="font-size:11px;margin-top:4px">അഡ്മിൻ ആദ്യം ഇവിടെ ചേർക്കട്ടെ</div></div>`;
 }
 
-function mkCard(e,rank=0){
+function mkCard(e){
   const c=CATS.find(x=>x.id===e.cat);
-
-  // extra field tags
   const extraIconMap={shopType:'🏷️',offers:'🎁',vehicleType:'🚘',vehicleNo:'🔢',availability:'🕐',speciality:'🔩',experience:'📅',ratePerTree:'💰',coverageArea:'📍',designation:'🏅',officeName:'🏢',serviceType:'🛠️',woodType:'🪵'};
   const extras=CAT_EXTRA[e.cat]||[];
   const tags=extras.filter(f=>e[f.id]).map(f=>`<span class="xtag">${extraIconMap[f.id]||'•'} ${e[f.id]}</span>`).join('');
-
-  // build detail rows for expanded view
-  const detailFields = [
-    e.desc        && {lbl:'വിവരണം',    val:e.desc},
-    e.area        && {lbl:'പ്രദേശം',    val:e.area},
-    e.timing      && {lbl:'സമയം',       val:'🕐 '+e.timing},
-    e.speciality  && {lbl:'Speciality', val:e.speciality},
-    e.experience  && {lbl:'പരിചയം',    val:e.experience},
-    e.shopType    && {lbl:'കടയുടെ തരം',val:e.shopType},
-    e.offers      && {lbl:'ഓഫർ',       val:'🎁 '+e.offers},
-    e.vehicleType && {lbl:'വാഹനം',      val:e.vehicleType},
-    e.vehicleNo   && {lbl:'Reg. No.',   val:e.vehicleNo},
-    e.availability&& {lbl:'ലഭ്യത',      val:e.availability},
-    e.ratePerTree && {lbl:'നിരക്ക്',    val:e.ratePerTree},
-    e.coverageArea&& {lbl:'Coverage',   val:e.coverageArea},
-    e.designation && {lbl:'പദവി',       val:e.designation},
-    e.officeName  && {lbl:'ഓഫീസ്',      val:e.officeName},
-    e.serviceType && {lbl:'സേവനം',      val:e.serviceType},
+  const detailFields=[
+    e.desc&&{lbl:'വിവരണം',val:e.desc},e.area&&{lbl:'പ്രദേശം',val:e.area},
+    e.timing&&{lbl:'സമയം',val:'🕐 '+e.timing},e.speciality&&{lbl:'Speciality',val:e.speciality},
+    e.experience&&{lbl:'പരിചയം',val:e.experience},e.shopType&&{lbl:'കടയുടെ തരം',val:e.shopType},
+    e.offers&&{lbl:'ഓഫർ',val:'🎁 '+e.offers},e.vehicleType&&{lbl:'വാഹനം',val:e.vehicleType},
+    e.vehicleNo&&{lbl:'Reg. No.',val:e.vehicleNo},e.availability&&{lbl:'ലഭ്യത',val:e.availability},
+    e.ratePerTree&&{lbl:'നിരക്ക്',val:e.ratePerTree},e.coverageArea&&{lbl:'Coverage',val:e.coverageArea},
+    e.designation&&{lbl:'പദവി',val:e.designation},e.officeName&&{lbl:'ഓഫീസ്',val:e.officeName},
+    e.serviceType&&{lbl:'സേവനം',val:e.serviceType},
   ].filter(Boolean);
-
-  const detailHTML = detailFields.map(r=>
-    `<div class="detail-row"><span class="detail-lbl">${r.lbl}</span><span class="detail-val">${r.val}</span></div>`
-  ).join('');
-
-  const uid = 'dp-'+e.id;
-
+  const detailHTML=detailFields.map(r=>`<div class="detail-row"><span class="detail-lbl">${r.lbl}</span><span class="detail-val">${r.val}</span></div>`).join('');
+  const uid='dp-'+e.id;
   return `<div class="card" style="border-left-color:${c?.col||'#666'}">
     <div class="cr">
       <div class="cb">
-        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-          <div class="cn">${c?.icon||''} ${e.name}</div>
-        </div>
+        <div class="cn">${c?.icon||''} ${e.name}</div>
         <div class="phone-row">📞 ${e.phone}</div>
         <div class="cm">${[e.area,e.desc].filter(Boolean).join(' · ')}</div>
         ${tags?`<div class="xtags">${tags}</div>`:''}
-        ${detailHTML?`
-        <div class="detail-panel" id="${uid}">${detailHTML}</div>
+        ${detailHTML?`<div class="detail-panel" id="${uid}">${detailHTML}</div>
         <button class="toggle-btn" onclick="toggleDetail('${uid}',this)">▼ കൂടുതൽ വിവരങ്ങൾ</button>`:''}
       </div>
       <a class="cbtn" href="tel:${e.phone}">📞<br>വിളിക്കുക</a>
@@ -403,15 +412,73 @@ function mkCard(e,rank=0){
   </div>`;
 }
 
-window.toggleDetail = function(id, btn){
-  const panel = document.getElementById(id);
-  if(!panel) return;
-  const open = panel.classList.toggle('open');
-  btn.textContent = open ? '▲ ചുരുക്കുക' : '▼ കൂടുതൽ വിവരങ്ങൾ';
-  btn.style.color = open ? 'var(--gold)' : '';
+window.toggleDetail = function(id,btn){
+  const panel=document.getElementById(id);if(!panel)return;
+  const open=panel.classList.toggle('open');
+  btn.textContent=open?'▲ ചുരുക്കുക':'▼ കൂടുതൽ വിവരങ്ങൾ';
+  btn.style.color=open?'var(--gold)':'';
 };
 
+// ── BLOOD DONOR ──
+function renderBlood(){
+  const counts={};
+  BLOOD_GROUPS.forEach(g=>counts[g]=donors.filter(d=>d.bloodGroup===g).length);
+  document.getElementById('blood-hero-wrap').innerHTML=`
+    <div class="blood-hero">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div style="font-size:10px;color:var(--red);letter-spacing:2px;text-transform:uppercase;font-weight:700">🩸 ഡോണർ രജിസ്ട്രി</div>
+          <div style="font-size:32px;font-weight:900;color:#fff;font-family:monospace;line-height:1.1;margin-top:4px">${donors.length}</div>
+          <div style="font-size:11px;color:var(--muted)">ആകെ ഡോണർമാർ</div>
+        </div>
+        <div style="font-size:48px;opacity:.15">🩸</div>
+      </div>
+      <div class="bg-grid">
+        ${BLOOD_GROUPS.map(g=>`
+          <div class="bg-stat">
+            <div style="font-size:13px;font-weight:900;color:var(--red);font-family:monospace">${g}</div>
+            <div style="font-size:16px;font-weight:800;color:#fff;font-family:monospace">${counts[g]}</div>
+          </div>`).join('')}
+      </div>
+    </div>`;
 
+  document.getElementById('bg-filter').innerHTML=
+    `<button class="bgtag${bloodFilter==='ALL'?' on':''}" onclick="setBG('ALL')">എല്ലാം</button>`+
+    BLOOD_GROUPS.map(g=>`<button class="bgtag${bloodFilter===g?' on':''}" onclick="setBG('${g}')">${g}</button>`).join('');
+
+  filterDonors();
+}
+
+window.setBG = function(g){bloodFilter=g;renderBlood();};
+document.getElementById('bq').oninput = e => {bloodQ=e.target.value;filterDonors();};
+
+function filterDonors(){
+  const list=donors.filter(d=>{
+    const grpOk=bloodFilter==='ALL'||d.bloodGroup===bloodFilter;
+    const qOk=!bloodQ.trim()||d.name?.includes(bloodQ)||d.phone?.includes(bloodQ)||(d.area||'').includes(bloodQ)||(d.bloodGroup||'').includes(bloodQ);
+    return grpOk&&qOk;
+  });
+  document.getElementById('blist').innerHTML=list.length
+    ?list.map(d=>mkDonorCard(d)).join('')
+    :`<div class="empty"><div style="font-size:36px">🩸</div><div style="font-size:13px;margin-top:8px">ഈ ഗ്രൂപ്പിൽ ഡോണർ ഇല്ല</div></div>`;
+}
+
+function mkDonorCard(d){
+  return `<div class="donor-card">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div class="blood-badge">${d.bloodGroup}</div>
+      <div style="flex:1;min-width:0">
+        <div class="donor-name">${d.name}</div>
+        <div class="donor-meta">${[d.area,d.age?d.age+' വയസ്':''].filter(Boolean).join(' · ')}</div>
+        ${d.note?`<div style="font-size:11px;color:var(--muted);margin-top:2px;font-style:italic">${d.note}</div>`:''}
+        <div class="donor-phone">📞 ${d.phone}</div>
+      </div>
+      <a class="cbtn" href="tel:${d.phone}" style="background:rgba(231,76,60,.13);border-color:rgba(231,76,60,.3);color:var(--red)">📞<br>വിളിക്കുക</a>
+    </div>
+  </div>`;
+}
+
+// ── BUS ──
 function pt(t){const[h,m]=t.split(':').map(Number);return h*60+m;}
 function ft(t){const[h,m]=t.split(':').map(Number);return{t:`${h%12||12}:${String(m).padStart(2,'0')}`,p:h<12?'AM':'PM'};}
 window.setBus = function(k){busR=k;renderBus();};
@@ -447,6 +514,7 @@ function renderBus(){
   }).join('');
 }
 
+// ── ADMIN ──
 function renderAdmin(){adminIn?renderPanel():renderLock();}
 
 function renderLock(){
@@ -461,8 +529,8 @@ function renderLock(){
         <div style="color:var(--red);font-size:12px;text-align:center;margin-top:8px;min-height:18px" id="perr"></div>
       </div>
     </div>`;
-  document.getElementById('lbtn').onclick = doLogin;
-  document.getElementById('pinp').onkeydown = e => {if(e.key==='Enter')doLogin();};
+  document.getElementById('lbtn').onclick=doLogin;
+  document.getElementById('pinp').onkeydown=e=>{if(e.key==='Enter')doLogin();};
 }
 
 function doLogin(){
@@ -476,6 +544,8 @@ function renderPanel(){
       <div><div class="pt">അഡ്മിൻ</div><div class="ps">ലിസ്റ്റിംഗ് ചേർക്കുക / തിരുത്തുക</div></div>
       <button id="logoutbtn" style="background:rgba(231,76,60,.12);border:1px solid rgba(231,76,60,.3);color:#E74C3C;padding:6px 12px;border-radius:8px;font-family:inherit;font-size:12px;cursor:pointer">ലോഗൗട്ട്</button>
     </div>
+
+    <div style="margin:0 16px 10px;font-size:10px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;font-weight:700">📋 ഡയറക്ടറി ലിസ്റ്റിംഗ്</div>
     <div class="fwrap">
       <div id="ebanner" class="ebanner" style="display:none">
         ✏️ <span>എഡിറ്റ് മോഡ്</span>
@@ -494,15 +564,46 @@ function renderPanel(){
       <button class="bprim" id="sbtn">+ ചേർക്കുക</button>
       <div style="height:16px"></div>
     </div>
+
+    <div class="divider"></div>
+
+    <div style="margin:12px 16px 10px;font-size:10px;color:var(--red);letter-spacing:2px;text-transform:uppercase;font-weight:700">🩸 രക്തദാതാവ് ചേർക്കുക</div>
+    <div class="fwrap">
+      <div id="donor-ebanner" class="ebanner" style="display:none;border-color:rgba(231,76,60,.3);background:rgba(231,76,60,.08);color:var(--red)">
+        ✏️ <span>ഡോണർ എഡിറ്റ് മോഡ്</span>
+        <button id="donor-cancelbtn" style="background:none;border:none;color:var(--red);font-family:inherit;font-size:12px;cursor:pointer">❌ റദ്ദാക്കുക</button>
+      </div>
+      <div class="fg"><label class="fl">പേര് *</label><input type="text" class="fi" id="dn" placeholder="ഉദാ: മുഹമ്മദ് റഷീദ്"></div>
+      <div class="fg"><label class="fl">ഫോൺ നമ്പർ *</label><input type="tel" class="fi" id="dph" placeholder="ഉദാ: 9400000000"></div>
+      <div class="fg"><label class="fl">രക്തഗ്രൂപ്പ് *</label>
+        <select class="fsl" id="dbg">
+          <option value="">— തിരഞ്ഞെടുക്കുക —</option>
+          ${BLOOD_GROUPS.map(g=>`<option value="${g}">${g}</option>`).join('')}
+        </select>
+      </div>
+      <div class="fg"><label class="fl">പ്രദേശം</label><input type="text" class="fi" id="dar" placeholder="ഉദാ: മറവഞ്ചേരി"></div>
+      <div class="fg"><label class="fl">പ്രായം</label><input type="number" class="fi" id="dage" placeholder="ഉദാ: 28" min="18" max="65"></div>
+      <div class="fg"><label class="fl">കുറിപ്പ് <span style="font-size:10px;color:var(--muted)">(ഐച്ഛികം)</span></label><input type="text" class="fi" id="dnote" placeholder="ഉദാ: എപ്പോഴും ലഭ്യം"></div>
+      <button class="bprim" id="dsbtn" style="background:var(--red)">🩸 ഡോണർ ചേർക്കുക</button>
+      <div style="height:16px"></div>
+    </div>
+
     <div class="divider"></div>
     <div class="stitle" id="altitle">ചേർത്ത ലിസ്റ്റിംഗ് (${entries.length})</div>
-    <div id="alist"></div>`;
-  document.getElementById('sbtn').onclick     = saveEntry;
-  document.getElementById('logoutbtn').onclick = doLogout;
-  document.getElementById('cancelbtn').onclick = cancelEdit;
-  document.getElementById('fc').onchange = () => renderExtraFields();
+    <div id="alist"></div>
+    <div class="divider"></div>
+    <div class="stitle" id="daltitle">രക്തദാതാക്കൾ (${donors.length})</div>
+    <div id="dalist"></div>`;
+
+  document.getElementById('sbtn').onclick       = saveEntry;
+  document.getElementById('logoutbtn').onclick   = doLogout;
+  document.getElementById('cancelbtn').onclick   = cancelEdit;
+  document.getElementById('fc').onchange         = ()=>renderExtraFields();
+  document.getElementById('dsbtn').onclick       = saveDonor;
+  document.getElementById('donor-cancelbtn').onclick = cancelDonorEdit;
   renderExtraFields();
   renderAList();
+  renderDAList();
 }
 
 function renderExtraFields(data={}){
@@ -515,13 +616,9 @@ function renderExtraFields(data={}){
     <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:12px 12px 2px;margin-bottom:13px">
       <div style="font-size:10px;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;font-weight:700">✦ അധിക വിവരങ്ങൾ</div>
       ${fields.map(f=>`
-        <div class="fg">
-          <label class="fl">${f.label}</label>
+        <div class="fg"><label class="fl">${f.label}</label>
           ${f.type==='select'
-            ?`<select class="fsl" id="ex-${f.id}">
-                <option value="">— തിരഞ്ഞെടുക്കുക —</option>
-                ${f.options.map(o=>`<option value="${o}" ${data[f.id]===o?'selected':''}>${o}</option>`).join('')}
-               </select>`
+            ?`<select class="fsl" id="ex-${f.id}"><option value="">— തിരഞ്ഞെടുക്കുക —</option>${f.options.map(o=>`<option value="${o}" ${data[f.id]===o?'selected':''}>${o}</option>`).join('')}</select>`
             :`<input type="text" class="fi" id="ex-${f.id}" placeholder="${f.placeholder||''}" value="${data[f.id]||''}">`
           }
         </div>`).join('')}
@@ -553,6 +650,31 @@ function renderAList(){
   el.querySelectorAll('.bdel').forEach(btn=>btn.onclick=()=>delEntry(btn.dataset.id));
 }
 
+function renderDAList(){
+  const el=document.getElementById('dalist'),tl=document.getElementById('daltitle');
+  if(!el)return;
+  if(tl)tl.textContent=`രക്തദാതാക്കൾ (${donors.length})`;
+  if(!donors.length){el.innerHTML='<div class="empty"><div style="font-size:32px">🩸</div><div style="font-size:13px;margin-top:6px">ഡോണർ ഇല്ല</div></div>';return;}
+  el.innerHTML=donors.map(d=>`
+    <div class="donor-card">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="blood-badge">${d.bloodGroup}</div>
+        <div style="flex:1;min-width:0">
+          <div class="donor-name">${d.name}</div>
+          <div class="donor-meta">${[d.area,d.age?d.age+' വയസ്':''].filter(Boolean).join(' · ')} · ${d.phone}</div>
+          ${d.note?`<div style="font-size:11px;color:var(--muted);margin-top:1px">${d.note}</div>`:''}
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <button class="bsm bedit" data-id="${d.id}">✏️</button>
+          <button class="bsm bdel"  data-id="${d.id}">🗑️</button>
+        </div>
+      </div>
+    </div>`).join('');
+  el.querySelectorAll('.bedit').forEach(btn=>btn.onclick=()=>editDonor(btn.dataset.id));
+  el.querySelectorAll('.bdel').forEach(btn=>btn.onclick=()=>delDonor(btn.dataset.id));
+}
+
+// Save/Edit/Delete entries
 async function saveEntry(){
   const name=document.getElementById('fn').value.trim();
   const phone=document.getElementById('fp').value.trim();
@@ -563,62 +685,66 @@ async function saveEntry(){
   if(!name||!phone){toast('⚠️ പേരും ഫോണും നൽകണം','err');return;}
   const extraData={};
   (CAT_EXTRA[cat]||[]).forEach(f=>{const el=document.getElementById('ex-'+f.id);if(el&&el.value.trim())extraData[f.id]=el.value.trim();});
-  const btn=document.getElementById('sbtn');
-  btn.disabled=true;btn.innerHTML='<span class="spin"></span>';
+  const btn=document.getElementById('sbtn');btn.disabled=true;btn.innerHTML='<span class="spin"></span>';
   try{
-    if(editId){
-      await updateDoc(doc(db,'entries',editId),{name,phone,cat,area,desc,timing,...extraData});
-      toast('✅ അപ്ഡേറ്റ് ചെയ്തു','ok');cancelEdit();
-    } else {
-      await addDoc(collection(db,'entries'),{name,phone,cat,area,desc,timing,...extraData,createdAt:serverTimestamp()});
-      toast('✅ Firebase-ൽ ചേർത്തു','ok');clearForm();
-    }
+    if(editId){await updateDoc(doc(db,'entries',editId),{name,phone,cat,area,desc,timing,...extraData});toast('✅ അപ്ഡേറ്റ് ചെയ്തു','ok');cancelEdit();}
+    else{await addDoc(collection(db,'entries'),{name,phone,cat,area,desc,timing,...extraData,createdAt:serverTimestamp()});toast('✅ Firebase-ൽ ചേർത്തു','ok');clearForm();}
   }catch(e){toast('❌ '+e.message,'err');}
-  btn.disabled=false;
-  btn.textContent=editId?'✅ അപ്ഡേറ്റ് ചെയ്യുക':'+ ചേർക്കുക';
+  btn.disabled=false;btn.textContent=editId?'✅ അപ്ഡേറ്റ് ചെയ്യുക':'+ ചേർക്കുക';
 }
 
 function editEntry(id){
   const e=entries.find(x=>x.id===id);if(!e)return;
   editId=id;
-  document.getElementById('fn').value=e.name||'';
-  document.getElementById('fp').value=e.phone||'';
-  document.getElementById('fc').value=e.cat||'store';
-  document.getElementById('fa').value=e.area||'';
-  document.getElementById('fd').value=e.desc||'';
-  document.getElementById('ft2').value=e.timing||'';
+  document.getElementById('fn').value=e.name||'';document.getElementById('fp').value=e.phone||'';
+  document.getElementById('fc').value=e.cat||'store';document.getElementById('fa').value=e.area||'';
+  document.getElementById('fd').value=e.desc||'';document.getElementById('ft2').value=e.timing||'';
   renderExtraFields(e);
   document.getElementById('ebanner').style.display='flex';
   document.getElementById('sbtn').textContent='✅ അപ്ഡേറ്റ് ചെയ്യുക';
   window.scrollTo({top:0,behavior:'smooth'});
 }
+function cancelEdit(){editId=null;document.getElementById('ebanner').style.display='none';document.getElementById('sbtn').textContent='+ ചേർക്കുക';clearForm();}
+function clearForm(){['fn','fp','fa','fd','ft2'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});document.getElementById('fc').value='store';renderExtraFields();}
+async function delEntry(id){if(!confirm('ഈ ലിസ്റ്റിംഗ് ഡിലീറ്റ് ചെയ്യണോ?'))return;try{await deleteDoc(doc(db,'entries',id));toast('🗑️ ഡിലീറ്റ് ചെയ്തു','ok');}catch{toast('❌ ഡിലീറ്റ് ചെയ്യാൻ കഴിഞ്ഞില്ല','err');}}
 
-function cancelEdit(){
-  editId=null;
-  document.getElementById('ebanner').style.display='none';
-  document.getElementById('sbtn').textContent='+ ചേർക്കുക';
-  clearForm();
+// Save/Edit/Delete donors
+async function saveDonor(){
+  const name=document.getElementById('dn').value.trim();
+  const phone=document.getElementById('dph').value.trim();
+  const bloodGroup=document.getElementById('dbg').value;
+  const area=document.getElementById('dar').value.trim();
+  const age=document.getElementById('dage').value.trim();
+  const note=document.getElementById('dnote').value.trim();
+  if(!name||!phone||!bloodGroup){toast('⚠️ പേര്, ഫോൺ, ഗ്രൂപ്പ് നൽകണം','err');return;}
+  const btn=document.getElementById('dsbtn');btn.disabled=true;btn.innerHTML='<span class="spin"></span>';
+  try{
+    if(donorEditId){await updateDoc(doc(db,'donors',donorEditId),{name,phone,bloodGroup,area,age,note});toast('✅ ഡോണർ അപ്ഡേറ്റ് ചെയ്തു','ok');cancelDonorEdit();}
+    else{await addDoc(collection(db,'donors'),{name,phone,bloodGroup,area,age,note,createdAt:serverTimestamp()});toast('🩸 ഡോണർ ചേർത്തു!','ok');clearDonorForm();}
+  }catch(e){toast('❌ '+e.message,'err');}
+  btn.disabled=false;btn.innerHTML=donorEditId?'✅ ഡോണർ അപ്ഡേറ്റ്':'🩸 ഡോണർ ചേർക്കുക';
 }
 
-function clearForm(){
-  ['fn','fp','fa','fd','ft2'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
-  document.getElementById('fc').value='store';
-  renderExtraFields();
+function editDonor(id){
+  const d=donors.find(x=>x.id===id);if(!d)return;
+  donorEditId=id;
+  document.getElementById('dn').value=d.name||'';document.getElementById('dph').value=d.phone||'';
+  document.getElementById('dbg').value=d.bloodGroup||'';document.getElementById('dar').value=d.area||'';
+  document.getElementById('dage').value=d.age||'';document.getElementById('dnote').value=d.note||'';
+  document.getElementById('donor-ebanner').style.display='flex';
+  document.getElementById('dsbtn').textContent='✅ ഡോണർ അപ്ഡേറ്റ്';
+  document.getElementById('dsbtn').style.background='var(--blue)';
+  window.scrollTo({top:0,behavior:'smooth'});
 }
-
-async function delEntry(id){
-  if(!confirm('ഈ ലിസ്റ്റിംഗ് ഡിലീറ്റ് ചെയ്യണോ?'))return;
-  try{await deleteDoc(doc(db,'entries',id));toast('🗑️ ഡിലീറ്റ് ചെയ്തു','ok');}
-  catch{toast('❌ ഡിലീറ്റ് ചെയ്യാൻ കഴിഞ്ഞില്ല','err');}
-}
+function cancelDonorEdit(){donorEditId=null;document.getElementById('donor-ebanner').style.display='none';document.getElementById('dsbtn').textContent='🩸 ഡോണർ ചേർക്കുക';document.getElementById('dsbtn').style.background='var(--red)';clearDonorForm();}
+function clearDonorForm(){['dn','dph','dar','dage','dnote'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});const bg=document.getElementById('dbg');if(bg)bg.value='';}
+async function delDonor(id){if(!confirm('ഈ ഡോണർ ഡിലീറ്റ് ചെയ്യണോ?'))return;try{await deleteDoc(doc(db,'donors',id));toast('🗑️ ഡിലീറ്റ് ചെയ്തു','ok');}catch{toast('❌ ഡിലീറ്റ് ചെയ്യാൻ കഴിഞ്ഞില്ല','err');}}
 
 function doLogout(){adminIn=false;renderLock();}
 
 function toast(msg,type='ok'){
-  const el=document.createElement('div');
-  el.className=`toast ${type}`;el.textContent=msg;
-  document.body.appendChild(el);
-  setTimeout(()=>el.remove(),2500);
+  const el=document.createElement('div');el.className=`toast ${type}`;el.textContent=msg;
+  document.body.appendChild(el);setTimeout(()=>el.remove(),2500);
 }
 
 // BOOT
@@ -626,7 +752,7 @@ document.getElementById('bnav').style.pointerEvents='auto';
 document.getElementById('bnav').style.opacity='1';
 document.getElementById('stats').innerHTML=
   `<div class="sbox"><div class="sv">…</div><div class="sl">ആകെ ലിസ്റ്റിംഗ്</div></div>
-   <div class="sbox"><div class="sv">…</div><div class="sl">റേറ്റിംഗ്</div></div>`;
+   <div class="sbox"><div class="sv">…</div><div class="sl">കാറ്റഗറി</div></div>`;
 renderBus();
 history.replaceState({page:'home'},'','#home');
 </script>
