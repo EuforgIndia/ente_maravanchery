@@ -3,6 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- ██ SECURITY HEADERS ██ -->
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self' https:; script-src 'self' 'unsafe-inline' https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src https://fonts.gstatic.com; frame-ancestors 'none';">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="Referrer-Policy" content="no-referrer">
   <title>എന്റെ മറവഞ്ചേരി — Coming Soon</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@400;700;800&family=Bebas+Neue&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
@@ -218,7 +224,6 @@
       margin-top: 4px;
     }
 
-
     /* ── Bottom tag ── */
     .bottom-tag {
       margin-top: 10px;
@@ -299,12 +304,21 @@
 </div>
 
 <script>
+  // ██ SECURITY: Code protection ██
+  document.addEventListener('contextmenu', e => e.preventDefault());
+  document.addEventListener('keydown', e => {
+    if(e.key === 'F12') { e.preventDefault(); return; }
+    if(e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key.toUpperCase())) { e.preventDefault(); return; }
+    if(e.ctrlKey && e.key.toLowerCase() === 'u') { e.preventDefault(); return; }
+    if(e.ctrlKey && e.key.toLowerCase() === 's') { e.preventDefault(); return; }
+  });
+
   // ── Launch date — change this ──
   const LAUNCH  = new Date('2026-04-25T11:00:00');
-  // ── Main app URL — change this to your app file ──
+  // ── Main app URL ──
   const APP_URL = 'https://ente-maravanchery.euforg.com/app.html';
 
-  let timer; // declare first so updateCountdown can reference it
+  let timer;
 
   function launch(){
     document.querySelector('.title').innerHTML = 'WE ARE<br><span>LIVE! 🎉</span>';
@@ -341,13 +355,12 @@
   for(let i = 0; i < 22; i++){
     const p = document.createElement('div');
     p.className = 'p';
-    p.style.left        = Math.random()*100 + 'vw';
-    p.style.width       = (Math.random()*2+1)+'px';
-    p.style.height      = p.style.width;
+    p.style.left               = Math.random()*100 + 'vw';
+    p.style.width              = (Math.random()*2+1)+'px';
+    p.style.height             = p.style.width;
     p.style.animationDuration  = (Math.random()*12+8) + 's';
     p.style.animationDelay     = (Math.random()*10) + 's';
-    p.style.opacity     = Math.random()*.7;
-    // some particles are red (blood donor hint)
+    p.style.opacity            = Math.random()*.7;
     if(Math.random() > .75) p.style.background = '#E74C3C';
     container.appendChild(p);
   }
