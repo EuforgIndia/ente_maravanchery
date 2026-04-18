@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>എന്റെ മറവഞ്ചേരി</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#07111A;--bg2:#0D1E2C;--bg3:#122436;--gold:#F5A623;--green:#2ECC71;--blue:#3498DB;--red:#E74C3C;--text:#ECF0F1;--muted:#7F8C8D;--border:rgba(255,255,255,.07);--r:16px;--nh:68px;}
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+    html,body{height:100%}
+    body{font-family:'Noto Sans Malayalam','Segoe UI',sans-serif;background:var(--bg);color:var(--text);max-width:430px;margin:0 auto;overflow-x:hidden;min-height:100vh}
+    .screen{display:none;padding-bottom:calc(var(--nh) + 10px);min-height:100vh}
+    .screen.active{display:block}
+    .bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:var(--bg2);border-top:1px solid var(--border);display:flex;height:var(--nh);z-index:100}
+    .nb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:none;color:var(--muted);font-family:inherit;cursor:pointer;font-size:9px;padding:6px 0;transition:color .2s;position:relative}
+    .nb.on{color:var(--gold)}
+    .nb.on::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:36px;height:3px;background:var(--gold);border-radius:0 0 4px 4px}
+    .ni{font-size:20px;line-height:1}
+    .ph{padding:48px 20px 16px;background:linear-gradient(180deg,var(--bg2),transparent);position:sticky;top:0;z-index:10;backdrop-filter:blur(10px)}
+    .pt{font-size:24px;font-weight:900}.ps{font-size:12px;color:var(--muted);margin-top:2px}
+    .sw{position:relative;padding:0 16px 14px}
+    .si{position:absolute;left:28px;top:50%;transform:translateY(-58%);font-size:15px;pointer-events:none;color:var(--muted)}
+    .sb{width:100%;padding:11px 14px 11px 42px;background:var(--bg3);border:1px solid var(--border);border-radius:12px;color:var(--text);font-family:inherit;font-size:14px;outline:none;transition:border-color .2s}
+    .sb:focus{border-color:var(--gold)}.sb::placeholder{color:var(--muted)}
+    .cg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 16px 4px}
+    .cc{background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:14px 6px 12px;text-align:center;cursor:pointer;transition:transform .15s}
+    .cc:active{transform:scale(.94)}
+    .card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin:0 14px 10px;border-left-width:3px}
+    .cr{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+    .cb{flex:1;min-width:0}
+    .cn{font-size:16px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .cm{font-size:12px;color:var(--muted);margin-top:3px}
+    .cbtn{background:rgba(46,204,113,.13);border:1px solid rgba(46,204,113,.3);color:var(--green);border-radius:10px;padding:8px 12px;font-size:12px;font-family:inherit;cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-flex;flex-direction:column;align-items:center;gap:2px;flex-shrink:0}
+    .tr{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);margin-top:5px}
+    .tabs{display:flex;gap:8px;padding:0 16px 14px;overflow-x:auto;scrollbar-width:none}
+    .tabs::-webkit-scrollbar{display:none}
+    .tbn{padding:7px 14px;border-radius:20px;border:1px solid var(--border);background:var(--bg3);color:var(--muted);font-family:inherit;font-size:12px;cursor:pointer;white-space:nowrap;transition:all .2s;flex-shrink:0}
+    .tbn.on{background:var(--gold);color:#000;border-color:var(--gold);font-weight:800}
+    .btabs{display:flex;gap:8px;padding:0 16px 14px}
+    .btab{flex:1;padding:10px 4px;border-radius:12px;border:1px solid var(--border);background:var(--bg3);color:var(--muted);font-family:inherit;font-size:11px;font-weight:700;cursor:pointer;text-align:center;transition:all .2s;line-height:1.5}
+    .tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 14px 20px}
+    .tc{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:10px 4px;text-align:center}
+    .tc.past{opacity:.25}.tc.next{border-width:1.5px}
+    .tv{font-size:17px;font-weight:800;font-family:monospace;letter-spacing:-.5px}
+    .tap{font-size:9px;color:var(--muted);letter-spacing:1px;margin-top:1px;font-family:monospace}
+    .ndot{width:6px;height:6px;border-radius:50%;margin:0 auto 4px}
+    .nbanner{margin:0 14px 16px;background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center}
+    .nlbl{font-size:9px;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;font-family:monospace}
+    .nt{font-size:30px;font-weight:900;font-family:monospace;letter-spacing:-1px}
+    .mbox{border-radius:10px;padding:8px 14px;text-align:center}
+    .mv{font-size:24px;font-weight:900;font-family:monospace}
+    .ml{font-size:9px;color:var(--muted);letter-spacing:1px;margin-top:1px}
+    .lkwrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;padding:24px;text-align:center}
+    .fwrap{padding:0 16px}
+    .fg{margin-bottom:13px}
+    .fl{font-size:12px;color:var(--muted);margin-bottom:5px;display:block;font-weight:600}
+    .fi,.fsl{width:100%;padding:11px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:inherit;font-size:14px;outline:none;transition:border-color .2s}
+    .fi:focus,.fsl:focus{border-color:var(--gold)}
+    .fsl option{background:#122436}
+    .bprim{width:100%;padding:13px;background:var(--gold);color:#000;border:none;border-radius:12px;font-family:inherit;font-size:15px;font-weight:800;cursor:pointer;transition:opacity .2s}
+    .bprim:disabled{opacity:.5;cursor:not-allowed}
+    .bsm{padding:6px 10px;border-radius:8px;font-family:inherit;font-size:12px;cursor:pointer;border:1px solid transparent}
+    .bedit{background:rgba(52,152,219,.13);border-color:rgba(52,152,219,.3);color:var(--blue)}
+    .bdel{background:rgba(231,76,60,.13);border-color:rgba(231,76,60,.3);color:var(--red)}
+    .ebanner{background:rgba(52,152,219,.1);border:1px solid rgba(52,152,219,.3);border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:13px;color:var(--blue);display:flex;justify-content:space-between;align-items:center}
+    .hero{padding:52px 20px 18px;background:linear-gradient(160deg,#0D2035,#07111A);position:relative;overflow:hidden}
+    .hero::before{content:'🌴';position:absolute;right:-10px;bottom:-10px;font-size:100px;opacity:.06;transform:rotate(-10deg);pointer-events:none}
+    .htitle{font-size:27px;font-weight:900;color:var(--gold);line-height:1.2}
+    .hsub{font-size:12px;color:var(--muted);margin-top:3px}
+    .srow{display:flex;gap:8px;margin-top:14px}
+    .sbox{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:10px 8px;text-align:center}
+    .sv{font-size:22px;font-weight:900;color:var(--gold);font-family:monospace}
+    .sl{font-size:10px;color:var(--muted);margin-top:1px}
+    .stitle{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;padding:14px 16px 10px}
+    .empty{text-align:center;padding:40px 20px;color:var(--muted)}
+    .clk{font-size:13px;font-family:monospace;color:var(--muted);letter-spacing:1px}
+    .divider{height:1px;background:var(--border);margin:2px 14px 10px}
+    .sdot{width:7px;height:7px;border-radius:50%;display:inline-block;background:var(--green);box-shadow:0 0 6px var(--green)}
+    .sdot.off{background:var(--muted);box-shadow:none}
+    .xtags{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+    .xtag{display:inline-flex;align-items:center;gap:3px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:3px 9px;font-size:11px;color:#b0bec5;white-space:nowrap}
+    #extra-fields .fg{margin-bottom:13px}
+    #extra-fields{transition:all .2s}
+    .detail-panel{display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+    .detail-panel.open{display:block}
+    .detail-row{display:flex;align-items:flex-start;gap:8px;margin-bottom:7px;font-size:12px}
+    .detail-lbl{color:var(--muted);min-width:80px;flex-shrink:0;font-size:11px}
+    .detail-val{color:var(--text);font-weight:600;flex:1}
+    .toggle-btn{width:100%;margin-top:8px;padding:6px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:inherit;font-size:11px;cursor:pointer;text-align:center;transition:all .2s}
+    .toggle-btn:active{background:rgba(255,255,255,.08)}
+    .phone-row{display:flex;align-items:center;gap:6px;margin-top:4px;font-size:13px;font-weight:700;color:var(--green);font-family:monospace;letter-spacing:.5px}
+    /* Blood donor styles */
+    .bg-filter{display:flex;gap:6px;padding:0 16px 14px;flex-wrap:wrap}
+    .bgtag{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--bg3);color:var(--muted);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s}
+    .bgtag.on{color:#fff;border-color:var(--red);background:var(--red)}
+    .donor-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin:0 14px 10px;border-left:3px solid var(--red)}
+    .blood-badge{display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:50%;background:rgba(231,76,60,.15);border:2px solid rgba(231,76,60,.4);font-size:15px;font-weight:900;color:var(--red);flex-shrink:0;font-family:monospace}
+    .donor-name{font-size:15px;font-weight:700}
+    .donor-meta{font-size:11px;color:var(--muted);margin-top:2px}
+    .donor-phone{font-size:13px;font-weight:700;color:var(--green);font-family:monospace;margin-top:5px}
+    .blood-hero{margin:0 14px 14px;background:linear-gradient(135deg,rgba(231,76,60,.15),rgba(231,76,60,.05));border:1px solid rgba(231,76,60,.25);border-radius:16px;padding:16px}
+    .bg-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:12px}
+    .bg-stat{background:rgba(0,0,0,.2);border:1px solid rgba(231,76,60,.2);border-radius:10px;padding:6px 4px;text-align:center}
+    .toast{position:fixed;bottom:calc(var(--nh) + 14px);left:50%;transform:translateX(-50%);padding:9px 20px;border-radius:20px;font-size:13px;font-weight:700;z-index:999;white-space:nowrap;pointer-events:none;animation:tin .3s ease}
+    .toast.ok{background:#2ECC71;color:#000}.toast.err{background:#E74C3C;color:#fff}
+    @keyframes tin{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+    .spin{display:inline-block;width:18px;height:18px;border:2px solid rgba(0,0,0,.2);border-top-color:#000;border-radius:50%;animation:sp .6s linear infinite;vertical-align:middle}
+    @keyframes sp{to{transform:rotate(360deg)}}
+  </style>
+</head>
+<body>
+
+<div class="screen active" id="s-home">
+  <div class="hero">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div>
+        <div class="htitle">എന്റെ മറവഞ്ചേരി</div>
+        <div class="hsub">നിങ്ങളുടെ നാടിന്റെ ഡിജിറ്റൽ ഡയറക്ടറി</div>
+      </div>
+      <div style="text-align:right">
+        <div id="clk-home" class="clk"></div>
+        <div style="margin-top:4px;font-size:10px;color:var(--muted);display:flex;align-items:center;gap:4px;justify-content:flex-end">
+          <span class="sdot off" id="sdot"></span><span id="stxt">കണക്ട്…</span>
+        </div>
+      </div>
+    </div>
+    <div class="srow" id="stats">
+      <div class="sbox"><div class="sv">…</div><div class="sl">ആകെ ലിസ്റ്റിംഗ്</div></div>
+      <div class="sbox"><div class="sv">…</div><div class="sl">കാറ്റഗറി</div></div>
+    </div>
+  </div>
+  <div class="sw" style="padding:14px 16px">
+    <span class="si">🔍</span>
+    <input class="sb" type="search" placeholder="പേര്, ഫോൺ, പ്രദേശം…" id="gsearch">
+  </div>
+  <div id="gres" style="display:none"></div>
+  <div id="hbody">
+    <div class="stitle">വിഭാഗങ്ങൾ</div>
+    <div class="cg" id="catgrid"></div>
+  </div>
+</div>
+
+<div class="screen" id="s-dir">
+  <div class="ph"><div class="pt">ഡയറക്ടറി</div><div class="ps">സേവനദാതാക്കൾ &amp; കടകൾ</div></div>
+  <div class="tabs" id="dtabs"></div>
+  <div class="sw"><span class="si">🔍</span><input class="sb" type="search" placeholder="തിരയുക…" id="dq"></div>
+  <div id="dlist"></div>
+</div>
+
+<div class="screen" id="s-bus">
+  <div class="ph" style="display:flex;justify-content:space-between;align-items:center">
+    <div><div class="pt">ബസ് സമയം</div><div class="ps">മറവഞ്ചേരി ടൈംടേബിൾ</div></div>
+    <div id="clk-bus" class="clk"></div>
+  </div>
+  <div id="nba"></div>
+  <div class="btabs" id="brtabs"></div>
+  <div class="tgrid" id="tgrid"></div>
+</div>
+
+<!-- Blood Donor Screen -->
+<div class="screen" id="s-blood">
+  <div class="ph">
+    <div class="pt">🩸 രക്തദാനം</div>
+    <div class="ps">മറവഞ്ചേരി ഡോണർ ഡയറക്ടറി</div>
+  </div>
+  <div id="blood-hero-wrap"></div>
+  <div class="sw"><span class="si">🔍</span><input class="sb" type="search" placeholder="പേര്, പ്രദേശം, ഗ്രൂപ്പ്…" id="bq"></div>
+  <div class="bg-filter" id="bg-filter"></div>
+  <div id="blist"></div>
+</div>
+
+<div class="screen" id="s-admin"><div id="aroot"></div></div>
+
+<nav class="bnav" id="bnav" style="pointer-events:none;opacity:0.5">
+  <button class="nb on" id="n-home"  onclick="nav('home')"> <span class="ni">🏠</span><span>ഹോം</span></button>
+  <button class="nb"    id="n-dir"   onclick="nav('dir')">  <span class="ni">📋</span><span>ഡയറക്ടറി</span></button>
+  <button class="nb"    id="n-bus"   onclick="nav('bus')">  <span class="ni">🚌</span><span>ബസ്</span></button>
+  <button class="nb"    id="n-blood" onclick="nav('blood')"><span class="ni">🩸</span><span>രക്തദാനം</span></button>
+  <button class="nb"    id="n-admin" onclick="nav('admin')"><span class="ni">⚙️</span><span>അഡ്മിൻ</span></button>
+</nav>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc,
+         onSnapshot, query, orderBy, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const app = initializeApp({
+  apiKey:"AIzaSyDd7k11dyoaRBEq6jnDGUbWw3KlrTXNwhY",
+  authDomain:"ente-maravanchery.firebaseapp.com",
+  projectId:"ente-maravanchery",
+  storageBucket:"ente-maravanchery.firebasestorage.app",
+  messagingSenderId:"859930472254",
+  appId:"1:859930472254:web:023d69985dd64f7fb2466f",
+  measurementId:"G-CYH8DH2JY4"
+});
+const db = getFirestore(app);
+
+const PASS = 'Maravanchery@123';
+const BLOOD_GROUPS = ['A+','A-','B+','B-','AB+','AB-','O+','O-'];
+
+const CATS = [
+  {id:'store',       icon:'🏪', name:'കടകൾ',           col:'#F59E0B'},
+  {id:'electrician', icon:'⚡', name:'ഇലക്ട്രീഷ്യൻ',  col:'#FBBF24'},
+  {id:'plumber',     icon:'🔧', name:'പ്ലംബർ',         col:'#38BDF8'},
+  {id:'coconut',     icon:'🥥', name:'തേങ്ങ പറിക്കൽ', col:'#84CC16'},
+  {id:'carpenter',   icon:'🔨', name:'ആശാരി',          col:'#C084FC'},
+  {id:'mason',       icon:'🧱', name:'മേസൻ',           col:'#FB923C'},
+  {id:'painter',     icon:'🎨', name:'പെയിന്റർ',      col:'#F472B6'},
+  {id:'welding',     icon:'🔥', name:'വെൽഡിംഗ്',      col:'#FF6B35'},
+  {id:'woodcut',     icon:'🪚', name:'മരം മുറിക്കൽ', col:'#A0785A'},
+  {id:'driver',      icon:'🚗', name:'ഡ്രൈവർ / ഓട്ടോ',col:'#34D399'},
+  {id:'authority',   icon:'🏛️', name:'അധികൃതർ',       col:'#60A5FA'},
+  {id:'other',       icon:'🛠️', name:'മറ്റുള്ളവ',     col:'#94A3B8'},
+];
+
+const CAT_EXTRA = {
+  store:[
+    {id:'shopType',label:'കടയുടെ തരം',type:'select',options:['പലചരക്ക് (Grocery)','ഹാർഡ്‌വെയർ (Hardware)','ഫാൻസി (Fancy)','മെഡിക്കൽ (Medical)','ബേക്കറി (Bakery)','ഹോട്ടൽ / ഭക്ഷണം','ടെക്സ്റ്റൈൽ (Textiles)','ഇലക്ട്രോണിക്സ്','മറ്റുള്ളവ']},
+    {id:'offers',label:'ഓഫറുകൾ / ഡിസ്കൗണ്ട്',type:'text',placeholder:'ഉദാ: 10% ഓഫ് on weekends'},
+  ],
+  driver:[
+    {id:'vehicleType',label:'വാഹനത്തിന്റെ തരം',type:'select',options:['കാർ (Car)','ഓട്ടോ റിക്ഷ (Auto)','ജീപ്പ് (Jeep)','ലോറി (Lorry)','മിനി ലോറി','ടെമ്പോ','ബൈക്ക് (Bike)','ബസ് (Bus)']},
+    {id:'vehicleNo',label:'വാഹന നമ്പർ',type:'text',placeholder:'ഉദാ: KL 11 AB 1234'},
+    {id:'availability',label:'ലഭ്യത',type:'text',placeholder:'ഉദാ: 24/7, രാവിലെ 6AM – 10PM'},
+  ],
+  electrician:[
+    {id:'speciality',label:'സ്പെഷ്യാലിറ്റി',type:'select',options:['Domestic Wiring','Industrial','Solar Installation','AC / Appliance Repair','Panel / Switchboard','General']},
+    {id:'experience',label:'പരിചയം (വർഷം)',type:'text',placeholder:'ഉദാ: 8 വർഷം'},
+  ],
+  plumber:[
+    {id:'speciality',label:'സ്പെഷ്യാലിറ്റി',type:'select',options:['Pipe Fitting','Drainage','Water Tank','Bore Well','Bathroom Fitting','General']},
+    {id:'experience',label:'പരിചയം (വർഷം)',type:'text',placeholder:'ഉദാ: 5 വർഷം'},
+  ],
+  coconut:[
+    {id:'ratePerTree',label:'ഒരു മരത്തിന് നിരക്ക്',type:'text',placeholder:'ഉദാ: ₹30 per tree'},
+    {id:'coverageArea',label:'സേവന പ്രദേശം',type:'text',placeholder:'ഉദാ: 5km radius'},
+  ],
+  carpenter:[
+    {id:'speciality',label:'സ്പെഷ്യാലിറ്റി',type:'select',options:['Furniture Making','Door / Window','Roofing','Modular Kitchen','Repair Work','General']},
+    {id:'experience',label:'പരിചയം (വർഷം)',type:'text',placeholder:'ഉദാ: 12 വർഷം'},
+  ],
+  mason:[
+    {id:'speciality',label:'സ്പെഷ്യാലിറ്റി',type:'select',options:['House Construction','Plastering','Tiling','Waterproofing','Compound Wall','General']},
+    {id:'experience',label:'പരിചയം (വർഷം)',type:'text',placeholder:'ഉദാ: 15 വർഷം'},
+  ],
+  painter:[
+    {id:'speciality',label:'സ്പെഷ്യാലിറ്റി',type:'select',options:['Interior','Exterior','Texture / Design','Waterproofing Paint','General']},
+    {id:'experience',label:'പരിചയം (വർഷം)',type:'text',placeholder:'ഉദാ: 7 വർഷം'},
+  ],
+  authority:[
+    {id:'designation',label:'പദവി (Designation)',type:'text',placeholder:'ഉദാ: Ward Member, Police Officer'},
+    {id:'officeName',label:'ഓഫീസ് / സ്ഥാപനം',type:'text',placeholder:'ഉദാ: Panchayath Office'},
+  ],
+  other:[
+    {id:'serviceType',label:'സേവനത്തിന്റെ തരം',type:'text',placeholder:'ഉദാ: AC Repair, Pest Control'},
+    {id:'experience',label:'പരിചയം (വർഷം)',type:'text',placeholder:'ഉദാ: 4 വർഷം'},
+  ],
+  welding:[
+    {id:'speciality',label:'സ്പെഷ്യാലിറ്റി',type:'select',options:['Arc Welding','MIG Welding','TIG Welding','Gas Welding','Fabrication','Gate / Grille','General']},
+    {id:'experience',label:'പരിചയം (വർഷം)',type:'text',placeholder:'ഉദാ: 6 വർഷം'},
+  ],
+  woodcut:[
+    {id:'speciality',label:'സ്പെഷ്യാലിറ്റി',type:'select',options:['Timber Cutting','Plywood Cutting','CNC Cutting','Firewood Cutting','General']},
+    {id:'experience',label:'പരിചയം (വർഷം)',type:'text',placeholder:'ഉദാ: 8 വർഷം'},
+  ],
+};
+
+const BUS = {
+  kurippuram:{name:'കുറിപ്പുറം',col:'#F5A623',
+    t:['6:45','7:00','7:15','8:05','8:35','9:15','9:20','9:35','10:10','10:30',
+       '10:55','11:20','11:50','11:55','12:15','13:10','13:27','13:40','14:05',
+       '14:12','14:25','14:40','14:55','15:20','15:40','16:20','16:40','16:50',
+       '17:30','17:35','17:50','18:10','18:20','18:55']},
+  edappal:{name:'എടപ്പാൾ',col:'#10B981',
+    t:['6:55','7:45','8:30','8:55','9:10','10:15','10:25','10:45','11:19','11:45',
+       '12:25','13:00','13:55','14:25','14:55','15:20','16:05','16:35','17:25',
+       '17:35','18:15','18:31','19:00']},
+  ponnani:{name:'പൊന്നാനി',col:'#8B5CF6',
+    t:['7:35','8:00','10:05','12:55','15:35','18:18']}
+};
+
+let entries=[], donors=[], adminIn=false, busR='kurippuram', dirTab='store', dirQ='', editId=null;
+let bloodFilter='ALL', bloodQ='', donorEditId=null;
+
+// Firestore listeners
+const eq = query(collection(db,'entries'), orderBy('createdAt','asc'));
+onSnapshot(eq, snap => {
+  entries = snap.docs.map(d => ({id:d.id, ...d.data()}));
+  syncDot(true);
+  const cur = document.querySelector('.screen.active')?.id?.replace('s-','');
+  if(cur==='home')  renderHome();
+  if(cur==='dir')  {renderDirTabs(); filterDir(dirQ);}
+  if(cur==='admin' && adminIn) renderAList();
+}, err => { syncDot(false); toast('❌ Firebase കണക്ട് ആകുന്നില്ല.','err'); });
+
+const dqr = query(collection(db,'donors'), orderBy('createdAt','asc'));
+onSnapshot(dqr, snap => {
+  donors = snap.docs.map(d => ({id:d.id, ...d.data()}));
+  const cur = document.querySelector('.screen.active')?.id?.replace('s-','');
+  if(cur==='blood') renderBlood();
+  if(cur==='admin' && adminIn) renderDAList();
+});
+
+function syncDot(ok){
+  const d=document.getElementById('sdot'),t=document.getElementById('stxt');
+  if(!d)return;
+  d.classList.toggle('off',!ok);
+  t.textContent=ok?'ലൈവ്':'ഓഫ്‌ലൈൻ';
+}
+
+function tickClocks(){
+  const t=new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+  ['clk-home','clk-bus'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=t;});
+}
+tickClocks();
+setInterval(tickClocks,1000);
+setInterval(()=>{if(document.getElementById('s-bus').classList.contains('active'))renderBus();},30000);
+
+window.nav = function(s, pushState=true){
+  document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(x=>x.classList.remove('on'));
+  document.getElementById('s-'+s).classList.add('active');
+  document.getElementById('n-'+s).classList.add('on');
+  ({home:renderHome,dir:renderDir,bus:renderBus,blood:renderBlood,admin:renderAdmin})[s]();
+  if(pushState) history.pushState({page:s},'','#'+s);
+};
+
+window.addEventListener('popstate', () => {
+  nav('home',false);
+  history.pushState({page:'home'},'','#home');
+});
+
+// ── HOME ──
+function renderHome(){
+  document.getElementById('stats').innerHTML=
+    `<div class="sbox"><div class="sv">${entries.length}</div><div class="sl">ആകെ ലിസ്റ്റിംഗ്</div></div>
+     <div class="sbox"><div class="sv">${CATS.length}</div><div class="sl">കാറ്റഗറി</div></div>`;
+  document.getElementById('catgrid').innerHTML=CATS.map(c=>{
+    const n=entries.filter(e=>e.cat===c.id).length;
+    return `<div class="cc" onclick="goCat('${c.id}')" style="${n?'border-color:'+c.col+'28':''}">
+      <div style="font-size:26px;margin-bottom:5px">${c.icon}</div>
+      <div style="font-size:11px;font-weight:700;line-height:1.3;color:${n?'#dde':'#566477'}">${c.name}</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:3px">${n} എൻട്രി</div></div>`;
+  }).join('');
+}
+
+window.goCat = function(id){dirTab=id;nav('dir');};
+document.getElementById('gsearch').oninput = e => gSearch(e.target.value);
+
+function gSearch(q){
+  const r=document.getElementById('gres'),b=document.getElementById('hbody');
+  if(!q.trim()){r.style.display='none';b.style.display='block';return;}
+  r.style.display='block';b.style.display='none';
+  const f=entries.filter(e=>e.name?.includes(q)||e.phone?.includes(q)||(e.area||'').includes(q)||(e.desc||'').includes(q));
+  r.innerHTML=`<div class="stitle">${f.length} ഫലം — "${q}"</div>`
+    +(f.length?f.map(e=>mkCard(e)).join(''):`<div class="empty"><div style="font-size:32px">🔍</div><div style="font-size:13px;margin-top:6px">ഒന്നും കണ്ടെത്തിയില്ല</div></div>`);
+}
+
+// ── DIRECTORY ──
+function renderDir(){renderDirTabs();filterDir(dirQ);}
+function renderDirTabs(){
+  document.getElementById('dtabs').innerHTML=CATS.map(c=>{
+    const n=entries.filter(e=>e.cat===c.id).length;
+    return `<button class="tbn${c.id===dirTab?' on':''}" onclick="setTab('${c.id}')">${c.icon} ${c.name} (${n})</button>`;
+  }).join('');
+}
+window.setTab = function(id){dirTab=id;dirQ='';document.getElementById('dq').value='';renderDir();};
+document.getElementById('dq').oninput = e => filterDir(e.target.value);
+
+function filterDir(q){
+  dirQ=q;
+  const list=entries.filter(e=>e.cat===dirTab&&(!q.trim()||e.name?.includes(q)||e.phone?.includes(q)||(e.area||'').includes(q)));
+  const c=CATS.find(x=>x.id===dirTab);
+  document.getElementById('dlist').innerHTML=list.length
+    ?list.map(e=>mkCard(e)).join('')
+    :`<div class="empty"><div style="font-size:32px">${c?.icon||'📋'}</div>
+       <div style="font-size:13px;margin-top:6px">${c?.name} ഒന്നും ഇല്ല</div>
+       <div style="font-size:11px;margin-top:4px">അഡ്മിൻ ആദ്യം ഇവിടെ ചേർക്കട്ടെ</div></div>`;
+}
+
+function mkCard(e){
+  const c=CATS.find(x=>x.id===e.cat);
+  const extraIconMap={shopType:'🏷️',offers:'🎁',vehicleType:'🚘',vehicleNo:'🔢',availability:'🕐',speciality:'🔩',experience:'📅',ratePerTree:'💰',coverageArea:'📍',designation:'🏅',officeName:'🏢',serviceType:'🛠️',woodType:'🪵'};
+  const extras=CAT_EXTRA[e.cat]||[];
+  const tags=extras.filter(f=>e[f.id]).map(f=>`<span class="xtag">${extraIconMap[f.id]||'•'} ${e[f.id]}</span>`).join('');
+  const detailFields=[
+    e.desc&&{lbl:'വിവരണം',val:e.desc},e.area&&{lbl:'പ്രദേശം',val:e.area},
+    e.timing&&{lbl:'സമയം',val:'🕐 '+e.timing},e.speciality&&{lbl:'Speciality',val:e.speciality},
+    e.experience&&{lbl:'പരിചയം',val:e.experience},e.shopType&&{lbl:'കടയുടെ തരം',val:e.shopType},
+    e.offers&&{lbl:'ഓഫർ',val:'🎁 '+e.offers},e.vehicleType&&{lbl:'വാഹനം',val:e.vehicleType},
+    e.vehicleNo&&{lbl:'Reg. No.',val:e.vehicleNo},e.availability&&{lbl:'ലഭ്യത',val:e.availability},
+    e.ratePerTree&&{lbl:'നിരക്ക്',val:e.ratePerTree},e.coverageArea&&{lbl:'Coverage',val:e.coverageArea},
+    e.designation&&{lbl:'പദവി',val:e.designation},e.officeName&&{lbl:'ഓഫീസ്',val:e.officeName},
+    e.serviceType&&{lbl:'സേവനം',val:e.serviceType},
+  ].filter(Boolean);
+  const detailHTML=detailFields.map(r=>`<div class="detail-row"><span class="detail-lbl">${r.lbl}</span><span class="detail-val">${r.val}</span></div>`).join('');
+  const uid='dp-'+e.id;
+  return `<div class="card" style="border-left-color:${c?.col||'#666'}">
+    <div class="cr">
+      <div class="cb">
+        <div class="cn">${c?.icon||''} ${e.name}</div>
+        <div class="phone-row">📞 ${e.phone}</div>
+        <div class="cm">${[e.area,e.desc].filter(Boolean).join(' · ')}</div>
+        ${tags?`<div class="xtags">${tags}</div>`:''}
+        ${detailHTML?`<div class="detail-panel" id="${uid}">${detailHTML}</div>
+        <button class="toggle-btn" onclick="toggleDetail('${uid}',this)">▼ കൂടുതൽ വിവരങ്ങൾ</button>`:''}
+      </div>
+      <a class="cbtn" href="tel:${e.phone}">📞<br>വിളിക്കുക</a>
+    </div>
+  </div>`;
+}
+
+window.toggleDetail = function(id,btn){
+  const panel=document.getElementById(id);if(!panel)return;
+  const open=panel.classList.toggle('open');
+  btn.textContent=open?'▲ ചുരുക്കുക':'▼ കൂടുതൽ വിവരങ്ങൾ';
+  btn.style.color=open?'var(--gold)':'';
+};
+
+// ── BLOOD DONOR ──
+function renderBlood(){
+  const counts={};
+  BLOOD_GROUPS.forEach(g=>counts[g]=donors.filter(d=>d.bloodGroup===g).length);
+  document.getElementById('blood-hero-wrap').innerHTML=`
+    <div class="blood-hero">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div style="font-size:10px;color:var(--red);letter-spacing:2px;text-transform:uppercase;font-weight:700">🩸 ഡോണർ രജിസ്ട്രി</div>
+          <div style="font-size:32px;font-weight:900;color:#fff;font-family:monospace;line-height:1.1;margin-top:4px">${donors.length}</div>
+          <div style="font-size:11px;color:var(--muted)">ആകെ ഡോണർമാർ</div>
+        </div>
+        <div style="font-size:48px;opacity:.15">🩸</div>
+      </div>
+      <div class="bg-grid">
+        ${BLOOD_GROUPS.map(g=>`
+          <div class="bg-stat">
+            <div style="font-size:13px;font-weight:900;color:var(--red);font-family:monospace">${g}</div>
+            <div style="font-size:16px;font-weight:800;color:#fff;font-family:monospace">${counts[g]}</div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+
+  document.getElementById('bg-filter').innerHTML=
+    `<button class="bgtag${bloodFilter==='ALL'?' on':''}" onclick="setBG('ALL')">എല്ലാം</button>`+
+    BLOOD_GROUPS.map(g=>`<button class="bgtag${bloodFilter===g?' on':''}" onclick="setBG('${g}')">${g}</button>`).join('');
+
+  filterDonors();
+}
+
+window.setBG = function(g){bloodFilter=g;renderBlood();};
+document.getElementById('bq').oninput = e => {bloodQ=e.target.value;filterDonors();};
+
+function filterDonors(){
+  const list=donors.filter(d=>{
+    const grpOk=bloodFilter==='ALL'||d.bloodGroup===bloodFilter;
+    const qOk=!bloodQ.trim()||d.name?.includes(bloodQ)||d.phone?.includes(bloodQ)||(d.area||'').includes(bloodQ)||(d.bloodGroup||'').includes(bloodQ);
+    return grpOk&&qOk;
+  });
+  document.getElementById('blist').innerHTML=list.length
+    ?list.map(d=>mkDonorCard(d)).join('')
+    :`<div class="empty"><div style="font-size:36px">🩸</div><div style="font-size:13px;margin-top:8px">ഈ ഗ്രൂപ്പിൽ ഡോണർ ഇല്ല</div></div>`;
+}
+
+function mkDonorCard(d){
+  return `<div class="donor-card">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div class="blood-badge">${d.bloodGroup}</div>
+      <div style="flex:1;min-width:0">
+        <div class="donor-name">${d.name}</div>
+        <div class="donor-meta">${[d.area,d.age?d.age+' വയസ്':''].filter(Boolean).join(' · ')}</div>
+        ${d.note?`<div style="font-size:11px;color:var(--muted);margin-top:2px;font-style:italic">${d.note}</div>`:''}
+        <div class="donor-phone">📞 ${d.phone}</div>
+      </div>
+      <a class="cbtn" href="tel:${d.phone}" style="background:rgba(231,76,60,.13);border-color:rgba(231,76,60,.3);color:var(--red)">📞<br>വിളിക്കുക</a>
+    </div>
+  </div>`;
+}
+
+// ── BUS ──
+function pt(t){const[h,m]=t.split(':').map(Number);return h*60+m;}
+function ft(t){const[h,m]=t.split(':').map(Number);return{t:`${h%12||12}:${String(m).padStart(2,'0')}`,p:h<12?'AM':'PM'};}
+window.setBus = function(k){busR=k;renderBus();};
+
+function renderBus(){
+  const cur=new Date().getHours()*60+new Date().getMinutes();
+  document.getElementById('brtabs').innerHTML=Object.entries(BUS).map(([k,v])=>
+    `<button class="btab${k===busR?' on':''}" onclick="setBus('${k}')"
+      style="${k===busR?'color:'+v.col+';border-color:'+v.col+'50;background:'+v.col+'12':''}">
+      ${v.name}</button>`).join('');
+  const r=BUS[busR],ni=r.t.findIndex(t=>pt(t)>cur),nb=ni!==-1?r.t[ni]:null,nm=nb?pt(nb)-cur:null;
+  if(nb){
+    const{t,p}=ft(nb);
+    document.getElementById('nba').innerHTML=`<div class="nbanner" style="border-color:${r.col}30">
+      <div>
+        <div class="nlbl" style="color:${r.col}">▶ അടുത്ത ബസ്</div>
+        <div class="nt" style="color:${r.col}">${t} <span style="font-size:14px;font-weight:400;color:#666">${p}</span></div>
+        <div style="font-size:11px;color:#556;margin-top:2px">${r.name} ഭാഗം</div>
+      </div>
+      <div class="mbox" style="background:${r.col}18;border:1px solid ${r.col}40">
+        <div class="mv" style="color:${r.col};font-size:${nm>=60?'18px':'24px'}">${nm>=60?Math.floor(nm/60)+'hr '+(nm%60)+'min':nm+'min'}</div>
+        <div class="ml">ബാക്കി</div>
+      </div></div>`;
+  } else {
+    document.getElementById('nba').innerHTML=`<div style="margin:0 14px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:14px;text-align:center;color:var(--muted);font-size:13px">🌙 ഇന്ന് ഇനി ബസ് ഇല്ല</div>`;
+  }
+  document.getElementById('tgrid').innerHTML=r.t.map(t=>{
+    const past=pt(t)<cur,isN=t===nb;const{t:tv,p}=ft(t);
+    return `<div class="tc${past?' past':''}${isN?' next':''}">
+      ${isN?`<div class="ndot" style="background:${r.col};box-shadow:0 0 6px ${r.col}"></div>`:''}
+      <div class="tv" style="${isN?'color:'+r.col:''}">${tv}</div>
+      <div class="tap">${p}</div></div>`;
+  }).join('');
+}
+
+// ── ADMIN ──
+function renderAdmin(){adminIn?renderPanel():renderLock();}
+
+function renderLock(){
+  document.getElementById('aroot').innerHTML=`
+    <div class="lkwrap">
+      <div style="font-size:56px;margin-bottom:14px">🔐</div>
+      <div style="font-size:20px;font-weight:800;margin-bottom:6px">അഡ്മിൻ ലോഗിൻ</div>
+      <div style="font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.6">ഈ വിഭാഗം കൈകാര്യം ചെയ്യാൻ<br>പാസ്‌വേഡ് നൽകുക</div>
+      <div style="width:100%;max-width:300px">
+        <input type="password" class="fi" id="pinp" placeholder="••••••••••" style="text-align:center;letter-spacing:4px;margin-bottom:10px">
+        <button class="bprim" id="lbtn">ലോഗിൻ ചെയ്യുക</button>
+        <div style="color:var(--red);font-size:12px;text-align:center;margin-top:8px;min-height:18px" id="perr"></div>
+      </div>
+    </div>`;
+  document.getElementById('lbtn').onclick=doLogin;
+  document.getElementById('pinp').onkeydown=e=>{if(e.key==='Enter')doLogin();};
+}
+
+function doLogin(){
+  if(document.getElementById('pinp').value===PASS){adminIn=true;renderPanel();}
+  else document.getElementById('perr').textContent='❌ തെറ്റായ പാസ്‌വേഡ്';
+}
+
+function renderPanel(){
+  document.getElementById('aroot').innerHTML=`
+    <div class="ph" style="display:flex;justify-content:space-between;align-items:center">
+      <div><div class="pt">അഡ്മിൻ</div><div class="ps">ലിസ്റ്റിംഗ് ചേർക്കുക / തിരുത്തുക</div></div>
+      <button id="logoutbtn" style="background:rgba(231,76,60,.12);border:1px solid rgba(231,76,60,.3);color:#E74C3C;padding:6px 12px;border-radius:8px;font-family:inherit;font-size:12px;cursor:pointer">ലോഗൗട്ട്</button>
+    </div>
+
+    <div style="margin:0 16px 10px;font-size:10px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;font-weight:700">📋 ഡയറക്ടറി ലിസ്റ്റിംഗ്</div>
+    <div class="fwrap">
+      <div id="ebanner" class="ebanner" style="display:none">
+        ✏️ <span>എഡിറ്റ് മോഡ്</span>
+        <button id="cancelbtn" style="background:none;border:none;color:var(--red);font-family:inherit;font-size:12px;cursor:pointer">❌ റദ്ദാക്കുക</button>
+      </div>
+      <div class="fg"><label class="fl">പേര് *</label><input type="text" class="fi" id="fn" placeholder="ഉദാ: രാജൻ ഇലക്ട്രിക്കൽ"></div>
+      <div class="fg"><label class="fl">ഫോൺ നമ്പർ *</label><input type="tel" class="fi" id="fp" placeholder="ഉദാ: 9400000000"></div>
+      <div class="fg"><label class="fl">വിഭാഗം *</label>
+        <select class="fsl" id="fc">${CATS.map(c=>`<option value="${c.id}">${c.icon} ${c.name}</option>`).join('')}</select>
+      </div>
+      <div class="fg"><label class="fl">പ്രദേശം</label><input type="text" class="fi" id="fa" placeholder="ഉദാ: മറവഞ്ചേരി"></div>
+      <div class="fg"><label class="fl">വിവരണം</label><input type="text" class="fi" id="fd" placeholder="ഉദാ: 10 വർഷം പരിചയം"></div>
+      <div class="fg"><label class="fl">സമയം <span style="font-size:10px;color:var(--muted)">(കടകൾക്ക്)</span></label>
+        <input type="text" class="fi" id="ft2" placeholder="ഉദാ: 8AM – 9PM"></div>
+      <div id="extra-fields"></div>
+      <button class="bprim" id="sbtn">+ ചേർക്കുക</button>
+      <div style="height:16px"></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div style="margin:12px 16px 10px;font-size:10px;color:var(--red);letter-spacing:2px;text-transform:uppercase;font-weight:700">🩸 രക്തദാതാവ് ചേർക്കുക</div>
+    <div class="fwrap">
+      <div id="donor-ebanner" class="ebanner" style="display:none;border-color:rgba(231,76,60,.3);background:rgba(231,76,60,.08);color:var(--red)">
+        ✏️ <span>ഡോണർ എഡിറ്റ് മോഡ്</span>
+        <button id="donor-cancelbtn" style="background:none;border:none;color:var(--red);font-family:inherit;font-size:12px;cursor:pointer">❌ റദ്ദാക്കുക</button>
+      </div>
+      <div class="fg"><label class="fl">പേര് *</label><input type="text" class="fi" id="dn" placeholder="ഉദാ: മുഹമ്മദ് റഷീദ്"></div>
+      <div class="fg"><label class="fl">ഫോൺ നമ്പർ *</label><input type="tel" class="fi" id="dph" placeholder="ഉദാ: 9400000000"></div>
+      <div class="fg"><label class="fl">രക്തഗ്രൂപ്പ് *</label>
+        <select class="fsl" id="dbg">
+          <option value="">— തിരഞ്ഞെടുക്കുക —</option>
+          ${BLOOD_GROUPS.map(g=>`<option value="${g}">${g}</option>`).join('')}
+        </select>
+      </div>
+      <div class="fg"><label class="fl">പ്രദേശം</label><input type="text" class="fi" id="dar" placeholder="ഉദാ: മറവഞ്ചേരി"></div>
+      <div class="fg"><label class="fl">പ്രായം</label><input type="number" class="fi" id="dage" placeholder="ഉദാ: 28" min="18" max="65"></div>
+      <div class="fg"><label class="fl">കുറിപ്പ് <span style="font-size:10px;color:var(--muted)">(ഐച്ഛികം)</span></label><input type="text" class="fi" id="dnote" placeholder="ഉദാ: എപ്പോഴും ലഭ്യം"></div>
+      <button class="bprim" id="dsbtn" style="background:var(--red)">🩸 ഡോണർ ചേർക്കുക</button>
+      <div style="height:16px"></div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="stitle" id="altitle">ചേർത്ത ലിസ്റ്റിംഗ് (${entries.length})</div>
+    <div id="alist"></div>
+    <div class="divider"></div>
+    <div class="stitle" id="daltitle">രക്തദാതാക്കൾ (${donors.length})</div>
+    <div id="dalist"></div>`;
+
+  document.getElementById('sbtn').onclick       = saveEntry;
+  document.getElementById('logoutbtn').onclick   = doLogout;
+  document.getElementById('cancelbtn').onclick   = cancelEdit;
+  document.getElementById('fc').onchange         = ()=>renderExtraFields();
+  document.getElementById('dsbtn').onclick       = saveDonor;
+  document.getElementById('donor-cancelbtn').onclick = cancelDonorEdit;
+  renderExtraFields();
+  renderAList();
+  renderDAList();
+}
+
+function renderExtraFields(data={}){
+  const cat=document.getElementById('fc')?.value;
+  const fields=CAT_EXTRA[cat]||[];
+  const el=document.getElementById('extra-fields');
+  if(!el)return;
+  if(!fields.length){el.innerHTML='';return;}
+  el.innerHTML=`
+    <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:12px 12px 2px;margin-bottom:13px">
+      <div style="font-size:10px;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;font-weight:700">✦ അധിക വിവരങ്ങൾ</div>
+      ${fields.map(f=>`
+        <div class="fg"><label class="fl">${f.label}</label>
+          ${f.type==='select'
+            ?`<select class="fsl" id="ex-${f.id}"><option value="">— തിരഞ്ഞെടുക്കുക —</option>${f.options.map(o=>`<option value="${o}" ${data[f.id]===o?'selected':''}>${o}</option>`).join('')}</select>`
+            :`<input type="text" class="fi" id="ex-${f.id}" placeholder="${f.placeholder||''}" value="${data[f.id]||''}">`
+          }
+        </div>`).join('')}
+    </div>`;
+}
+
+function renderAList(){
+  const el=document.getElementById('alist'),tl=document.getElementById('altitle');
+  if(!el)return;
+  if(tl)tl.textContent=`ചേർത്ത ലിസ്റ്റിംഗ് (${entries.length})`;
+  if(!entries.length){el.innerHTML='<div class="empty"><div style="font-size:32px">📋</div><div style="font-size:13px;margin-top:6px">ഒന്നും ചേർത്തിട്ടില്ല</div></div>';return;}
+  el.innerHTML=entries.map(e=>{
+    const c=CATS.find(x=>x.id===e.cat);
+    return `<div class="card" style="border-left-color:${c?.col||'#666'}">
+      <div class="cr">
+        <div class="cb">
+          <div class="cn">${c?.icon||''} ${e.name}</div>
+          <div class="cm">${c?.name||''} · ${e.phone}</div>
+          ${e.area?`<div style="font-size:11px;color:#556;margin-top:2px">${e.area}</div>`:''}
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <button class="bsm bedit" data-id="${e.id}">✏️ തിരുത്ത്</button>
+          <button class="bsm bdel"  data-id="${e.id}">🗑️ ഡിലീറ്റ്</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  el.querySelectorAll('.bedit').forEach(btn=>btn.onclick=()=>editEntry(btn.dataset.id));
+  el.querySelectorAll('.bdel').forEach(btn=>btn.onclick=()=>delEntry(btn.dataset.id));
+}
+
+function renderDAList(){
+  const el=document.getElementById('dalist'),tl=document.getElementById('daltitle');
+  if(!el)return;
+  if(tl)tl.textContent=`രക്തദാതാക്കൾ (${donors.length})`;
+  if(!donors.length){el.innerHTML='<div class="empty"><div style="font-size:32px">🩸</div><div style="font-size:13px;margin-top:6px">ഡോണർ ഇല്ല</div></div>';return;}
+  el.innerHTML=donors.map(d=>`
+    <div class="donor-card">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="blood-badge">${d.bloodGroup}</div>
+        <div style="flex:1;min-width:0">
+          <div class="donor-name">${d.name}</div>
+          <div class="donor-meta">${[d.area,d.age?d.age+' വയസ്':''].filter(Boolean).join(' · ')} · ${d.phone}</div>
+          ${d.note?`<div style="font-size:11px;color:var(--muted);margin-top:1px">${d.note}</div>`:''}
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <button class="bsm bedit" data-id="${d.id}">✏️</button>
+          <button class="bsm bdel"  data-id="${d.id}">🗑️</button>
+        </div>
+      </div>
+    </div>`).join('');
+  el.querySelectorAll('.bedit').forEach(btn=>btn.onclick=()=>editDonor(btn.dataset.id));
+  el.querySelectorAll('.bdel').forEach(btn=>btn.onclick=()=>delDonor(btn.dataset.id));
+}
+
+// Save/Edit/Delete entries
+async function saveEntry(){
+  const name=document.getElementById('fn').value.trim();
+  const phone=document.getElementById('fp').value.trim();
+  const cat=document.getElementById('fc').value;
+  const area=document.getElementById('fa').value.trim();
+  const desc=document.getElementById('fd').value.trim();
+  const timing=document.getElementById('ft2').value.trim();
+  if(!name||!phone){toast('⚠️ പേരും ഫോണും നൽകണം','err');return;}
+  const extraData={};
+  (CAT_EXTRA[cat]||[]).forEach(f=>{const el=document.getElementById('ex-'+f.id);if(el&&el.value.trim())extraData[f.id]=el.value.trim();});
+  const btn=document.getElementById('sbtn');btn.disabled=true;btn.innerHTML='<span class="spin"></span>';
+  try{
+    if(editId){await updateDoc(doc(db,'entries',editId),{name,phone,cat,area,desc,timing,...extraData});toast('✅ അപ്ഡേറ്റ് ചെയ്തു','ok');cancelEdit();}
+    else{await addDoc(collection(db,'entries'),{name,phone,cat,area,desc,timing,...extraData,createdAt:serverTimestamp()});toast('✅ Firebase-ൽ ചേർത്തു','ok');clearForm();}
+  }catch(e){toast('❌ '+e.message,'err');}
+  btn.disabled=false;btn.textContent=editId?'✅ അപ്ഡേറ്റ് ചെയ്യുക':'+ ചേർക്കുക';
+}
+
+function editEntry(id){
+  const e=entries.find(x=>x.id===id);if(!e)return;
+  editId=id;
+  document.getElementById('fn').value=e.name||'';document.getElementById('fp').value=e.phone||'';
+  document.getElementById('fc').value=e.cat||'store';document.getElementById('fa').value=e.area||'';
+  document.getElementById('fd').value=e.desc||'';document.getElementById('ft2').value=e.timing||'';
+  renderExtraFields(e);
+  document.getElementById('ebanner').style.display='flex';
+  document.getElementById('sbtn').textContent='✅ അപ്ഡേറ്റ് ചെയ്യുക';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function cancelEdit(){editId=null;document.getElementById('ebanner').style.display='none';document.getElementById('sbtn').textContent='+ ചേർക്കുക';clearForm();}
+function clearForm(){['fn','fp','fa','fd','ft2'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});document.getElementById('fc').value='store';renderExtraFields();}
+async function delEntry(id){if(!confirm('ഈ ലിസ്റ്റിംഗ് ഡിലീറ്റ് ചെയ്യണോ?'))return;try{await deleteDoc(doc(db,'entries',id));toast('🗑️ ഡിലീറ്റ് ചെയ്തു','ok');}catch{toast('❌ ഡിലീറ്റ് ചെയ്യാൻ കഴിഞ്ഞില്ല','err');}}
+
+// Save/Edit/Delete donors
+async function saveDonor(){
+  const name=document.getElementById('dn').value.trim();
+  const phone=document.getElementById('dph').value.trim();
+  const bloodGroup=document.getElementById('dbg').value;
+  const area=document.getElementById('dar').value.trim();
+  const age=document.getElementById('dage').value.trim();
+  const note=document.getElementById('dnote').value.trim();
+  if(!name||!phone||!bloodGroup){toast('⚠️ പേര്, ഫോൺ, ഗ്രൂപ്പ് നൽകണം','err');return;}
+  const btn=document.getElementById('dsbtn');btn.disabled=true;btn.innerHTML='<span class="spin"></span>';
+  try{
+    if(donorEditId){await updateDoc(doc(db,'donors',donorEditId),{name,phone,bloodGroup,area,age,note});toast('✅ ഡോണർ അപ്ഡേറ്റ് ചെയ്തു','ok');cancelDonorEdit();}
+    else{await addDoc(collection(db,'donors'),{name,phone,bloodGroup,area,age,note,createdAt:serverTimestamp()});toast('🩸 ഡോണർ ചേർത്തു!','ok');clearDonorForm();}
+  }catch(e){toast('❌ '+e.message,'err');}
+  btn.disabled=false;btn.innerHTML=donorEditId?'✅ ഡോണർ അപ്ഡേറ്റ്':'🩸 ഡോണർ ചേർക്കുക';
+}
+
+function editDonor(id){
+  const d=donors.find(x=>x.id===id);if(!d)return;
+  donorEditId=id;
+  document.getElementById('dn').value=d.name||'';document.getElementById('dph').value=d.phone||'';
+  document.getElementById('dbg').value=d.bloodGroup||'';document.getElementById('dar').value=d.area||'';
+  document.getElementById('dage').value=d.age||'';document.getElementById('dnote').value=d.note||'';
+  document.getElementById('donor-ebanner').style.display='flex';
+  document.getElementById('dsbtn').textContent='✅ ഡോണർ അപ്ഡേറ്റ്';
+  document.getElementById('dsbtn').style.background='var(--blue)';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function cancelDonorEdit(){donorEditId=null;document.getElementById('donor-ebanner').style.display='none';document.getElementById('dsbtn').textContent='🩸 ഡോണർ ചേർക്കുക';document.getElementById('dsbtn').style.background='var(--red)';clearDonorForm();}
+function clearDonorForm(){['dn','dph','dar','dage','dnote'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});const bg=document.getElementById('dbg');if(bg)bg.value='';}
+async function delDonor(id){if(!confirm('ഈ ഡോണർ ഡിലീറ്റ് ചെയ്യണോ?'))return;try{await deleteDoc(doc(db,'donors',id));toast('🗑️ ഡിലീറ്റ് ചെയ്തു','ok');}catch{toast('❌ ഡിലീറ്റ് ചെയ്യാൻ കഴിഞ്ഞില്ല','err');}}
+
+function doLogout(){adminIn=false;renderLock();}
+
+function toast(msg,type='ok'){
+  const el=document.createElement('div');el.className=`toast ${type}`;el.textContent=msg;
+  document.body.appendChild(el);setTimeout(()=>el.remove(),2500);
+}
+
+// BOOT
+document.getElementById('bnav').style.pointerEvents='auto';
+document.getElementById('bnav').style.opacity='1';
+document.getElementById('stats').innerHTML=
+  `<div class="sbox"><div class="sv">…</div><div class="sl">ആകെ ലിസ്റ്റിംഗ്</div></div>
+   <div class="sbox"><div class="sv">…</div><div class="sl">കാറ്റഗറി</div></div>`;
+renderBus();
+history.replaceState({page:'home'},'','#home');
+</script>
+</body>
+</html>
