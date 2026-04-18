@@ -131,6 +131,12 @@
     /* Security UI */
     .lockout-bar{background:rgba(231,76,60,.1);border:1px solid rgba(231,76,60,.3);border-radius:10px;padding:10px 14px;margin-top:10px;font-size:12px;color:var(--red);text-align:center}
     .session-warn{position:fixed;top:8px;left:50%;transform:translateX(-50%);background:rgba(245,166,35,.95);color:#000;padding:8px 18px;border-radius:20px;font-size:12px;font-weight:700;z-index:9999;display:none;pointer-events:none}
+    /* Contact links */
+    .contact-link{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px;padding:11px 16px;border-radius:12px;text-decoration:none;font-family:monospace;font-size:13px;font-weight:700;transition:opacity .2s}
+    .contact-link:active{opacity:.7}
+    .contact-wa{background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.3);color:#25D366}
+    .contact-call{background:rgba(52,152,219,.08);border:1px solid rgba(52,152,219,.25);color:var(--blue)}
+    .contact-mail{background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.25);color:var(--purple)}
   </style>
 </head>
 <body>
@@ -212,7 +218,7 @@
   <div id="annlist"></div>
 </div>
 
-<!-- ADMIN -->
+<!-- CONTACT / ADMIN -->
 <div class="screen" id="s-admin"><div id="aroot"></div></div>
 
 <nav class="bnav" id="bnav" style="pointer-events:none;opacity:0.5">
@@ -221,7 +227,7 @@
   <button class="nb"    id="n-bus"   onclick="nav('bus')">  <span class="ni">🚌</span><span>ബസ്</span></button>
   <button class="nb"    id="n-blood" onclick="nav('blood')"><span class="ni">🩸</span><span>രക്തദാനം</span></button>
   <button class="nb"    id="n-ann"   onclick="nav('ann')">  <span class="ni">📢</span><span>അറിയിപ്പ്</span></button>
-  <button class="nb"    id="n-admin" onclick="nav('admin')"><span class="ni">⚙️</span><span>അഡ്മിൻ</span></button>
+  <button class="nb"    id="n-admin" onclick="nav('admin')"><span class="ni">📞</span><span>ബന്ധപ്പെടുക</span></button>
 </nav>
 
 <script type="module">
@@ -230,10 +236,6 @@ import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc,
          onSnapshot, query, orderBy, serverTimestamp }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// ══════════════════════════════════════════════════
-// ██ FIREBASE CONFIG — safe to be public
-//    Real security = Firestore Security Rules
-// ══════════════════════════════════════════════════
 const app = initializeApp({
   apiKey:"AIzaSyDd7k11dyoaRBEq6jnDGUbWw3KlrTXNwhY",
   authDomain:"ente-maravanchery.firebaseapp.com",
@@ -245,16 +247,6 @@ const app = initializeApp({
 });
 const db = getFirestore(app);
 
-// ══════════════════════════════════════════════════
-// ██ SECURITY: SHA-256 hashed password
-//    Plain text NEVER stored in code.
-//    Hash = SHA-256("Maravanchery@123")
-//    To change password → run in browser console:
-//      crypto.subtle.digest('SHA-256',
-//        new TextEncoder().encode('NewPassword'))
-//        .then(b=>console.log([...new Uint8Array(b)]
-//          .map(x=>x.toString(16).padStart(2,'0')).join('')))
-// ══════════════════════════════════════════════════
 const PASS_HASH = '88b14559d173302098c9dd0706c733c352321f7b0bda558a01d959ed8bb33fe0';
 
 async function sha256(msg){
@@ -262,9 +254,6 @@ async function sha256(msg){
   return [...new Uint8Array(buf)].map(x=>x.toString(16).padStart(2,'0')).join('');
 }
 
-// ══════════════════════════════════════════════════
-// ██ SECURITY: Rate limiting (5 attempts → 15 min lockout)
-// ══════════════════════════════════════════════════
 const RL_KEY='_em_rl', MAX_TRIES=5, LOCKOUT_MS=15*60*1000;
 function rlGet(){try{return JSON.parse(localStorage.getItem(RL_KEY))||{count:0,lockUntil:0};}catch{return{count:0,lockUntil:0};}}
 function rlSet(d){localStorage.setItem(RL_KEY,JSON.stringify(d));}
@@ -277,9 +266,6 @@ function isLocked(){
 }
 function rlFail(){const d=rlGet();d.count=(d.count||0)+1;if(d.count>=MAX_TRIES)d.lockUntil=Date.now()+LOCKOUT_MS;rlSet(d);return d;}
 
-// ══════════════════════════════════════════════════
-// ██ SECURITY: Session timeout (2 hr, warn 5 min before)
-// ══════════════════════════════════════════════════
 const SESSION_MS=2*60*60*1000, WARN_MS=5*60*1000;
 let sessionTimer, warnTimer;
 function startSession(){
@@ -290,21 +276,14 @@ function startSession(){
 function refreshSession(){if(adminIn)startSession();}
 ['click','keydown','touchstart'].forEach(ev=>document.addEventListener(ev,refreshSession,{passive:true}));
 
-// ══════════════════════════════════════════════════
-// ██ SECURITY: HTML escape — prevents XSS
-// ══════════════════════════════════════════════════
 function esc(s){
   return String(s==null?'':s)
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
     .replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/\//g,'&#x2F;');
 }
 
-// ██ Safe phone: only digits/spaces/+/-/() allowed ██
 function safePhone(p){return /^[\d\s+\-()]{7,15}$/.test(p||'')?p:'';}
 
-// ══════════════════════════════════════════════════
-// ██ SECURITY: Code protection
-// ══════════════════════════════════════════════════
 document.addEventListener('contextmenu',e=>e.preventDefault());
 document.addEventListener('keydown',e=>{
   if(e.key==='F12'){e.preventDefault();return;}
@@ -320,9 +299,6 @@ document.addEventListener('keydown',e=>{
   },1000);
 })();
 
-// ══════════════════════════════════════════════════
-// APP DATA
-// ══════════════════════════════════════════════════
 const BLOOD_GROUPS=['A+','A-','B+','B-','AB+','AB-','O+','O-'];
 
 const ANN_CATS=[
@@ -334,7 +310,6 @@ const ANN_CATS=[
   {id:'event',label:'ഇവന്റ്'},
   {id:'other',label:'മറ്റുള്ളവ'},
 ];
-// Allowlist of valid ann category IDs (for server-side validation)
 const ANN_CAT_IDS=new Set(ANN_CATS.filter(c=>c.id!=='all').map(c=>c.id));
 
 const CATS=[
@@ -379,7 +354,6 @@ let adminIn=false,busR='kurippuram',dirTab='store',dirQ='',editId=null;
 let bloodFilter='ALL',bloodQ='',donorEditId=null;
 let annFilter='all',annEditId=null;
 
-// ── FIRESTORE LISTENERS ──
 const eq=query(collection(db,'entries'),orderBy('createdAt','asc'));
 onSnapshot(eq,snap=>{
   entries=snap.docs.map(d=>({id:d.id,...d.data()}));
@@ -426,7 +400,6 @@ window.nav=function(s,pushState=true){
 };
 window.addEventListener('popstate',()=>{nav('home',false);history.pushState({page:'home'},'','#home');});
 
-// ── HOME ──
 function renderHome(){
   document.getElementById('stats').innerHTML=
     `<div class="sbox"><div class="sv">${entries.length}</div><div class="sl">ആകെ ലിസ്റ്റിംഗ്</div></div>
@@ -465,7 +438,6 @@ function gSearch(q){
     +(f.length?f.map(e=>mkCard(e)).join(''):`<div class="empty"><div style="font-size:32px">🔍</div><div style="font-size:13px;margin-top:6px">ഒന്നും കണ്ടെത്തിയില്ല</div></div>`);
 }
 
-// ── DIRECTORY ──
 function renderDir(){renderDirTabs();filterDir(dirQ);}
 function renderDirTabs(){
   document.getElementById('dtabs').innerHTML=CATS.map(c=>{
@@ -526,7 +498,6 @@ window.toggleDetail=function(id,btn){
   btn.style.color=open?'var(--gold)':'';
 };
 
-// ── BLOOD DONOR ──
 function renderBlood(){
   const counts={};BLOOD_GROUPS.forEach(g=>counts[g]=donors.filter(d=>d.bloodGroup===g).length);
   document.getElementById('blood-hero-wrap').innerHTML=`
@@ -576,7 +547,6 @@ function mkDonorCard(d){
   </div>`;
 }
 
-// ── ANNOUNCEMENTS ──
 function timeAgo(ts){
   if(!ts)return '';
   const d=ts.toDate?ts.toDate():new Date(ts);
@@ -634,7 +604,6 @@ function filterAnn(){
     :`<div class="empty"><div style="font-size:36px">📢</div><div style="font-size:13px;margin-top:8px">ഈ വിഭാഗത്തിൽ അറിയിപ്പ് ഇല്ല</div></div>`;
 }
 
-// ── BUS ──
 function pt(t){const[h,m]=t.split(':').map(Number);return h*60+m;}
 function ft(t){const[h,m]=t.split(':').map(Number);return{t:`${h%12||12}:${String(m).padStart(2,'0')}`,p:h<12?'AM':'PM'};}
 window.setBus=function(k){busR=k;renderBus();};
@@ -669,7 +638,6 @@ function renderBus(){
   }).join('');
 }
 
-// ── ADMIN ──
 function renderAdmin(){adminIn?renderPanel():renderLock();}
 
 function renderLock(){
@@ -685,10 +653,34 @@ function renderLock(){
   }
   document.getElementById('aroot').innerHTML=`
     <div class="lkwrap">
-      <div style="font-size:56px;margin-bottom:14px">🔐</div>
-      <div style="font-size:20px;font-weight:800;margin-bottom:6px">അഡ്മിൻ ലോഗിൻ</div>
-      <div style="font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.6">ഈ വിഭാഗം കൈകാര്യം ചെയ്യാൻ<br>പാസ്‌വേഡ് നൽകുക</div>
-      <div style="width:100%;max-width:300px">
+      <div style="font-size:48px;margin-bottom:10px">📞</div>
+      <div style="font-size:20px;font-weight:800;margin-bottom:4px">ബന്ധപ്പെടുക</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:20px;line-height:1.7;max-width:280px">
+        പരാതികൾക്കും തിരുത്തലുകൾക്കും<br>വിവരങ്ങൾ അപ്‌ഡേറ്റ് ചെയ്യുന്നതിനും<br>ഞങ്ങളെ ബന്ധപ്പെടുക
+      </div>
+
+      <!-- Contact buttons — always visible -->
+      <div style="width:100%;max-width:300px;margin-bottom:28px">
+        <a href="https://wa.me/917594993481" class="contact-link contact-wa">
+          <span style="font-size:18px">💬</span>
+          <span>
+            <span style="display:block;font-size:14px">7594993481</span>
+            <span style="font-size:10px;font-weight:400;opacity:.75">WhatsApp ലഭ്യമാണ്</span>
+          </span>
+        </a>
+        <a href="tel:+917594993481" class="contact-link contact-call" style="margin-top:8px">
+          <span style="font-size:18px">📞</span>
+          <span style="font-size:14px">7594993481</span>
+        </a>
+        <a href="mailto:info@euforg.com" class="contact-link contact-mail" style="margin-top:8px">
+          <span style="font-size:18px">📧</span>
+          <span style="font-size:13px">info@euforg.com</span>
+        </a>
+      </div>
+
+      <!-- Divider -->
+      <div style="width:100%;max-width:300px;border-top:1px solid rgba(255,255,255,.07);padding-top:24px;margin-bottom:4px">
+        <div style="font-size:10px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;text-align:center;margin-bottom:14px">🔐 അഡ്മിൻ ലോഗിൻ</div>
         <input type="password" class="fi" id="pinp" placeholder="••••••••••"
                style="text-align:center;letter-spacing:4px;margin-bottom:10px"
                ${lockUntil?'disabled':''} autocomplete="current-password" maxlength="64">
@@ -701,7 +693,6 @@ function renderLock(){
   document.getElementById('pinp').onkeydown=e=>{if(e.key==='Enter')doLogin();};
 }
 
-// ██ SECURITY: Async login — SHA-256 + rate limiting + constant-time compare ██
 async function doLogin(){
   const lockUntil=isLocked();
   if(lockUntil){const mins=Math.ceil((lockUntil-Date.now())/60000);document.getElementById('perr').textContent=`🔒 ${mins} മിനിറ്റ് കഴിഞ്ഞ് ശ്രമിക്കുക`;return;}
@@ -711,7 +702,6 @@ async function doLogin(){
     const entered=document.getElementById('pinp').value;
     if(!entered){document.getElementById('perr').textContent='പാസ്‌വേഡ് നൽകുക';btn.disabled=false;btn.textContent='ലോഗിൻ ചെയ്യുക';return;}
     const hash=await sha256(entered);
-    // Constant-time comparison (prevents timing attacks)
     let diff=0;
     const a=hash.padEnd(64,'0'),b=PASS_HASH.padEnd(64,'0');
     for(let i=0;i<64;i++)diff|=a.charCodeAt(i)^b.charCodeAt(i);
@@ -733,7 +723,6 @@ function renderPanel(){
       <button id="logoutbtn" style="background:rgba(231,76,60,.12);border:1px solid rgba(231,76,60,.3);color:#E74C3C;padding:6px 12px;border-radius:8px;font-family:inherit;font-size:12px;cursor:pointer">ലോഗൗട്ട്</button>
     </div>
 
-    <!-- ① DIRECTORY -->
     <div style="margin:0 16px 10px;font-size:10px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;font-weight:700">📋 ഡയറക്ടറി ലിസ്റ്റിംഗ്</div>
     <div class="fwrap">
       <div id="ebanner" class="ebanner" style="display:none">✏️ <span>എഡിറ്റ് മോഡ്</span>
@@ -753,7 +742,6 @@ function renderPanel(){
 
     <div class="divider"></div>
 
-    <!-- ② BLOOD DONOR -->
     <div style="margin:12px 16px 10px;font-size:10px;color:var(--red);letter-spacing:2px;text-transform:uppercase;font-weight:700">🩸 രക്തദാതാവ് ചേർക്കുക</div>
     <div class="fwrap">
       <div id="donor-ebanner" class="ebanner" style="display:none;border-color:rgba(231,76,60,.3);background:rgba(231,76,60,.08);color:var(--red)">
@@ -775,7 +763,6 @@ function renderPanel(){
 
     <div class="divider"></div>
 
-    <!-- ③ ARIYIPPUKAL -->
     <div style="margin:12px 16px 10px;font-size:10px;color:var(--purple);letter-spacing:2px;text-transform:uppercase;font-weight:700">📢 അറിയിപ്പ് ചേർക്കുക</div>
     <div class="fwrap">
       <div id="ann-ebanner" class="ebanner" style="display:none;border-color:rgba(139,92,246,.3);background:rgba(139,92,246,.08);color:var(--purple)">
@@ -876,13 +863,11 @@ function renderAAList(){
   el.querySelectorAll('.bdel').forEach(btn=>btn.onclick=()=>delAnn(btn.dataset.id));
 }
 
-// ── ENTRY CRUD ──
 async function saveEntry(){
   const name=document.getElementById('fn').value.trim(),phone=document.getElementById('fp').value.trim();
   const cat=document.getElementById('fc').value,area=document.getElementById('fa').value.trim();
   const desc=document.getElementById('fd').value.trim(),timing=document.getElementById('ft2').value.trim();
   if(!name||!phone){toast('⚠️ പേരും ഫോണും നൽകണം','err');return;}
-  // ██ Input validation ██
   if(!/^[\d\s+\-()]{7,15}$/.test(phone)){toast('⚠️ ഫോൺ നമ്പർ ശരിയല്ല (7-15 ഡിജിറ്റ്)','err');return;}
   if(!CAT_IDS.has(cat)){toast('⚠️ വിഭാഗം ശരിയല്ല','err');return;}
   const extraData={};(CAT_EXTRA[cat]||[]).forEach(f=>{const el=document.getElementById('ex-'+f.id);if(el&&el.value.trim())extraData[f.id]=el.value.trim();});
@@ -905,14 +890,12 @@ function cancelEdit(){editId=null;document.getElementById('ebanner').style.displ
 function clearForm(){['fn','fp','fa','fd','ft2'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});document.getElementById('fc').value='store';renderExtraFields();}
 async function delEntry(id){if(!confirm('ഈ ലിസ്റ്റിംഗ് ഡിലീറ്റ് ചെയ്യണോ?'))return;try{await deleteDoc(doc(db,'entries',id));toast('🗑️ ഡിലീറ്റ് ചെയ്തു','ok');}catch{toast('❌ ഡിലീറ്റ് ചെയ്യാൻ കഴിഞ്ഞില്ല','err');}}
 
-// ── DONOR CRUD ──
 async function saveDonor(){
   const name=document.getElementById('dn').value.trim(),phone=document.getElementById('dph').value.trim();
   const bloodGroup=document.getElementById('dbg').value,area=document.getElementById('dar').value.trim();
   const age=document.getElementById('dage').value.trim(),note=document.getElementById('dnote').value.trim();
   if(!name||!phone||!bloodGroup){toast('⚠️ പേര്, ഫോൺ, ഗ്രൂപ്പ് നൽകണം','err');return;}
   if(!/^[\d\s+\-()]{7,15}$/.test(phone)){toast('⚠️ ഫോൺ നമ്പർ ശരിയല്ല','err');return;}
-  // ██ Blood group allowlist ██
   if(!BLOOD_GROUPS.includes(bloodGroup)){toast('⚠️ രക്തഗ്രൂപ്പ് ശരിയല്ല','err');return;}
   const btn=document.getElementById('dsbtn');btn.disabled=true;btn.innerHTML='<span class="spin"></span>';
   try{
@@ -934,7 +917,6 @@ function cancelDonorEdit(){donorEditId=null;document.getElementById('donor-ebann
 function clearDonorForm(){['dn','dph','dar','dage','dnote'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});const bg=document.getElementById('dbg');if(bg)bg.value='';}
 async function delDonor(id){if(!confirm('ഈ ഡോണർ ഡിലീറ്റ് ചെയ്യണോ?'))return;try{await deleteDoc(doc(db,'donors',id));toast('🗑️ ഡിലീറ്റ് ചെയ്തു','ok');}catch{toast('❌ ഡിലീറ്റ് ചെയ്യാൻ കഴിഞ്ഞില്ല','err');}}
 
-// ── ANNOUNCEMENT CRUD ──
 async function saveAnn(){
   const title=document.getElementById('an-title').value.trim();
   const body=document.getElementById('an-body').value.trim();
@@ -942,7 +924,6 @@ async function saveAnn(){
   const designation=document.getElementById('an-desig').value.trim();
   const category=document.getElementById('an-cat').value;
   if(!title||!body||!author){toast('⚠️ തലക്കെട്ട്, സന്ദേശം, പേര് നൽകണം','err');return;}
-  // ██ Category allowlist validation ██
   if(!ANN_CAT_IDS.has(category)){toast('⚠️ വിഭാഗം ശരിയല്ല','err');return;}
   const btn=document.getElementById('an-sbtn');btn.disabled=true;btn.innerHTML='<span class="spin"></span>';
   try{
@@ -983,7 +964,6 @@ function toast(msg,type='ok'){
   document.body.appendChild(el);setTimeout(()=>el.remove(),2500);
 }
 
-// BOOT
 document.getElementById('bnav').style.pointerEvents='auto';
 document.getElementById('bnav').style.opacity='1';
 document.getElementById('stats').innerHTML=
