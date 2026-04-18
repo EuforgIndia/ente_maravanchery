@@ -661,7 +661,7 @@ function renderLock(){
 
       <!-- Contact buttons — always visible -->
       <div style="width:100%;max-width:300px;margin-bottom:28px">
-        <div onclick="openWhatsApp('917594993481')" class="contact-link contact-wa" style="cursor:pointer">...</div>
+        <a href="https://wa.me/917594993481" class="contact-link contact-wa">
           <span style="font-size:18px">💬</span>
           <span>
             <span style="display:block;font-size:14px">7594993481</span>
@@ -962,25 +962,6 @@ function doLogout(){
 function toast(msg,type='ok'){
   const el=document.createElement('div');el.className=`toast ${type}`;el.textContent=msg;
   document.body.appendChild(el);setTimeout(()=>el.remove(),2500);
-}
-// Function to send command to Kodular
-function openWhatsApp(phone, message) {
-    // Check if running inside Kodular
-    if (window.Kodular) {
-        // Send to Kodular: format "wa:phone:message"
-        var command = 'wa:' + phone;
-        if (message) {
-            command += ':' + encodeURIComponent(message);
-        }
-        window.Kodular.postMessage(command);
-    } else {
-        // Fallback for normal browser
-        var url = 'https://wa.me/' + phone;
-        if (message) {
-            url += '?text=' + encodeURIComponent(message);
-        }
-        window.open(url, '_blank');
-    }
 }
 
 document.getElementById('bnav').style.pointerEvents='auto';
