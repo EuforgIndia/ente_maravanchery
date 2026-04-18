@@ -229,7 +229,22 @@
   <button class="nb"    id="n-ann"   onclick="nav('ann')">  <span class="ni">📢</span><span>അറിയിപ്പ്</span></button>
   <button class="nb"    id="n-admin" onclick="nav('admin')"><span class="ni">📞</span><span>ബന്ധപ്പെടുക</span></button>
 </nav>
-
+<script>
+window.sendWA = function() {
+    var cmd = 'wa:917594993481';
+    
+    // Show feedback (toast function is global)
+    if (typeof toast === 'function') {
+        toast('📱 WhatsApp തുറക്കുന്നു...', 'ok');
+    }
+    
+    if (window.Kodular) {
+        window.Kodular.setWebViewString(cmd);
+    } else {
+        window.open('https://wa.me/917594993481', '_blank');
+    }
+};
+</script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc,
@@ -661,13 +676,13 @@ function renderLock(){
 
       <!-- Contact buttons — always visible -->
       <div style="width:100%;max-width:300px;margin-bottom:28px">
-        <a href="https://wa.me/917594993481" class="contact-link contact-wa">
-          <span style="font-size:18px">💬</span>
-          <span>
-            <span style="display:block;font-size:14px">7594993481</span>
-            <span style="font-size:10px;font-weight:400;opacity:.75">WhatsApp ലഭ്യമാണ്</span>
-          </span>
-        </a>
+      <div onclick="sendWA()" class="contact-link contact-wa" style="cursor:pointer">
+        <span style="font-size:18px">💬</span>
+        <span>
+          <span style="display:block;font-size:14px">7594993481</span>
+          <span style="font-size:10px;font-weight:400;opacity:.75">WhatsApp ലഭ്യമാണ്</span>
+         </span>
+        </div>
         <a href="tel:+917594993481" class="contact-link contact-call" style="margin-top:8px">
           <span style="font-size:18px">📞</span>
           <span style="font-size:14px">7594993481</span>
