@@ -2,10 +2,11 @@
 <html lang="ml">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- ██ SECURITY HEADERS ██ -->
+  <!-- NOTE: unsafe-inline in script-src remains until scripts are moved to external files with nonces -->
   <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self' https:; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com; font-src https://fonts.gstatic.com; frame-ancestors 'none';">
+        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com; font-src https://fonts.gstatic.com; img-src 'self' data:; frame-ancestors 'none';">
   <meta http-equiv="X-Frame-Options" content="DENY">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta http-equiv="Referrer-Policy" content="no-referrer">
@@ -143,9 +144,11 @@
 
 <!-- Session expiry warning -->
 <div class="session-warn" id="sess-warn">⚠️ 5 മിനിറ്റിനുള്ളിൽ ഓട്ടോ ലോഗൗട്ട്</div>
+<!-- Screen reader live region for toast notifications -->
+<div id="toast-live" aria-live="polite" aria-atomic="true" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap"></div>
 
 <!-- HOME -->
-<div class="screen active" id="s-home">
+<div class="screen active" id="s-home" role="main" aria-label="ഹോം">
   <div class="hero">
     <div style="display:flex;justify-content:space-between;align-items:flex-start">
       <div>
@@ -221,13 +224,13 @@
 <!-- CONTACT / ADMIN -->
 <div class="screen" id="s-admin"><div id="aroot"></div></div>
 
-<nav class="bnav" id="bnav" style="pointer-events:none;opacity:0.5">
-  <button class="nb on" id="n-home"  onclick="nav('home')"> <span class="ni">🏠</span><span>ഹോം</span></button>
-  <button class="nb"    id="n-dir"   onclick="nav('dir')">  <span class="ni">📋</span><span>ഡയറക്ടറി</span></button>
-  <button class="nb"    id="n-bus"   onclick="nav('bus')">  <span class="ni">🚌</span><span>ബസ്</span></button>
-  <button class="nb"    id="n-blood" onclick="nav('blood')"><span class="ni">🩸</span><span>രക്തദാനം</span></button>
-  <button class="nb"    id="n-ann"   onclick="nav('ann')">  <span class="ni">📢</span><span>അറിയിപ്പ്</span></button>
-  <button class="nb"    id="n-admin" onclick="nav('admin')"><span class="ni">📞</span><span>ബന്ധപ്പെടുക</span></button>
+<nav class="bnav" id="bnav" aria-label="പ്രധാന നാവിഗേഷൻ" style="pointer-events:none;opacity:0.5">
+  <button class="nb on" id="n-home"  onclick="nav('home')"  aria-label="ഹോം"><span class="ni">🏠</span><span>ഹോം</span></button>
+  <button class="nb"    id="n-dir"   onclick="nav('dir')"   aria-label="ഡയറക്ടറി"><span class="ni">📋</span><span>ഡയറക്ടറി</span></button>
+  <button class="nb"    id="n-bus"   onclick="nav('bus')"   aria-label="ബസ് സമയം"><span class="ni">🚌</span><span>ബസ്</span></button>
+  <button class="nb"    id="n-blood" onclick="nav('blood')" aria-label="രക്തദാനം"><span class="ni">🩸</span><span>രക്തദാനം</span></button>
+  <button class="nb"    id="n-ann"   onclick="nav('ann')"   aria-label="അറിയിപ്പുകൾ"><span class="ni">📢</span><span>അറിയിപ്പ്</span></button>
+  <button class="nb"    id="n-admin" onclick="nav('admin')" aria-label="ബന്ധപ്പെടുക / അഡ്മിൻ"><span class="ni">📞</span><span>ബന്ധപ്പെടുക</span></button>
 </nav>
 <script>
 window.sendWA = function() {
@@ -273,10 +276,12 @@ async function sha256(msg){
   return [...new Uint8Array(buf)].map(x=>x.toString(16).padStart(2,'0')).join('');
 }
 
-const RL_KEY='_em_rl', MAX_TRIES=5, LOCKOUT_MS=15*60*1000;
-function rlGet(){try{return JSON.parse(localStorage.getItem(RL_KEY))||{count:0,lockUntil:0};}catch{return{count:0,lockUntil:0};}}
-function rlSet(d){localStorage.setItem(RL_KEY,JSON.stringify(d));}
-function rlReset(){localStorage.removeItem(RL_KEY);}
+// Rate limiter uses sessionStorage so it persists per-tab but cannot be cleared
+// silently across sessions. For full security, move auth to a Cloud Function.
+const RL_KEY='_em_rl_v2', MAX_TRIES=5, LOCKOUT_MS=15*60*1000;
+function rlGet(){try{return JSON.parse(sessionStorage.getItem(RL_KEY))||{count:0,lockUntil:0};}catch{return{count:0,lockUntil:0};}}
+function rlSet(d){try{sessionStorage.setItem(RL_KEY,JSON.stringify(d));}catch{}}
+function rlReset(){try{sessionStorage.removeItem(RL_KEY);}catch{}}
 function isLocked(){
   const d=rlGet();
   if(d.lockUntil&&Date.now()<d.lockUntil)return d.lockUntil;
@@ -384,7 +389,7 @@ onSnapshot(dqr,snap=>{
   const cur=curScreen();
   if(cur==='blood')renderBlood();
   if(cur==='admin'&&adminIn)renderDAList();
-});
+},()=>{syncDot(false);toast('❌ ഡോണർ ലോഡ് ആകുന്നില്ല','err');});
 
 const aqr=query(collection(db,'announcements'),orderBy('createdAt','desc'));
 onSnapshot(aqr,snap=>{
@@ -393,7 +398,7 @@ onSnapshot(aqr,snap=>{
   if(cur==='ann')renderAnn();
   if(cur==='home')renderHomeAnn();
   if(cur==='admin'&&adminIn)renderAAList();
-});
+},()=>{syncDot(false);toast('❌ അറിയിപ്പ് ലോഡ് ആകുന്നില്ല','err');});
 
 function curScreen(){return document.querySelector('.screen.active')?.id?.replace('s-','');}
 function syncDot(ok){const d=document.getElementById('sdot'),t=document.getElementById('stxt');if(!d)return;d.classList.toggle('off',!ok);t.textContent=ok?'ലൈവ്':'ഓഫ്‌ലൈൻ';}
@@ -403,9 +408,14 @@ function tickClocks(){
   ['clk-home','clk-bus'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=t;});
 }
 tickClocks();setInterval(tickClocks,1000);
-setInterval(()=>{if(document.getElementById('s-bus').classList.contains('active'))renderBus();},30000);
+// Bus auto-refresh: only re-render when bus screen is active AND tab is visible
+setInterval(()=>{
+  if(!document.hidden&&document.getElementById('s-bus').classList.contains('active'))renderBus();
+},30000);
 
+const VALID_SCREENS=new Set(['home','dir','bus','blood','ann','admin']);
 window.nav=function(s,pushState=true){
+  if(!VALID_SCREENS.has(s))s='home';
   document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
   document.querySelectorAll('.nb').forEach(x=>x.classList.remove('on'));
   document.getElementById('s-'+s).classList.add('active');
@@ -882,6 +892,7 @@ function renderAAList(){
 }
 
 async function saveEntry(){
+  if(!adminIn){toast('⚠️ ആദ്യം ലോഗിൻ ചെയ്യുക','err');return;}
   const name=document.getElementById('fn').value.trim(),phone=document.getElementById('fp').value.trim();
   const cat=document.getElementById('fc').value,area=document.getElementById('fa').value.trim();
   const desc=document.getElementById('fd').value.trim(),timing=document.getElementById('ft2').value.trim();
@@ -909,6 +920,7 @@ function clearForm(){['fn','fp','fa','fd','ft2'].forEach(id=>{const e=document.g
 async function delEntry(id){if(!confirm('ഈ ലിസ്റ്റിംഗ് ഡിലീറ്റ് ചെയ്യണോ?'))return;try{await deleteDoc(doc(db,'entries',id));toast('🗑️ ഡിലീറ്റ് ചെയ്തു','ok');}catch{toast('❌ ഡിലീറ്റ് ചെയ്യാൻ കഴിഞ്ഞില്ല','err');}}
 
 async function saveDonor(){
+  if(!adminIn){toast('⚠️ ആദ്യം ലോഗിൻ ചെയ്യുക','err');return;}
   const name=document.getElementById('dn').value.trim(),phone=document.getElementById('dph').value.trim();
   const bloodGroup=document.getElementById('dbg').value,area=document.getElementById('dar').value.trim();
   const age=document.getElementById('dage').value.trim(),note=document.getElementById('dnote').value.trim();
@@ -936,6 +948,7 @@ function clearDonorForm(){['dn','dph','dar','dage','dnote'].forEach(id=>{const e
 async function delDonor(id){if(!confirm('ഈ ഡോണർ ഡിലീറ്റ് ചെയ്യണോ?'))return;try{await deleteDoc(doc(db,'donors',id));toast('🗑️ ഡിലീറ്റ് ചെയ്തു','ok');}catch{toast('❌ ഡിലീറ്റ് ചെയ്യാൻ കഴിഞ്ഞില്ല','err');}}
 
 async function saveAnn(){
+  if(!adminIn){toast('⚠️ ആദ്യം ലോഗിൻ ചെയ്യുക','err');return;}
   const title=document.getElementById('an-title').value.trim();
   const body=document.getElementById('an-body').value.trim();
   const author=document.getElementById('an-author').value.trim();
@@ -980,6 +993,9 @@ function doLogout(){
 function toast(msg,type='ok'){
   const el=document.createElement('div');el.className=`toast ${type}`;el.textContent=msg;
   document.body.appendChild(el);setTimeout(()=>el.remove(),2500);
+  // Announce to screen readers via aria-live region
+  const live=document.getElementById('toast-live');
+  if(live){live.textContent='';setTimeout(()=>{live.textContent=msg;},50);}
 }
 
 document.getElementById('bnav').style.pointerEvents='auto';
@@ -987,7 +1003,6 @@ document.getElementById('bnav').style.opacity='1';
 document.getElementById('stats').innerHTML=
   `<div class="sbox"><div class="sv">…</div><div class="sl">ആകെ ലിസ്റ്റിംഗ്</div></div>
    <div class="sbox"><div class="sv">…</div><div class="sl">കാറ്റഗറി</div></div>`;
-renderBus();
 history.replaceState({page:'home'},'','#home');
 </script>
 </body>
