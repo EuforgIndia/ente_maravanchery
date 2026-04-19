@@ -304,14 +304,8 @@
 </div>
 
 <script>
-  // ██ SECURITY: Code protection ██
-  document.addEventListener('contextmenu', e => e.preventDefault());
-  document.addEventListener('keydown', e => {
-    if(e.key === 'F12') { e.preventDefault(); return; }
-    if(e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key.toUpperCase())) { e.preventDefault(); return; }
-    if(e.ctrlKey && e.key.toLowerCase() === 'u') { e.preventDefault(); return; }
-    if(e.ctrlKey && e.key.toLowerCase() === 's') { e.preventDefault(); return; }
-  });
+  // Note: contextmenu and devtools blocking removed — these don't provide
+  // real security and actively harm iOS/mobile users in WhatsApp in-app browsers.
 
   // ── Launch date — change this ──
   const LAUNCH  = new Date('2026-04-25T11:00:00');
@@ -326,7 +320,10 @@
     document.querySelector('.subtitle').textContent = 'എന്റെ മറവഞ്ചേരി ഇപ്പോൾ ലൈവ് ആണ്! ആപ്പ് തുറക്കുന്നു…';
     const pills = document.querySelector('.pills');
     if(pills) pills.style.display = 'none';
-    setTimeout(() => { window.location.href = APP_URL; }, 3000);
+    // Only redirect if not already on app.html
+    if(!window.location.pathname.includes('app.html')){
+      setTimeout(() => { window.location.href = APP_URL; }, 3000);
+    }
   }
 
   function updateCountdown(){
