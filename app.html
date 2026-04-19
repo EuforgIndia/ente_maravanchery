@@ -262,6 +262,10 @@ const app = initializeApp({
 });
 const db = getFirestore(app);
 
+// ⚠️  SECURITY NOTE: This hash is visible to anyone who views page source.
+// It can be cracked offline with a dictionary/brute-force attack.
+// For real security, move authentication to a server-side endpoint
+// (e.g. a Firebase Cloud Function) so the secret never reaches the client.
 const PASS_HASH = '88b14559d173302098c9dd0706c733c352321f7b0bda558a01d959ed8bb33fe0';
 
 async function sha256(msg){
@@ -297,22 +301,18 @@ function esc(s){
     .replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/\//g,'&#x2F;');
 }
 
-function safePhone(p){return /^[\d\s+\-()]{7,15}$/.test(p||'')?p:'';}
+function safePhone(p){
+  // Must contain at least 7 actual digits (not just symbols/spaces)
+  const s=p||'';
+  return /^[\d\s+\-()]{7,15}$/.test(s)&&(s.match(/\d/g)||[]).length>=7?s:'';
+}
 
-document.addEventListener('contextmenu',e=>e.preventDefault());
-document.addEventListener('keydown',e=>{
-  if(e.key==='F12'){e.preventDefault();return;}
-  if(e.ctrlKey&&e.shiftKey&&['I','J','C','K'].includes(e.key.toUpperCase())){e.preventDefault();return;}
-  if(e.ctrlKey&&e.key.toLowerCase()==='u'){e.preventDefault();return;}
-  if(e.ctrlKey&&e.key.toLowerCase()==='s'){e.preventDefault();return;}
-});
-(function devtoolsGuard(){
-  setInterval(()=>{
-    if(window.outerWidth-window.innerWidth>160||window.outerHeight-window.innerHeight>160){
-      document.body.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;font-size:18px;background:#07111A;color:#F5A623">🔒 DevTools ക്ലോസ് ചെയ്യുക</div>';
-    }
-  },1000);
-})();
+// Note: contextmenu and keyboard-shortcut blocking removed — these are
+// ineffective as security measures and break accessibility on iOS devices.
+// devtoolsGuard removed: the outerWidth/outerHeight heuristic falsely triggers
+// on iOS Safari inside WhatsApp's in-app browser (and other in-app browsers on
+// iPhones), where the browser chrome makes the difference exceed 160 px for
+// perfectly normal users — wiping the page content for them.
 
 const BLOOD_GROUPS=['A+','A-','B+','B-','AB+','AB-','O+','O-'];
 
@@ -413,7 +413,10 @@ window.nav=function(s,pushState=true){
   ({home:renderHome,dir:renderDir,bus:renderBus,blood:renderBlood,ann:renderAnn,admin:renderAdmin})[s]();
   if(pushState)history.pushState({page:s},'','#'+s);
 };
-window.addEventListener('popstate',()=>{nav('home',false);history.pushState({page:'home'},'','#home');});
+window.addEventListener('popstate',e=>{
+  const page=(e.state&&e.state.page)||'home';
+  nav(page,false);
+});
 
 function renderHome(){
   document.getElementById('stats').innerHTML=
@@ -883,7 +886,7 @@ async function saveEntry(){
   const cat=document.getElementById('fc').value,area=document.getElementById('fa').value.trim();
   const desc=document.getElementById('fd').value.trim(),timing=document.getElementById('ft2').value.trim();
   if(!name||!phone){toast('⚠️ പേരും ഫോണും നൽകണം','err');return;}
-  if(!/^[\d\s+\-()]{7,15}$/.test(phone)){toast('⚠️ ഫോൺ നമ്പർ ശരിയല്ല (7-15 ഡിജിറ്റ്)','err');return;}
+  if(!/^[\d\s+\-()]{7,15}$/.test(phone)||((phone.match(/\d/g)||[]).length<7)){toast('⚠️ ഫോൺ നമ്പർ ശരിയല്ല (7-15 ഡിജിറ്റ്)','err');return;}
   if(!CAT_IDS.has(cat)){toast('⚠️ വിഭാഗം ശരിയല്ല','err');return;}
   const extraData={};(CAT_EXTRA[cat]||[]).forEach(f=>{const el=document.getElementById('ex-'+f.id);if(el&&el.value.trim())extraData[f.id]=el.value.trim();});
   const btn=document.getElementById('sbtn');btn.disabled=true;btn.innerHTML='<span class="spin"></span>';
@@ -910,7 +913,7 @@ async function saveDonor(){
   const bloodGroup=document.getElementById('dbg').value,area=document.getElementById('dar').value.trim();
   const age=document.getElementById('dage').value.trim(),note=document.getElementById('dnote').value.trim();
   if(!name||!phone||!bloodGroup){toast('⚠️ പേര്, ഫോൺ, ഗ്രൂപ്പ് നൽകണം','err');return;}
-  if(!/^[\d\s+\-()]{7,15}$/.test(phone)){toast('⚠️ ഫോൺ നമ്പർ ശരിയല്ല','err');return;}
+  if(!/^[\d\s+\-()]{7,15}$/.test(phone)||((phone.match(/\d/g)||[]).length<7)){toast('⚠️ ഫോൺ നമ്പർ ശരിയല്ല','err');return;}
   if(!BLOOD_GROUPS.includes(bloodGroup)){toast('⚠️ രക്തഗ്രൂപ്പ് ശരിയല്ല','err');return;}
   const btn=document.getElementById('dsbtn');btn.disabled=true;btn.innerHTML='<span class="spin"></span>';
   try{
