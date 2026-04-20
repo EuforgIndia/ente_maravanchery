@@ -132,6 +132,19 @@
     /* Security UI */
     .lockout-bar{background:rgba(231,76,60,.1);border:1px solid rgba(231,76,60,.3);border-radius:10px;padding:10px 14px;margin-top:10px;font-size:12px;color:var(--red);text-align:center}
     .session-warn{position:fixed;top:8px;left:50%;transform:translateX(-50%);background:rgba(245,166,35,.95);color:#000;padding:8px 18px;border-radius:20px;font-size:12px;font-weight:700;z-index:9999;display:none;pointer-events:none}
+    /* Announcement slider — home page */
+    .ann-slider-wrap{overflow:hidden;margin:0 14px 4px;border-radius:var(--r);border:1px solid rgba(139,92,246,.2);}
+    .ann-slider-track{display:flex;transition:transform .4s cubic-bezier(.4,0,.2,1);}
+    .ann-slide-card{min-width:100%;padding:14px 16px;background:var(--bg3);cursor:pointer;-webkit-user-select:none;user-select:none;position:relative;}
+    .ann-slide-card:active{background:rgba(139,92,246,.1);}
+    .ann-slide-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.25);color:var(--purple);border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;z-index:2;transition:background .2s;}
+    .ann-slide-arrow:active{background:rgba(139,92,246,.35);}
+    .ann-dots{display:flex;justify-content:center;gap:6px;padding:4px 0 10px;}
+    .ann-dot{width:6px;height:6px;border-radius:50%;background:rgba(139,92,246,.3);cursor:pointer;transition:all .25s;}
+    .ann-dot.active{width:18px;border-radius:3px;background:var(--purple);}
+    /* Announcement expand/collapse — ARIYIPPUKAL section */
+    .ann-expand-btn{width:100%;margin-top:8px;padding:6px;background:rgba(139,92,246,.06);border:1px solid rgba(139,92,246,.2);border-radius:8px;color:var(--muted);font-family:inherit;font-size:11px;cursor:pointer;text-align:center;transition:all .2s;}
+    .ann-expand-btn:active{background:rgba(139,92,246,.15);}
     /* Contact links */
     .contact-link{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px;padding:11px 16px;border-radius:12px;text-decoration:none;font-family:monospace;font-size:13px;font-weight:700;transition:opacity .2s}
     .contact-link:active{opacity:.7}
@@ -444,14 +457,49 @@ function renderHome(){
 
 function renderHomeAnn(){
   const el=document.getElementById('home-ann-wrap');if(!el)return;
-  const latest=announcements.slice(0,2);
+  const latest=announcements.slice(0,6);
   if(!latest.length){el.innerHTML='';return;}
+
+  const slides=latest.map(a=>{
+    const body=a.body||'';
+    const preview=body.length>90?body.slice(0,90)+'…':body;
+    const nb=isNew(a.createdAt)?`<span style="background:var(--green);color:#000;font-size:9px;font-weight:800;padding:2px 7px;border-radius:10px;letter-spacing:.5px;margin-left:6px">NEW</span>`:'';
+    return `<div class="ann-slide-card" onclick="viewAnn('${esc(a.id)}')">
+      <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin-bottom:7px">
+        <div class="ann-badge" style="margin-bottom:0">📢 ${esc(catLabel(a.category||'other'))}</div>${nb}
+      </div>
+      <div class="ann-title" style="font-size:14px;margin-bottom:5px;padding-right:8px">${esc(a.title)}</div>
+      <div style="font-size:12px;color:#8899aa;line-height:1.55">${esc(preview)}</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:8px;display:flex;align-items:center;justify-content:space-between">
+        <span>👤 ${esc(a.author)}${a.designation?' · '+esc(a.designation):''}</span>
+        <span style="color:var(--purple);font-weight:700;font-size:11px">കൂടുതൽ →</span>
+      </div>
+    </div>`;
+  }).join('');
+
+  const total=latest.length;
+  const dots=total>1?latest.map((_,i)=>`<span class="ann-dot${i===0?' active':''}" onclick="goAnnSlide(${i})"></span>`).join(''):'';
+
   el.innerHTML=`
     <div style="padding:4px 16px 2px;display:flex;justify-content:space-between;align-items:center">
       <div class="stitle" style="padding:10px 0">📢 അറിയിപ്പുകൾ</div>
       <button onclick="nav('ann')" style="background:none;border:none;color:var(--purple);font-family:inherit;font-size:11px;cursor:pointer;font-weight:700">എല്ലാം →</button>
     </div>
-    ${latest.map(a=>mkAnnCard(a,true)).join('')}`;
+    <div style="position:relative">
+      <div class="ann-slider-wrap"><div class="ann-slider-track" id="ann-track">${slides}</div></div>
+    </div>
+    ${dots?`<div class="ann-dots" id="ann-dots">${dots}</div>`:''}`;
+
+  let cur=0;
+  function goTo(n){
+    cur=((n%total)+total)%total;
+    const track=document.getElementById('ann-track');
+    if(track)track.style.transform=`translateX(-${cur*100}%)`;
+    document.querySelectorAll('.ann-dot').forEach((d,i)=>d.classList.toggle('active',i===cur));
+  }
+  window.goAnnSlide=goTo;
+  if(window._annSlideTimer)clearInterval(window._annSlideTimer);
+  if(total>1)window._annSlideTimer=setInterval(()=>goTo(cur+1),4000);
 }
 
 window.goCat=function(id){dirTab=id;nav('dir');};
@@ -588,13 +636,46 @@ function timeAgo(ts){
 function isNew(ts){if(!ts)return false;const d=ts.toDate?ts.toDate():new Date(ts);return(Date.now()-d)<86400000*2;}
 function catLabel(id){return ANN_CATS.find(x=>x.id===id)?.label||esc(id);}
 
-function mkAnnCard(a,compact=false){
+// ── Linkify: converts phone numbers and URLs in raw text into tappable links ──
+function linkify(raw){
+  // Combined pattern: https/http URLs, www URLs, Indian mobile numbers (+91 or 10-digit starting 6-9)
+  const re=/(https?:\/\/[^\s]+|www\.[^\s]+|\+91[\s\-]?[6-9]\d{9}|[6-9]\d{9})/g;
+  let result='',last=0,m;
+  re.lastIndex=0;
+  while((m=re.exec(raw))!==null){
+    result+=esc(raw.slice(last,m.index));
+    const token=m[0];
+    if(/^https?:\/\//i.test(token)){
+      result+=`<a href="${esc(token)}" target="_blank" rel="noopener noreferrer"
+        style="color:var(--blue);text-decoration:underline;word-break:break-all;font-weight:600">${esc(token)}</a>`;
+    } else if(/^www\./i.test(token)){
+      result+=`<a href="https://${esc(token)}" target="_blank" rel="noopener noreferrer"
+        style="color:var(--blue);text-decoration:underline;word-break:break-all;font-weight:600">${esc(token)}</a>`;
+    } else {
+      const digits=token.replace(/[\s\-]/g,'');
+      result+=`<a href="tel:${esc(digits)}"
+        style="color:var(--green);font-weight:700;font-family:monospace;white-space:nowrap">${esc(token)}</a>`;
+    }
+    last=m.index+m[0].length;
+  }
+  result+=esc(raw.slice(last));
+  return result;
+}
+
+const ANN_PREVIEW=130;
+function mkAnnCard(a){
+  const uid='ann-'+esc(a.id);
   const newBadge=isNew(a.createdAt)?`<div class="ann-new">NEW</div>`:'';
-  return `<div class="ann-card" style="${compact?'margin:0 14px 10px;':''}">
+  const body=a.body||'';
+  const needsTrunc=body.length>ANN_PREVIEW;
+  const preview=needsTrunc?body.slice(0,ANN_PREVIEW)+'…':body;
+  return `<div class="ann-card" id="${uid}">
     ${newBadge}
     <div class="ann-badge">📢 ${esc(catLabel(a.category||'other'))}</div>
     <div class="ann-title">${esc(a.title)}</div>
-    <div class="ann-body">${esc(a.body)}</div>
+    <div class="ann-body ann-body-preview" style="white-space:pre-wrap">${linkify(preview)}</div>
+    ${needsTrunc?`<div class="ann-body ann-body-full" style="display:none;white-space:pre-wrap">${linkify(body)}</div>
+    <button class="ann-expand-btn" onclick="toggleAnn('${uid}',this)">▼ കൂടുതൽ വായിക്കുക</button>`:''}
     <div class="ann-meta">
       <span class="ann-author">👤 ${esc(a.author)}</span>
       ${a.designation?`<span>· ${esc(a.designation)}</span>`:''}
@@ -602,6 +683,34 @@ function mkAnnCard(a,compact=false){
     </div>
   </div>`;
 }
+
+window.toggleAnn=function(uid,btn){
+  const card=document.getElementById(uid);if(!card)return;
+  const prev=card.querySelector('.ann-body-preview');
+  const full=card.querySelector('.ann-body-full');
+  if(!prev||!full)return;
+  const isOpen=full.style.display!=='none';
+  prev.style.display=isOpen?'':'none';
+  full.style.display=isOpen?'none':'';
+  btn.textContent=isOpen?'▼ കൂടുതൽ വായിക്കുക':'▲ ചുരുക്കുക';
+  btn.style.color=isOpen?'':'var(--gold)';
+};
+
+window.viewAnn=function(id){
+  annFilter='all';
+  nav('ann');
+  setTimeout(()=>{
+    const uid='ann-'+id;
+    const el=document.getElementById(uid);if(!el)return;
+    el.scrollIntoView({behavior:'smooth',block:'center'});
+    const prev=el.querySelector('.ann-body-preview');
+    const full=el.querySelector('.ann-body-full');
+    const btn=el.querySelector('.ann-expand-btn');
+    if(prev&&full&&btn){prev.style.display='none';full.style.display='';btn.textContent='▲ ചുരുക്കുക';btn.style.color='var(--gold)';}
+    el.style.transition='box-shadow .3s';el.style.boxShadow='0 0 0 2px var(--purple)';
+    setTimeout(()=>{el.style.boxShadow='';},2200);
+  },180);
+};
 
 function renderAnn(){
   document.getElementById('ann-hero-wrap').innerHTML=`
