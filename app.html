@@ -86,6 +86,8 @@
     .divider{height:1px;background:var(--border);margin:2px 14px 10px}
     .sdot{width:7px;height:7px;border-radius:50%;display:inline-block;background:var(--green);box-shadow:0 0 6px var(--green)}
     .sdot.off{background:var(--muted);box-shadow:none}
+    /* Notification badge on nav buttons */
+    .nb-badge{position:absolute;top:5px;right:calc(50% - 16px);background:var(--red);color:#fff;font-size:8px;font-weight:800;min-width:15px;height:15px;border-radius:8px;display:none;align-items:center;justify-content:center;padding:0 3px;pointer-events:none;line-height:1}
     .xtags{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
     .xtag{display:inline-flex;align-items:center;gap:3px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:3px 9px;font-size:11px;color:#b0bec5;white-space:nowrap}
     #extra-fields .fg{margin-bottom:13px}
@@ -242,7 +244,7 @@
   <button class="nb"    id="n-dir"   onclick="nav('dir')"   aria-label="ഡയറക്ടറി"><span class="ni">📋</span><span>ഡയറക്ടറി</span></button>
   <button class="nb"    id="n-bus"   onclick="nav('bus')"   aria-label="ബസ് സമയം"><span class="ni">🚌</span><span>ബസ്</span></button>
   <button class="nb"    id="n-blood" onclick="nav('blood')" aria-label="രക്തദാനം"><span class="ni">🩸</span><span>രക്തദാനം</span></button>
-  <button class="nb"    id="n-ann"   onclick="nav('ann')"   aria-label="അറിയിപ്പുകൾ"><span class="ni">📢</span><span>അറിയിപ്പ്</span></button>
+  <button class="nb"    id="n-ann"   onclick="nav('ann')"   aria-label="അറിയിപ്പുകൾ"><span class="ni">📢</span><span>അറിയിപ്പ്</span><span class="nb-badge" id="ann-badge"></span></button>
   <button class="nb"    id="n-admin" onclick="nav('admin')" aria-label="ബന്ധപ്പെടുക / അഡ്മിൻ"><span class="ni">📞</span><span>ബന്ധപ്പെടുക</span></button>
 </nav>
 <script>
@@ -386,6 +388,7 @@ let entries=[],donors=[],announcements=[];
 let adminIn=false,busR='kurippuram',dirTab='store',dirQ='',editId=null;
 let bloodFilter='ALL',bloodQ='',donorEditId=null;
 let annFilter='all',annEditId=null;
+let annInitialized=false,annPrevCount=0;
 
 const eq=query(collection(db,'entries'),orderBy('createdAt','asc'));
 onSnapshot(eq,snap=>{
@@ -406,7 +409,16 @@ onSnapshot(dqr,snap=>{
 
 const aqr=query(collection(db,'announcements'),orderBy('createdAt','desc'));
 onSnapshot(aqr,snap=>{
-  announcements=snap.docs.map(d=>({id:d.id,...d.data()}));
+  const fresh=snap.docs.map(d=>({id:d.id,...d.data()}));
+  const newCount=fresh.length;
+  // Play tone + show badge only when new items arrive after the initial load
+  if(annInitialized&&newCount>annPrevCount){
+    playNotificationTone();
+    showAnnBadge(newCount-annPrevCount);
+  }
+  announcements=fresh;
+  annPrevCount=newCount;
+  annInitialized=true;
   const cur=curScreen();
   if(cur==='ann')renderAnn();
   if(cur==='home')renderHomeAnn();
@@ -415,6 +427,44 @@ onSnapshot(aqr,snap=>{
 
 function curScreen(){return document.querySelector('.screen.active')?.id?.replace('s-','');}
 function syncDot(ok){const d=document.getElementById('sdot'),t=document.getElementById('stxt');if(!d)return;d.classList.toggle('off',!ok);t.textContent=ok?'ലൈവ്':'ഓഫ്‌ലൈൻ';}
+
+// ── Notification tone for new ARIYIPPUKAL (Web Audio API — no external file, CSP-safe, works on Web & Kodular WebView) ──
+function playNotificationTone(){
+  try{
+    const AC=window.AudioContext||window.webkitAudioContext;
+    if(!AC)return;
+    const ctx=new AC();
+    const run=()=>{
+      const t=ctx.currentTime;
+      // Three-note rising chime: A5 → D6 → E6
+      [[880,0,0.13,0.35],[1175,0.16,0.22,0.28],[1319,0.38,0.28,0.2]].forEach(([freq,delay,dur,vol])=>{
+        const osc=ctx.createOscillator(),gain=ctx.createGain();
+        osc.connect(gain);gain.connect(ctx.destination);
+        osc.type='sine';osc.frequency.value=freq;
+        gain.gain.setValueAtTime(0,t+delay);
+        gain.gain.linearRampToValueAtTime(vol,t+delay+0.015);
+        gain.gain.exponentialRampToValueAtTime(0.001,t+delay+dur);
+        osc.start(t+delay);osc.stop(t+delay+dur+0.05);
+      });
+      setTimeout(()=>{try{ctx.close();}catch(e){}},1200);
+    };
+    if(ctx.state==='suspended'){ctx.resume().then(run).catch(()=>{});}else{run();}
+  }catch(e){}
+}
+// ── Announcement badge on nav button ──
+let _annBadgeCount=0;
+function showAnnBadge(n){
+  _annBadgeCount+=n;
+  const el=document.getElementById('ann-badge');
+  if(!el)return;
+  el.textContent=_annBadgeCount>9?'9+':_annBadgeCount;
+  el.style.display='flex';
+}
+function clearAnnBadge(){
+  _annBadgeCount=0;
+  const el=document.getElementById('ann-badge');
+  if(el){el.textContent='';el.style.display='none';}
+}
 
 function tickClocks(){
   const t=new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
@@ -429,6 +479,16 @@ setInterval(()=>{
 const VALID_SCREENS=new Set(['home','dir','bus','blood','ann','admin']);
 window.nav=function(s,pushState=true){
   if(!VALID_SCREENS.has(s))s='home';
+  // FIX: Stop slider auto-scroll when leaving home to avoid wasted cycles
+  if(s!=='home'&&window._annSlideTimer){clearInterval(window._annSlideTimer);window._annSlideTimer=null;}
+  // FIX: Reset home search state so stale results don't persist on return
+  if(s==='home'){
+    const gs=document.getElementById('gsearch');if(gs)gs.value='';
+    const gr=document.getElementById('gres');if(gr)gr.style.display='none';
+    const hb=document.getElementById('hbody');if(hb)hb.style.display='block';
+  }
+  // FIX: Clear notification badge when user opens the ann screen
+  if(s==='ann')clearAnnBadge();
   document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
   document.querySelectorAll('.nb').forEach(x=>x.classList.remove('on'));
   document.getElementById('s-'+s).classList.add('active');
@@ -500,6 +560,13 @@ function renderHomeAnn(){
   window.goAnnSlide=goTo;
   if(window._annSlideTimer)clearInterval(window._annSlideTimer);
   if(total>1)window._annSlideTimer=setInterval(()=>goTo(cur+1),4000);
+  // FIX: Touch swipe support for mobile/Kodular WebView
+  const _wrap=document.querySelector('.ann-slider-wrap');
+  if(_wrap&&total>1){
+    let _tx=0;
+    _wrap.ontouchstart=e=>{_tx=e.touches[0].clientX;};
+    _wrap.ontouchend=e=>{const dx=e.changedTouches[0].clientX-_tx;if(Math.abs(dx)>40)goTo(dx<0?cur+1:cur-1);};
+  }
 }
 
 window.goCat=function(id){dirTab=id;nav('dir');};
@@ -526,7 +593,8 @@ document.getElementById('dq').oninput=e=>filterDir(e.target.value);
 
 function filterDir(q){
   dirQ=q;
-  const list=entries.filter(e=>e.cat===dirTab&&(!q.trim()||e.name?.includes(q)||e.phone?.includes(q)||(e.area||'').includes(q)));
+  // FIX: also search desc field, consistent with global search
+  const list=entries.filter(e=>e.cat===dirTab&&(!q.trim()||e.name?.includes(q)||e.phone?.includes(q)||(e.area||'').includes(q)||(e.desc||'').includes(q)));
   const c=CATS.find(x=>x.id===dirTab);
   document.getElementById('dlist').innerHTML=list.length
     ?list.map(e=>mkCard(e)).join('')
@@ -668,7 +736,9 @@ function mkAnnCard(a){
   const newBadge=isNew(a.createdAt)?`<div class="ann-new">NEW</div>`:'';
   const body=a.body||'';
   const needsTrunc=body.length>ANN_PREVIEW;
-  const preview=needsTrunc?body.slice(0,ANN_PREVIEW)+'…':body;
+  // FIX: word-boundary truncation avoids splitting Malayalam words or URLs mid-character
+  const rawCut=needsTrunc?body.slice(0,ANN_PREVIEW):'';
+  const preview=needsTrunc?(rawCut.replace(/\S+$/,'')||rawCut)+'…':body;
   return `<div class="ann-card" id="${uid}">
     ${newBadge}
     <div class="ann-badge">📢 ${esc(catLabel(a.category||'other'))}</div>
@@ -745,7 +815,8 @@ function pt(t){const[h,m]=t.split(':').map(Number);return h*60+m;}
 function ft(t){const[h,m]=t.split(':').map(Number);return{t:`${h%12||12}:${String(m).padStart(2,'0')}`,p:h<12?'AM':'PM'};}
 window.setBus=function(k){busR=k;renderBus();};
 function renderBus(){
-  const cur=new Date().getHours()*60+new Date().getMinutes();
+  // FIX: single Date object to avoid minute-boundary race condition
+  const _now=new Date(),cur=_now.getHours()*60+_now.getMinutes();
   document.getElementById('brtabs').innerHTML=Object.entries(BUS).map(([k,v])=>
     `<button class="btab${k===busR?' on':''}" onclick="setBus('${esc(k)}')"
       style="${k===busR?'color:'+v.col+';border-color:'+v.col+'50;background:'+v.col+'12':''}">
@@ -1112,7 +1183,10 @@ document.getElementById('bnav').style.opacity='1';
 document.getElementById('stats').innerHTML=
   `<div class="sbox"><div class="sv">…</div><div class="sl">ആകെ ലിസ്റ്റിംഗ്</div></div>
    <div class="sbox"><div class="sv">…</div><div class="sl">കാറ്റഗറി</div></div>`;
+// FIX: capture hash BEFORE replaceState overwrites it (shared/bookmarked links like #ann)
+const _initHash=location.hash.replace('#','');
 history.replaceState({page:'home'},'','#home');
+if(VALID_SCREENS.has(_initHash)&&_initHash!=='home')nav(_initHash,false);
 </script>
 </body>
 </html>
