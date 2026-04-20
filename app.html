@@ -654,7 +654,7 @@ function linkify(raw){
     } else {
       const digits=token.replace(/[\s\-]/g,'');
       result+=`<a href="tel:${esc(digits)}"
-        style="color:var(--green);font-weight:700;font-family:monospace;white-space:nowrap">📞 ${esc(token)}</a>`;
+        style="color:var(--green);font-weight:700;font-family:monospace;white-space:nowrap">${esc(token)}</a>`;
     }
     last=m.index+m[0].length;
   }
