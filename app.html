@@ -636,6 +636,32 @@ function timeAgo(ts){
 function isNew(ts){if(!ts)return false;const d=ts.toDate?ts.toDate():new Date(ts);return(Date.now()-d)<86400000*2;}
 function catLabel(id){return ANN_CATS.find(x=>x.id===id)?.label||esc(id);}
 
+// ── Linkify: converts phone numbers and URLs in raw text into tappable links ──
+function linkify(raw){
+  // Combined pattern: https/http URLs, www URLs, Indian mobile numbers (+91 or 10-digit starting 6-9)
+  const re=/(https?:\/\/[^\s]+|www\.[^\s]+|\+91[\s\-]?[6-9]\d{9}|[6-9]\d{9})/g;
+  let result='',last=0,m;
+  re.lastIndex=0;
+  while((m=re.exec(raw))!==null){
+    result+=esc(raw.slice(last,m.index));
+    const token=m[0];
+    if(/^https?:\/\//i.test(token)){
+      result+=`<a href="${esc(token)}" target="_blank" rel="noopener noreferrer"
+        style="color:var(--blue);text-decoration:underline;word-break:break-all;font-weight:600">${esc(token)}</a>`;
+    } else if(/^www\./i.test(token)){
+      result+=`<a href="https://${esc(token)}" target="_blank" rel="noopener noreferrer"
+        style="color:var(--blue);text-decoration:underline;word-break:break-all;font-weight:600">${esc(token)}</a>`;
+    } else {
+      const digits=token.replace(/[\s\-]/g,'');
+      result+=`<a href="tel:${esc(digits)}"
+        style="color:var(--green);font-weight:700;font-family:monospace;white-space:nowrap">📞 ${esc(token)}</a>`;
+    }
+    last=m.index+m[0].length;
+  }
+  result+=esc(raw.slice(last));
+  return result;
+}
+
 const ANN_PREVIEW=130;
 function mkAnnCard(a){
   const uid='ann-'+esc(a.id);
@@ -647,8 +673,8 @@ function mkAnnCard(a){
     ${newBadge}
     <div class="ann-badge">📢 ${esc(catLabel(a.category||'other'))}</div>
     <div class="ann-title">${esc(a.title)}</div>
-    <div class="ann-body ann-body-preview">${esc(preview)}</div>
-    ${needsTrunc?`<div class="ann-body ann-body-full" style="display:none;white-space:pre-wrap">${esc(body)}</div>
+    <div class="ann-body ann-body-preview" style="white-space:pre-wrap">${linkify(preview)}</div>
+    ${needsTrunc?`<div class="ann-body ann-body-full" style="display:none;white-space:pre-wrap">${linkify(body)}</div>
     <button class="ann-expand-btn" onclick="toggleAnn('${uid}',this)">▼ കൂടുതൽ വായിക്കുക</button>`:''}
     <div class="ann-meta">
       <span class="ann-author">👤 ${esc(a.author)}</span>
