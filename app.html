@@ -144,7 +144,14 @@
     .ann-dots{display:flex;justify-content:center;gap:6px;padding:4px 0 10px;}
     .ann-dot{width:6px;height:6px;border-radius:50%;background:rgba(139,92,246,.3);cursor:pointer;transition:all .25s;}
     .ann-dot.active{width:18px;border-radius:3px;background:var(--purple);}
-    /* Announcement expand/collapse — ARIYIPPUKAL section */
+    /* Announcement notification toast — for all users */
+    .ann-notify{position:fixed;top:14px;left:50%;transform:translateX(-50%) translateY(-80px);max-width:360px;width:calc(100% - 32px);background:linear-gradient(135deg,#1e1060,#2d1a75);border:1px solid rgba(139,92,246,.5);border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:10px;z-index:9999;box-shadow:0 6px 28px rgba(0,0,0,.5);transition:transform .38s cubic-bezier(.34,1.2,.64,1);pointer-events:auto;cursor:pointer;}
+    .ann-notify.show{transform:translateX(-50%) translateY(0);}
+    .ann-notify-icon{font-size:22px;flex-shrink:0;line-height:1;}
+    .ann-notify-body{flex:1;min-width:0;}
+    .ann-notify-title{font-size:11px;color:rgba(180,160,255,.9);font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:2px;}
+    .ann-notify-text{font-size:13px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .ann-notify-close{font-size:16px;color:rgba(255,255,255,.4);flex-shrink:0;padding:2px 4px;line-height:1;}
     .ann-expand-btn{width:100%;margin-top:8px;padding:6px;background:rgba(139,92,246,.06);border:1px solid rgba(139,92,246,.2);border-radius:8px;color:var(--muted);font-family:inherit;font-size:11px;cursor:pointer;text-align:center;transition:all .2s;}
     .ann-expand-btn:active{background:rgba(139,92,246,.15);}
     /* Contact links */
@@ -411,9 +418,11 @@ const aqr=query(collection(db,'announcements'),orderBy('createdAt','desc'));
 onSnapshot(aqr,snap=>{
   const fresh=snap.docs.map(d=>({id:d.id,...d.data()}));
   const newCount=fresh.length;
-  // Play tone + show badge only when new items arrive after the initial load
+  // Play tone + show banner + badge only when new items arrive after the initial load
   if(annInitialized&&newCount>annPrevCount){
+    const newestTitle=fresh[0]?.title||'';
     playNotificationTone();
+    showAnnNotify(newestTitle);
     showAnnBadge(newCount-annPrevCount);
   }
   announcements=fresh;
@@ -428,30 +437,101 @@ onSnapshot(aqr,snap=>{
 function curScreen(){return document.querySelector('.screen.active')?.id?.replace('s-','');}
 function syncDot(ok){const d=document.getElementById('sdot'),t=document.getElementById('stxt');if(!d)return;d.classList.toggle('off',!ok);t.textContent=ok?'ലൈവ്':'ഓഫ്‌ലൈൻ';}
 
-// ── Notification tone for new ARIYIPPUKAL (Web Audio API — no external file, CSP-safe, works on Web & Kodular WebView) ──
-function playNotificationTone(){
+// ════════════════════════════════════════════════════════════════
+// NOTIFICATION SYSTEM — works for ALL users on web & Kodular WebView
+//
+// Root cause of audio not playing for regular users:
+//   Browsers and Android WebView enforce "autoplay policy" — an
+//   AudioContext created outside a user gesture starts SUSPENDED
+//   and ctx.resume() fails silently in a Firestore callback.
+//
+// Fix: pre-warm ONE shared AudioContext on the user's very first
+//   tap/click/keydown. That gesture unlocks the context permanently.
+//   When a Firestore notification fires later, we reuse the already-
+//   RUNNING context — no gesture required at play time.
+// ════════════════════════════════════════════════════════════════
+let _audioCtx=null;
+let _audioReady=false;
+
+function _initAudio(){
+  if(_audioReady)return;
   try{
     const AC=window.AudioContext||window.webkitAudioContext;
     if(!AC)return;
-    const ctx=new AC();
-    const run=()=>{
-      const t=ctx.currentTime;
+    _audioCtx=new AC();
+    // Resume immediately inside the gesture so it becomes "running"
+    _audioCtx.resume().then(()=>{_audioReady=true;}).catch(()=>{});
+  }catch(e){}
+}
+
+// Warm up on the very first user interaction (covers web + Kodular WebView)
+['touchstart','mousedown','keydown'].forEach(ev=>
+  document.addEventListener(ev,_initAudio,{once:false,passive:true})
+);
+
+function playNotificationTone(){
+  try{
+    // If pre-warmed context is running, use it; otherwise try creating fresh
+    const ctx=(_audioCtx&&_audioCtx.state==='running')
+      ? _audioCtx
+      : (()=>{
+          const AC=window.AudioContext||window.webkitAudioContext;
+          if(!AC)return null;
+          const c=new AC();
+          c.resume().catch(()=>{});
+          return c;
+        })();
+    if(!ctx)return;
+    const run=(c)=>{
+      const t=c.currentTime;
       // Three-note rising chime: A5 → D6 → E6
       [[880,0,0.13,0.35],[1175,0.16,0.22,0.28],[1319,0.38,0.28,0.2]].forEach(([freq,delay,dur,vol])=>{
-        const osc=ctx.createOscillator(),gain=ctx.createGain();
-        osc.connect(gain);gain.connect(ctx.destination);
+        const osc=c.createOscillator(),gain=c.createGain();
+        osc.connect(gain);gain.connect(c.destination);
         osc.type='sine';osc.frequency.value=freq;
         gain.gain.setValueAtTime(0,t+delay);
         gain.gain.linearRampToValueAtTime(vol,t+delay+0.015);
         gain.gain.exponentialRampToValueAtTime(0.001,t+delay+dur);
         osc.start(t+delay);osc.stop(t+delay+dur+0.05);
       });
-      setTimeout(()=>{try{ctx.close();}catch(e){}},1200);
+      // Only close disposable contexts; keep the shared one alive
+      if(c!==_audioCtx)setTimeout(()=>{try{c.close();}catch(e){}},1200);
     };
-    if(ctx.state==='suspended'){ctx.resume().then(run).catch(()=>{});}else{run();}
+    if(ctx.state==='suspended'){ctx.resume().then(()=>run(ctx)).catch(()=>{});}
+    else{run(ctx);}
   }catch(e){}
 }
-// ── Announcement badge on nav button ──
+
+// ── Visible notification banner (for all users, works even in silent mode) ──
+let _notifyTimer=null;
+function showAnnNotify(title,body){
+  // Remove any existing banner
+  const old=document.getElementById('ann-notify-el');if(old)old.remove();
+  const el=document.createElement('div');
+  el.id='ann-notify-el';el.className='ann-notify';
+  el.innerHTML=`<div class="ann-notify-icon">📢</div>
+    <div class="ann-notify-body">
+      <div class="ann-notify-title">പുതിയ അറിയിപ്പ്</div>
+      <div class="ann-notify-text">${String(title).replace(/</g,'&lt;')}</div>
+    </div>
+    <div class="ann-notify-close">✕</div>`;
+  el.querySelector('.ann-notify-close').onclick=(e)=>{e.stopPropagation();dismissAnnNotify();};
+  el.onclick=()=>{dismissAnnNotify();nav('ann');};
+  document.body.appendChild(el);
+  // Trigger slide-in after paint
+  requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.add('show')));
+  if(_notifyTimer)clearTimeout(_notifyTimer);
+  _notifyTimer=setTimeout(dismissAnnNotify,5000);
+}
+function dismissAnnNotify(){
+  clearTimeout(_notifyTimer);_notifyTimer=null;
+  const el=document.getElementById('ann-notify-el');
+  if(!el)return;
+  el.classList.remove('show');
+  setTimeout(()=>el.remove(),400);
+}
+
+// ── Nav-button badge ──
 let _annBadgeCount=0;
 function showAnnBadge(n){
   _annBadgeCount+=n;
@@ -488,7 +568,7 @@ window.nav=function(s,pushState=true){
     const hb=document.getElementById('hbody');if(hb)hb.style.display='block';
   }
   // FIX: Clear notification badge when user opens the ann screen
-  if(s==='ann')clearAnnBadge();
+  if(s==='ann'){clearAnnBadge();dismissAnnNotify();}
   document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
   document.querySelectorAll('.nb').forEach(x=>x.classList.remove('on'));
   document.getElementById('s-'+s).classList.add('active');
