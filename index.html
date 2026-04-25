@@ -3,13 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- ██ SECURITY HEADERS ██ -->
   <meta http-equiv="Content-Security-Policy"
         content="default-src 'self'; script-src 'self' 'unsafe-inline' https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; connect-src 'none'; font-src https://fonts.gstatic.com; img-src 'self' data:; frame-ancestors 'none';">
   <meta http-equiv="X-Frame-Options" content="DENY">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta http-equiv="Referrer-Policy" content="no-referrer">
-  <title>എന്റെ മറവഞ്ചേരി — Coming Soon</title>
+  <title>എന്റെ മറവഞ്ചേരി &mdash; Coming Soon</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@400;700;800&family=Bebas+Neue&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -30,7 +29,6 @@
       font-family: 'Noto Sans Malayalam', sans-serif;
     }
 
-    /* ── Animated grid background ── */
     .grid-bg {
       position: fixed; inset: 0; z-index: 0;
       background-image:
@@ -44,13 +42,9 @@
       to   { background-position: 40px 40px; }
     }
 
-    /* ── Radial glow ── */
     .glow {
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(80px);
-      pointer-events: none;
-      z-index: 0;
+      position: fixed; border-radius: 50%;
+      filter: blur(80px); pointer-events: none; z-index: 0;
     }
     .glow-1 {
       width: 400px; height: 400px;
@@ -65,190 +59,158 @@
       animation: pulse2 6s ease-in-out infinite;
     }
     @keyframes pulse1 {
-      0%,100% { opacity: .6; transform: translateX(-50%) scale(1); }
-      50%      { opacity: 1;  transform: translateX(-50%) scale(1.15); }
+      0%,100% { opacity:.6; transform:translateX(-50%) scale(1); }
+      50%      { opacity:1;  transform:translateX(-50%) scale(1.15); }
     }
     @keyframes pulse2 {
-      0%,100% { opacity: .4; }
-      50%      { opacity: .8; }
+      0%,100% { opacity:.4; }
+      50%      { opacity:.8; }
     }
 
-    /* ── Floating particles ── */
     .particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
     .p {
-      position: absolute;
-      width: 3px; height: 3px;
-      border-radius: 50%;
-      background: var(--gold);
-      opacity: 0;
-      animation: float linear infinite;
+      position: absolute; width: 3px; height: 3px;
+      border-radius: 50%; background: var(--gold); opacity: 0;
+      animation: floatUp linear infinite;
     }
-    @keyframes float {
-      0%   { opacity: 0; transform: translateY(100vh) scale(0); }
-      10%  { opacity: .6; }
-      90%  { opacity: .3; }
-      100% { opacity: 0; transform: translateY(-20vh) scale(1.5); }
+    @keyframes floatUp {
+      0%   { opacity:0; transform:translateY(100vh) scale(0); }
+      10%  { opacity:.6; }
+      90%  { opacity:.3; }
+      100% { opacity:0; transform:translateY(-20vh) scale(1.5); }
     }
 
-    /* ── Main content ── */
     .wrap {
       position: relative; z-index: 1;
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
-      min-height: 100vh;
-      padding: 24px;
-      text-align: center;
+      min-height: 100vh; padding: 24px; text-align: center;
     }
 
-    /* ── Logo badge ── */
     .badge {
       display: inline-flex; align-items: center; gap: 8px;
       background: rgba(245,166,35,.1);
       border: 1px solid rgba(245,166,35,.3);
-      border-radius: 30px;
-      padding: 6px 16px;
-      font-size: 11px;
-      font-family: 'DM Mono', monospace;
-      color: var(--gold);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      margin-bottom: 28px;
-      animation: fadeUp .8s ease both;
+      border-radius: 30px; padding: 6px 16px;
+      font-size: 11px; font-family: 'DM Mono', monospace;
+      color: var(--gold); letter-spacing: 2px; text-transform: uppercase;
+      margin-bottom: 28px; animation: fadeUp .8s ease both;
     }
     .badge-dot {
       width: 6px; height: 6px; border-radius: 50%;
-      background: var(--green);
-      box-shadow: 0 0 8px var(--green);
+      background: var(--green); box-shadow: 0 0 8px var(--green);
       animation: blink 1.5s ease-in-out infinite;
     }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
 
-    /* ── Title ── */
     .title {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(52px, 14vw, 90px);
-      line-height: .95;
-      letter-spacing: 2px;
-      color: #fff;
-      margin-bottom: 6px;
+      font-size: clamp(52px,14vw,90px); line-height:.95;
+      letter-spacing: 2px; color: #fff; margin-bottom: 6px;
       animation: fadeUp .8s .1s ease both;
     }
-    .title span {
-      color: var(--gold);
-      text-shadow: 0 0 40px rgba(245,166,35,.5);
-    }
+    .title span { color:var(--gold); text-shadow:0 0 40px rgba(245,166,35,.5); }
 
     .title-ml {
       font-family: 'Noto Sans Malayalam', sans-serif;
-      font-size: clamp(22px, 6vw, 36px);
-      font-weight: 800;
-      color: var(--gold);
-      letter-spacing: 1px;
-      margin-bottom: 20px;
+      font-size: clamp(22px,6vw,36px); font-weight: 800;
+      color: var(--gold); letter-spacing: 1px; margin-bottom: 20px;
       animation: fadeUp .8s .2s ease both;
     }
 
     .subtitle {
-      font-size: 14px;
-      color: rgba(255,255,255,.45);
-      line-height: 1.7;
-      max-width: 320px;
-      margin-bottom: 40px;
+      font-size: 14px; color: rgba(255,255,255,.45);
+      line-height: 1.7; max-width: 320px; margin-bottom: 40px;
       animation: fadeUp .8s .3s ease both;
     }
 
-    /* ── Feature pills ── */
     .pills {
       display: flex; flex-wrap: wrap; gap: 8px;
-      justify-content: center;
-      max-width: 360px;
-      margin-bottom: 30px;
-      animation: fadeUp .8s .4s ease both;
+      justify-content: center; max-width: 360px;
+      margin-bottom: 30px; animation: fadeUp .8s .4s ease both;
     }
     .pill {
       display: inline-flex; align-items: center; gap: 6px;
       background: rgba(255,255,255,.05);
       border: 1px solid rgba(255,255,255,.08);
-      border-radius: 20px;
-      padding: 6px 14px;
-      font-size: 12px;
-      color: rgba(255,255,255,.65);
-      transition: all .3s;
-      cursor: default;
+      border-radius: 20px; padding: 6px 14px; font-size: 12px;
+      color: rgba(255,255,255,.65); transition: all .3s; cursor: default;
     }
     .pill:hover {
-      background: rgba(245,166,35,.12);
-      border-color: rgba(245,166,35,.3);
-      color: var(--gold);
-      transform: translateY(-2px);
+      background: rgba(245,166,35,.12); border-color: rgba(245,166,35,.3);
+      color: var(--gold); transform: translateY(-2px);
     }
     .pill-icon { font-size: 14px; }
 
-    /* ── Countdown ── */
-    .countdown-wrap {
-      margin-bottom: 10px;
-      animation: fadeUp .8s .5s ease both;
-    }
+    .countdown-wrap { margin-bottom: 10px; animation: fadeUp .8s .5s ease both; }
     .countdown-lbl {
-      font-size: 10px;
-      font-family: 'DM Mono', monospace;
-      letter-spacing: 3px;
-      color: rgba(255,255,255,.3);
-      text-transform: uppercase;
-      margin-bottom: 14px;
+      font-size: 10px; font-family: 'DM Mono', monospace;
+      letter-spacing: 3px; color: rgba(255,255,255,.3);
+      text-transform: uppercase; margin-bottom: 14px;
     }
-    .countdown {
-      display: flex; gap: 12px; justify-content: center;
-    }
+    .countdown { display: flex; gap: 12px; justify-content: center; }
     .cbox {
       display: flex; flex-direction: column; align-items: center;
       background: rgba(255,255,255,.05);
       border: 1px solid rgba(255,255,255,.08);
-      border-radius: 14px;
-      padding: 12px 16px;
-      min-width: 62px;
+      border-radius: 14px; padding: 12px 16px; min-width: 62px;
     }
     .cval {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 36px;
-      color: var(--gold);
-      line-height: 1;
+      font-family: 'Bebas Neue', sans-serif; font-size: 36px;
+      color: var(--gold); line-height: 1;
       text-shadow: 0 0 20px rgba(245,166,35,.4);
     }
     .cunit {
-      font-size: 9px;
-      font-family: 'DM Mono', monospace;
-      color: rgba(255,255,255,.3);
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      margin-top: 4px;
+      font-size: 9px; font-family: 'DM Mono', monospace;
+      color: rgba(255,255,255,.3); letter-spacing: 1.5px;
+      text-transform: uppercase; margin-top: 4px;
     }
 
-    /* ── Bottom tag ── */
+    /* Launch button — hidden until countdown ends */
+    #launch-btn {
+      display: none;
+      margin-top: 28px; padding: 16px 52px;
+      background: linear-gradient(135deg, var(--gold), var(--gold2));
+      color: #000; border: none; border-radius: 50px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px; letter-spacing: 4px; cursor: pointer;
+      box-shadow: 0 0 30px rgba(245,166,35,.55),
+                  0 0 70px rgba(245,166,35,.25),
+                  0 4px 20px rgba(0,0,0,.4);
+      animation: launchPulse 1.8s ease-in-out infinite;
+      transition: transform .12s;
+    }
+    #launch-btn:active { transform: scale(.95); }
+    @keyframes launchPulse {
+      0%,100% {
+        box-shadow: 0 0 30px rgba(245,166,35,.55),
+                    0 0 70px rgba(245,166,35,.25),
+                    0 4px 20px rgba(0,0,0,.4);
+      }
+      50% {
+        box-shadow: 0 0 55px rgba(245,166,35,.9),
+                    0 0 110px rgba(245,166,35,.45),
+                    0 4px 20px rgba(0,0,0,.4);
+      }
+    }
+
     .bottom-tag {
-      margin-top: 10px;
-      text-align: center;
-      font-size: 11px;
-      color: rgba(255,255,255,.18);
-      font-family: 'DM Mono', monospace;
+      margin-top: 10px; font-size: 11px;
+      color: rgba(255,255,255,.18); font-family: 'DM Mono', monospace;
       letter-spacing: 1px;
     }
 
-    /* ── Scanline overlay ── */
     .scanlines {
       position: fixed; inset: 0; z-index: 2; pointer-events: none;
       background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(0,0,0,.03) 2px,
-        rgba(0,0,0,.03) 4px
+        0deg, transparent, transparent 2px,
+        rgba(0,0,0,.03) 2px, rgba(0,0,0,.03) 4px
       );
     }
 
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: translateY(0); }
+      from { opacity:0; transform:translateY(24px); }
+      to   { opacity:1; transform:translateY(0); }
     }
   </style>
 </head>
@@ -258,8 +220,6 @@
 <div class="glow glow-1"></div>
 <div class="glow glow-2"></div>
 <div class="scanlines"></div>
-
-<!-- Floating particles -->
 <div class="particles" id="particles"></div>
 
 <div class="wrap">
@@ -271,24 +231,24 @@
 
   <div class="title-ml">എന്റെ മറവഞ്ചേരി</div>
 
-  <div class="title">COMING<br><span>SOON</span></div>
+  <div class="title" id="main-title">COMING<br><span>SOON</span></div>
 
-  <p class="subtitle">
-    മറവഞ്ചേരിക്കാർക്കായി ഒരു ഡിജിറ്റൽ ഡയറക്ടറി —
+  <p class="subtitle" id="main-subtitle">
+    മറവഞ്ചേരിക്കാർക്കായി ഒരു ഡിജിറ്റൽ ഡയറക്ടറി &mdash;
     ബിസിനസ്സ്, സേവനങ്ങൾ, ബസ് സമയം, രക്തദാനം
     എല്ലാം ഒരിടത്ത്.
   </p>
 
-  <div class="pills">
-    <div class="pill"><span class="pill-icon">🏪</span> ലോക്കൽ ബിസിനസ്</div>
-    <div class="pill"><span class="pill-icon">🚌</span> ബസ് ടൈംടേബിൾ</div>
-    <div class="pill"><span class="pill-icon">🩸</span> ബ്ലഡ് ഡോണർ</div>
-    <div class="pill"><span class="pill-icon">⚡</span> ലോക്കൽ വർക്കേഴ്സ്</div>
-    <div class="pill"><span class="pill-icon">🥥</span> തേങ്ങ പറിക്കൽ</div>
-    <div class="pill"><span class="pill-icon">📢</span> അറിയിപ്പുകൾ</div>
+  <div class="pills" id="main-pills">
+    <div class="pill"><span class="pill-icon">&#127978;</span> ലോക്കൽ ബിസിനസ്</div>
+    <div class="pill"><span class="pill-icon">&#128652;</span> ബസ് ടൈംടേബിൾ</div>
+    <div class="pill"><span class="pill-icon">&#129656;</span> ബ്ലഡ് ഡോണർ</div>
+    <div class="pill"><span class="pill-icon">&#9889;</span> ലോക്കൽ വർക്കേഴ്സ്</div>
+    <div class="pill"><span class="pill-icon">&#129381;</span> തേങ്ങ പറിക്കൽ</div>
+    <div class="pill"><span class="pill-icon">&#128226;</span> അറിയിപ്പുകൾ</div>
   </div>
 
-  <div class="countdown-wrap">
+  <div class="countdown-wrap" id="countdown-wrap">
     <div class="countdown-lbl">ലോഞ്ച് കൗണ്ട്ഡൗൺ</div>
     <div class="countdown">
       <div class="cbox"><div class="cval" id="cd-d">00</div><div class="cunit">ദിവസം</div></div>
@@ -298,69 +258,124 @@
     </div>
   </div>
 
+  <!-- Appears only when time is up. Hidden forever after first tap. -->
+  <button id="launch-btn" onclick="doLaunch()">&#128640;&nbsp; LAUNCH</button>
+
   <div class="bottom-tag">ente-maravanchery.euforg.com</div>
   <div class="bottom-tag">Powered by Euforg</div>
 
 </div>
 
 <script>
-  // Note: contextmenu and devtools blocking removed — these don't provide
-  // real security and actively harm iOS/mobile users in WhatsApp in-app browsers.
+(function () {
+  'use strict';
 
-  // ── Launch date — change this ──
-  const LAUNCH  = new Date('2026-04-25T17:00:00');
-  // ── Main app URL ──
-  const APP_URL = 'https://ente-maravanchery.euforg.com/app.html';
+  var LAUNCH_TIME = new Date('2026-04-25T12:48:00'); // April 25 at 5:00 PM
+  var APP_URL     = 'https://ente-maravanchery.euforg.com/app.html';
+  var STORAGE_KEY = 'em_launched';
+  var countdownTimer = null;
 
-  let timer;
-
-  function launch(){
-    document.querySelector('.title').innerHTML = 'WE ARE<br><span>LIVE! 🎉</span>';
-    document.querySelector('.title-ml').textContent = 'ലോഞ്ച് ആയി!';
-    document.querySelector('.subtitle').textContent = 'എന്റെ മറവഞ്ചേരി ഇപ്പോൾ ലൈവ് ആണ്! ആപ്പ് തുറക്കുന്നു…';
-    const pills = document.querySelector('.pills');
-    if(pills) pills.style.display = 'none';
-    // Only redirect if not already on app.html
-    if(!window.location.pathname.includes('app.html')){
-      setTimeout(() => { window.location.href = APP_URL; }, 3000);
-    }
+  /* ── Safe localStorage wrappers (won't crash in restricted WebViews) ── */
+  function lsGet(key) {
+    try { return localStorage.getItem(key); } catch (e) { return null; }
+  }
+  function lsSet(key, val) {
+    try { localStorage.setItem(key, val); } catch (e) {}
   }
 
-  function updateCountdown(){
-    const now  = new Date();
-    const diff = LAUNCH - now;
-    if(diff <= 0){
-      ['cd-d','cd-h','cd-m','cd-s'].forEach(id=>document.getElementById(id).textContent='00');
-      clearInterval(timer);
-      launch();
+  /* ── If already launched, jump straight to the app ── */
+  function checkAlreadyLaunched() {
+    if (lsGet(STORAGE_KEY) === '1') {
+      window.location.replace(APP_URL);
+      return true;
+    }
+    return false;
+  }
+
+  /* ── User taps the Launch button ── */
+  window.doLaunch = function () {
+    lsSet(STORAGE_KEY, '1');
+    var btn = document.getElementById('launch-btn');
+    if (btn) btn.style.display = 'none';
+    window.location.href = APP_URL;
+  };
+
+  /* ── Show live state + launch button ── */
+  function showLaunchReady() {
+    var title = document.getElementById('main-title');
+    var sub   = document.getElementById('main-subtitle');
+    var pills = document.getElementById('main-pills');
+    var cdWrap = document.getElementById('countdown-wrap');
+    var btn   = document.getElementById('launch-btn');
+
+    if (title)  title.innerHTML = 'WE ARE<br><span>LIVE! &#127881;</span>';
+    if (sub)    sub.textContent = 'എന്റെ മറവഞ്ചേരി ഇപ്പോൾ ലൈവ് ആണ്! Launch അമർത്തി ആപ്പ് തുറക്കൂ.';
+    if (pills)  pills.style.display  = 'none';
+    if (cdWrap) cdWrap.style.display = 'none';
+    if (btn)    btn.style.display    = 'inline-block';
+  }
+
+  /* ── Countdown tick ── */
+  function tick() {
+    var diff = LAUNCH_TIME.getTime() - Date.now();
+
+    if (diff <= 0) {
+      var ids = ['cd-d','cd-h','cd-m','cd-s'];
+      for (var i = 0; i < ids.length; i++) {
+        var el = document.getElementById(ids[i]);
+        if (el) el.textContent = '00';
+      }
+      if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; }
+      showLaunchReady();
       return;
     }
-    const d = Math.floor(diff / 86400000);
-    const h = Math.floor((diff % 86400000) / 3600000);
-    const m = Math.floor((diff % 3600000)  / 60000);
-    const s = Math.floor((diff % 60000)    / 1000);
-    document.getElementById('cd-d').textContent = String(d).padStart(2,'0');
-    document.getElementById('cd-h').textContent = String(h).padStart(2,'0');
-    document.getElementById('cd-m').textContent = String(m).padStart(2,'0');
-    document.getElementById('cd-s').textContent = String(s).padStart(2,'0');
-  }
-  updateCountdown();
-  timer = setInterval(updateCountdown, 1000);
 
-  // ── Particles ──
-  const container = document.getElementById('particles');
-  for(let i = 0; i < 22; i++){
-    const p = document.createElement('div');
-    p.className = 'p';
-    p.style.left               = Math.random()*100 + 'vw';
-    p.style.width              = (Math.random()*2+1)+'px';
-    p.style.height             = p.style.width;
-    p.style.animationDuration  = (Math.random()*12+8) + 's';
-    p.style.animationDelay     = (Math.random()*10) + 's';
-    p.style.opacity            = Math.random()*.7;
-    if(Math.random() > .75) p.style.background = '#E74C3C';
-    container.appendChild(p);
+    var d = Math.floor(diff / 86400000);
+    var h = Math.floor((diff % 86400000) / 3600000);
+    var m = Math.floor((diff % 3600000)  / 60000);
+    var s = Math.floor((diff % 60000)    / 1000);
+
+    function set(id, val) {
+      var el = document.getElementById(id);
+      if (el) el.textContent = String(val).padStart(2, '0');
+    }
+    set('cd-d', d); set('cd-h', h); set('cd-m', m); set('cd-s', s);
   }
+
+  /* ── Floating particles ── */
+  function initParticles() {
+    var container = document.getElementById('particles');
+    if (!container) return;
+    for (var i = 0; i < 22; i++) {
+      var p = document.createElement('div');
+      p.className = 'p';
+      p.style.left              = (Math.random() * 100) + 'vw';
+      p.style.width             = (Math.random() * 2 + 1) + 'px';
+      p.style.height            = p.style.width;
+      p.style.animationDuration = (Math.random() * 12 + 8) + 's';
+      p.style.animationDelay    = (Math.random() * 10) + 's';
+      p.style.opacity           = String(Math.random() * 0.7);
+      if (Math.random() > 0.75) p.style.background = '#E74C3C';
+      container.appendChild(p);
+    }
+  }
+
+  /* ── Boot ── */
+  function boot() {
+    if (checkAlreadyLaunched()) return; // redirect, nothing else needed
+    initParticles();
+    tick();
+    countdownTimer = setInterval(tick, 1000);
+  }
+
+  // Wait for DOM to be ready before touching any elements
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
+
+})();
 </script>
 </body>
 </html>
