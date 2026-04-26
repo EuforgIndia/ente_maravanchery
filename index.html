@@ -6,10 +6,20 @@
   <!-- ██ SECURITY HEADERS ██ -->
   <!-- NOTE: unsafe-inline in script-src remains until scripts are moved to external files with nonces -->
   <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com; font-src https://fonts.gstatic.com; img-src 'self' data:; frame-ancestors 'none';">
+        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://www.google-analytics.com https://region1.google-analytics.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.google-analytics.com; frame-ancestors 'none';">
   <meta http-equiv="X-Frame-Options" content="DENY">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta http-equiv="Referrer-Policy" content="no-referrer">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-L4PY16D4E8"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-L4PY16D4E8');
+  </script>
+
   <title>എന്റെ മറവഞ്ചേരി</title>
   <meta name="description" content="മറവഞ്ചേരിക്കാർക്കായി ഒരു ഡിജിറ്റൽ ഡയറക്ടറി — ബിസിനസ്സ്, സേവനങ്ങൾ, ബസ് സമയം, രക്തദാനം എല്ലാം ഒരിടത്ത്.">
 
