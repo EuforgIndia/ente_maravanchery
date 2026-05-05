@@ -6,7 +6,7 @@
   <!-- ██ SECURITY HEADERS ██ -->
   <!-- NOTE: unsafe-inline in script-src remains until scripts are moved to external files with nonces -->
   <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://www.google-analytics.com https://region1.google-analytics.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.google-analytics.com; frame-ancestors 'none';">
+        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://www.google-analytics.com https://region1.google-analytics.com https://onesignal.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.google-analytics.com; frame-ancestors 'none';">
   <meta http-equiv="X-Frame-Options" content="DENY">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta http-equiv="Referrer-Policy" content="no-referrer">
@@ -1103,6 +1103,27 @@ function cancelDonorEdit(){donorEditId=null;document.getElementById('donor-ebann
 function clearDonorForm(){['dn','dph','dar','dage','dnote'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});const bg=document.getElementById('dbg');if(bg)bg.value='';}
 async function delDonor(id){if(!confirm('ഈ ഡോണർ ഡിലീറ്റ് ചെയ്യണോ?'))return;try{await deleteDoc(doc(db,'donors',id));toast('🗑️ ഡിലീറ്റ് ചെയ്തു','ok');}catch{toast('❌ ഡിലീറ്റ് ചെയ്യാൻ കഴിഞ്ഞില്ല','err');}}
 
+async function sendPushNotification(title, body, author) {
+  try {
+    const notifTitle = '📢 ' + (title || 'പുതിയ അറിയിപ്പ്');
+    let notifBody = (body || '').length > 120 ? body.substring(0, 117) + '…' : (body || '');
+    if (author) notifBody += ' — ' + author;
+    await fetch('https://onesignal.com/api/v1/notifications', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Basic 7qu4jxa3eeshvdvtykunrk2za'
+      },
+      body: JSON.stringify({
+        app_id: 'e13fa271-860f-48ef-8730-0f21121788d7',
+        included_segments: ['All'],
+        headings: { en: notifTitle, ml: notifTitle },
+        contents: { en: notifBody || 'മറവഞ്ചേരിയിൽ നിന്ന് ഒരു പുതിയ അറിയിപ്പ്.', ml: notifBody || 'മറവഞ്ചേരിയിൽ നിന്ന് ഒരു പുതിയ അറിയിപ്പ്.' },
+        data: { screen: 'ann' }
+      })
+    });
+  } catch(e) { console.warn('Push notification failed:', e); }
+}
 async function saveAnn(){
   if(!adminIn){toast('⚠️ ആദ്യം ലോഗിൻ ചെയ്യുക','err');return;}
   const title=document.getElementById('an-title').value.trim();
@@ -1120,6 +1141,7 @@ async function saveAnn(){
     } else {
       await addDoc(collection(db,'announcements'),{title,body,author,designation,category,createdAt:serverTimestamp()});
       toast('📢 അറിയിപ്പ് ചേർത്തു!','ok');clearAnnForm();
+      sendPushNotification(title,body,author);
     }
   }catch(e){toast('❌ '+e.message,'err');}
   btn.disabled=false;btn.innerHTML=annEditId?'✅ അറിയിപ്പ് അപ്ഡേറ്റ്':'📢 അറിയിപ്പ് ചേർക്കുക';
